@@ -1,27 +1,198 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import header from "../images/header.jpg";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+/* =====================
+   TIPOS
+===================== */
+
+type Perfil = {
+  id: string;
+  nome: string;
+  diarias: {
+    enabled: boolean;
+    extras: {
+      tpPremium: boolean;
+      tpDesafio: boolean;
+    };
+    checks: {
+      checkin: boolean;
+      espolios: boolean;
+      expedicao: boolean;
+      deserto: boolean;
+      portao: boolean;
+      contrato: boolean;
+    };
+  };
+};
+
+/* =====================
+   PERFIS PADRÃO
+===================== */
+
+const PERFIS_INICIAIS: Perfil[] = [
+  {
+    id: "principal",
+    nome: "Principal",
+    diarias: {
+      enabled: false,
+      extras: { tpPremium: false, tpDesafio: false },
+      checks: {
+        checkin: false,
+        espolios: false,
+        expedicao: false,
+        deserto: false,
+        portao: false,
+        contrato: false,
+      },
+    },
+  },
+];
+
+/* =====================
+   COMPONENTE
+===================== */
 
 export default function Diarias() {
-  const [enabled, setEnabled] = useState(false);
-  const [extra1, setExtra1] = useState(false);
-  const [extra2, setExtra2] = useState(false);
+  const [perfis, setPerfis] = useState<Perfil[]>(PERFIS_INICIAIS);
+  const [perfilAtivoId, setPerfilAtivoId] = useState("principal");
+  const [novoNome, setNovoNome] = useState("");
+  const [editarAberto, setEditarAberto] = useState(false);
 
-  function handleToggle(value: boolean) {
-    setEnabled(value);
+  const perfilAtivo = perfis.find((p) => p.id === perfilAtivoId)!;
 
-    // Se desligar o switch, desmarca os extras
-    if (!value) {
-      setExtra1(false);
-      setExtra2(false);
-    }
+  useEffect(() => {
+    setNovoNome(perfilAtivo.nome);
+  }, [perfilAtivoId]);
+
+  /* =====================
+     PERFIL
+  ===================== */
+
+  function criarPerfil() {
+    const novoPerfil: Perfil = {
+      id: crypto.randomUUID(),
+      nome: "Novo Perfil",
+      diarias: structuredClone(perfilAtivo.diarias),
+    };
+
+    setPerfis([...perfis, novoPerfil]);
+    setPerfilAtivoId(novoPerfil.id);
   }
 
+  function renomearPerfil() {
+    setPerfis(
+      perfis.map((p) =>
+        p.id === perfilAtivoId ? { ...p, nome: novoNome } : p,
+      ),
+    );
+  }
+
+  function excluirPerfil() {
+    if (perfis.length <= 1) return;
+
+    const novos = perfis.filter((p) => p.id !== perfilAtivoId);
+    setPerfis(novos);
+    setPerfilAtivoId(novos[0].id);
+  }
+
+  /* =====================
+     DIÁRIAS
+  ===================== */
+
+  function setEnabled(value: boolean) {
+    setPerfis(
+      perfis.map((p) =>
+        p.id === perfilAtivoId
+          ? {
+              ...p,
+              diarias: {
+                ...p.diarias,
+                enabled: value,
+                extras: value
+                  ? p.diarias.extras
+                  : { tpPremium: false, tpDesafio: false },
+              },
+            }
+          : p,
+      ),
+    );
+  }
+
+  function setExtra(key: "tpPremium" | "tpDesafio", value: boolean) {
+    setPerfis(
+      perfis.map((p) =>
+        p.id === perfilAtivoId
+          ? {
+              ...p,
+              diarias: {
+                ...p.diarias,
+                extras: {
+                  ...p.diarias.extras,
+                  [key]: value,
+                },
+              },
+            }
+          : p,
+      ),
+    );
+  }
+
+  function setCheck(key: keyof Perfil["diarias"]["checks"], value: boolean) {
+    setPerfis(
+      perfis.map((p) =>
+        p.id === perfilAtivoId
+          ? {
+              ...p,
+              diarias: {
+                ...p.diarias,
+                checks: {
+                  ...p.diarias.checks,
+                  [key]: value,
+                },
+              },
+            }
+          : p,
+      ),
+    );
+  }
+
+  function resetarDiarias() {
+    setEnabled(false);
+    setExtra("tpPremium", false);
+    setExtra("tpDesafio", false);
+
+    Object.keys(perfilAtivo.diarias.checks).forEach((key) => {
+      setCheck(key as keyof Perfil["diarias"]["checks"], false);
+    });
+  }
+
+  /* =====================
+     UI
+  ===================== */
+
   return (
-    <div className="min-h-screen flex flex-col items-center pt-10 gap-10">
+    <div className="min-h-screen flex flex-col items-center gap-8 pt-8">
       {/* HEADER */}
       <div
         className="relative h-[200px] w-[700px] rounded-xl overflow-hidden"
@@ -34,90 +205,142 @@ export default function Diarias() {
         <div className="absolute inset-0 bg-black/20" />
       </div>
 
-      {/* CARD */}
-      <div className="w-[300px] rounded-xl border bg-card p-6 shadow-md space-y-6">
-        {/* TÍTULO + SWITCH */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Diárias</h2>
+      <div className="flex gap-8">
+        {/* PERFIS */}
+        <div className="w-[240px] border rounded-xl p-4 space-y-4 bg-card shadow">
+          <h3 className="font-semibold text-lg">Perfis</h3>
 
-          {/* TEXTO + SWITCH */}
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-xs font-medium text-muted-foreground">
-              Evento TP
-            </span>
+          <Select value={perfilAtivoId} onValueChange={setPerfilAtivoId}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
 
-            <Switch
-              checked={enabled}
-              onCheckedChange={handleToggle}
-              className="w-24 h-8"
-            />
+            <SelectContent>
+              {perfis.map((p) => (
+                <SelectItem key={p.id} value={p.id}>
+                  {p.nome}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* EDITAR NOME */}
+          <div className="flex gap-2">
+            {/* BOTÃO NOVO */}
+            <Button className="flex-1" onClick={criarPerfil}>
+              Novo
+            </Button>
+
+            {/* EDITAR NOME (COM DIALOG) */}
+            <Dialog open={editarAberto} onOpenChange={setEditarAberto}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="secondary"
+                  className="flex-1"
+                  onClick={() => setEditarAberto(true)}
+                >
+                  Editar nome
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Editar nome do perfil</DialogTitle>
+                </DialogHeader>
+
+                <Input
+                  value={novoNome}
+                  onChange={(e) => setNovoNome(e.target.value)}
+                />
+
+                <Button
+                  onClick={() => {
+                    renomearPerfil();
+                    setEditarAberto(false);
+                  }}
+                >
+                  Salvar
+                </Button>
+              </DialogContent>
+            </Dialog>
+
+            {/* BOTÃO EXCLUIR */}
+            <Button
+              variant="destructive"
+              className="flex-1"
+              onClick={excluirPerfil}
+            >
+              Excluir
+            </Button>
           </div>
         </div>
 
-        {/* CHECKBOXES FIXOS */}
-        <div className="flex flex-col gap-4">
-          <label className="flex items-center gap-3">
-            <Checkbox /> Check-in
-          </label>
+        {/* DIÁRIAS */}
+        <div className="w-[320px] rounded-xl border bg-card p-6 shadow space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold">Diárias</h2>
 
-          <label className="flex items-center gap-3">
-            <Checkbox /> Espólios
-          </label>
-
-          <label className="flex items-center gap-3">
-            <Checkbox /> Expedição
-          </label>
-
-          <label className="flex items-center gap-3">
-            <Checkbox /> Deserto Desconhecido
-          </label>
-
-          <label className="flex items-center gap-3">
-            <Checkbox /> Portão Infernal
-          </label>
-
-          {/* CHECKBOXES EXTRAS (SÓ QUANDO ON) */}
-          <div
-            className={`
-    overflow-hidden transition-all duration-400 ease-out
-    ${enabled ? "max-h-40 opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-2"}
-  `}
-          >
-            <div className="flex flex-col gap-4 pt-2">
-              <label className="flex items-center gap-3">
-                <Checkbox
-                  checked={extra1}
-                  onCheckedChange={(v) => setExtra1(!!v)}
-                />
-                Missão Especial
-              </label>
-
-              <label className="flex items-center gap-3">
-                <Checkbox
-                  checked={extra2}
-                  onCheckedChange={(v) => setExtra2(!!v)}
-                />
-                Evento Diário
-              </label>
+            <div className="flex flex-col items-center">
+              <span className="text-xs text-muted-foreground">Evento TP</span>
+              <Switch
+                checked={perfilAtivo.diarias.enabled}
+                onCheckedChange={setEnabled}
+              />
             </div>
           </div>
-        </div>
 
-        {/* BOTÕES */}
-        <div className="flex gap-4 pt-4">
-          <Button className="flex-1">Atualizar</Button>
+          <div className="flex flex-col gap-4">
+            {(
+              [
+                ["checkin", "Check-in"],
+                ["espolios", "Espólios"],
+                ["expedicao", "Expedição"],
+                ["deserto", "Deserto Desconhecido"],
+                ["portao", "Portão Infernal"],
+                ["contrato", "Contrato de Caça"],
+              ] as const
+            ).map(([key, label]) => (
+              <label key={key} className="flex gap-2 items-center">
+                <Checkbox
+                  checked={perfilAtivo.diarias.checks[key]}
+                  onCheckedChange={(v) => setCheck(key, !!v)}
+                />
+                {label}
+              </label>
+            ))}
 
-          <Button
-            variant="secondary"
-            className="flex-1"
-            onClick={() => {
-              setEnabled(false);
-              setExtra1(false);
-              setExtra2(false);
-            }}
-          >
-            Reset
-          </Button>
+            {perfilAtivo.diarias.enabled && (
+              <div className="flex flex-col gap-3 pt-3">
+                <label className="flex gap-2 items-center">
+                  <Checkbox
+                    checked={perfilAtivo.diarias.extras.tpPremium}
+                    onCheckedChange={(v) => setExtra("tpPremium", !!v)}
+                  />
+                  TP - Teleporte Premium
+                </label>
+
+                <label className="flex gap-2 items-center">
+                  <Checkbox
+                    checked={perfilAtivo.diarias.extras.tpDesafio}
+                    onCheckedChange={(v) => setExtra("tpDesafio", !!v)}
+                  />
+                  TP - Espólio Desafio
+                </label>
+              </div>
+            )}
+
+            <div className="flex gap-4 pt-4">
+              <Button className="flex-1">Atualizar</Button>
+
+              <Button
+                variant="secondary"
+                className="flex-1"
+                onClick={resetarDiarias}
+              >
+                Reset
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
