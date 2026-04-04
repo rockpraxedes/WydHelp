@@ -121,7 +121,7 @@ export function ScheduleBoard() {
           <div className="text-right">
             <p className="text-xs text-muted-foreground mb-1">Próxima missão</p>
             <p className="text-sm font-medium">{globalNext.names.join(' + ')}</p>
-            <p className="text-xl font-medium text-emerald-600 tabular-nums">{globalNext.label}</p>
+            <p className="text-xl font-medium text-violet-600 tabular-nums">{globalNext.label}</p>
           </div>
         )}
       </div>
@@ -148,7 +148,7 @@ export function ScheduleBoard() {
               variant="outline"
               className={cn(
                 'text-sm tabular-nums px-3 py-1 font-normal',
-                i === 0 && 'border-emerald-500 text-emerald-600 bg-emerald-50 font-medium'
+                i === 0 && 'border-violet-500 text-violet-600 bg-violet-50 font-medium'
               )}
             >
               {slot}
@@ -192,7 +192,7 @@ function FixedMissionBlock({ name, times, nowSec }: FixedMissionBlockProps) {
               variant="outline"
               className={cn(
                 'text-sm tabular-nums px-3 py-1 font-normal transition-all',
-                isNext && 'border-emerald-500 text-emerald-600 bg-emerald-50 font-medium',
+                isNext && 'border-violet-500 text-violet-600 bg-violet-50 font-medium',
                 isPast && 'opacity-35'
               )}
             >

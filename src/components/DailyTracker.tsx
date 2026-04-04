@@ -15,13 +15,19 @@ import { cn } from '@/lib/utils'
 import { CheckIcon, CalendarIcon } from 'lucide-react'
 
 export function DailyTracker() {
-  const { activeId: profileId } = useProfiles()
+  const {
+    profiles, activeId: profileId, setActive,
+    addProfile, renameProfile, deleteProfile,
+    exportProfile, importProfile, importLegacy,
+  } = useProfiles()
+
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [calOpen, setCalOpen] = useState(false)
 
   const dateKey = selectedDate.toLocaleDateString('pt-BR')
   const isToday = dateKey === new Date().toLocaleDateString('pt-BR')
 
+  // Sempre usa o profileId e dateKey atuais — recarrega automaticamente quando mudam
   const { checked, eventActive, history, toggle, toggleEvent, saveDay } = useDailyMissions(profileId, dateKey)
 
   const fixedMissions = DAILY_MISSIONS.filter(m => !m.isEvent)
@@ -67,12 +73,21 @@ export function DailyTracker() {
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
-          {/* Seletor de perfil */}
-          <ProfileSelector onProfileChange={() => {}} />
+          {/* Seletor de perfil — estado gerenciado aqui, passado via props */}
+          <ProfileSelector
+            profiles={profiles}
+            activeId={profileId}
+            onSelect={setActive}
+            onAdd={addProfile}
+            onRename={renameProfile}
+            onDelete={(id) => deleteProfile(id, profileId)}
+            onExport={exportProfile}
+            onImport={importProfile}
+            onImportLegacy={importLegacy}
+          />
 
           <div className="w-px h-4 bg-border" />
 
-          {/* Switch evento */}
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Evento</span>
             <Badge
@@ -200,16 +215,12 @@ function MissionCard({ name, checked, isEvent = false, onClick }: MissionCardPro
         checked && 'opacity-60'
       )}
     >
-      <div
-        className={cn(
-          'w-5 h-5 rounded flex items-center justify-center shrink-0 border transition-colors',
-          checked
-            ? isEvent
-              ? 'bg-amber-500 border-amber-500'
-              : 'bg-emerald-500 border-emerald-500'
-            : 'border-border'
-        )}
-      >
+      <div className={cn(
+        'w-5 h-5 rounded flex items-center justify-center shrink-0 border transition-colors',
+        checked
+          ? isEvent ? 'bg-amber-500 border-amber-500' : 'bg-emerald-500 border-emerald-500'
+          : 'border-border'
+      )}>
         {checked && <CheckIcon className="w-3 h-3 text-white" />}
       </div>
       <span className={cn('text-sm flex-1', checked && 'line-through text-muted-foreground')}>
