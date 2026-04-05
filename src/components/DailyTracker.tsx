@@ -44,11 +44,11 @@ export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) 
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 ">
 
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap ">
           <h2 className="text-lg font-medium">Missões do dia</h2>
 
           <Popover open={calOpen} onOpenChange={setCalOpen}>
@@ -202,7 +202,7 @@ function MissionCard({ name, checked, isEvent = false, onClick }: MissionCardPro
     <button
       onClick={onClick}
       className={cn(
-        'w-full flex items-center gap-3 rounded-md border px-4 py-3 text-left transition-colors hover:bg-muted/50',
+        'w-full flex items-center gap-3 rounded-md border px-4 py-3 text-left transition-colors bg-muted/50 hover:bg-muted',
         isEvent && 'border-amber-300',
         checked && 'opacity-60'
       )}

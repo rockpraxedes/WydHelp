@@ -44,6 +44,8 @@ export const RUNAS: Runa[] = [
   { id: 'tiwaz',     name: 'Tiwaz',     img: '/src/images/runas/tiwaz.png' },
   { id: 'uraz',      name: 'Uraz',      img: '/src/images/runas/uraz.png' },
   { id: 'wunjo',     name: 'Wunjo',     img: '/src/images/runas/wunjo.png' },
+  { id: 'pergaminho', name: 'Pergaminho', img: '/src/images/runas/pergaminho.png' },
+  { id: 'selo',       name: 'Selo',       img: '/src/images/runas/selo.png' },
 ]
 
 export const RECEITAS: Receita[] = [
@@ -122,10 +124,13 @@ export const RECEITAS: Receita[] = [
     name: 'Destrave Nível 40',
     img: '/src/images/pedras/capa.png',
     runas: [
-      { runaId: 'fehu',     quantidade: 1 },
-      { runaId: 'mannaz',   quantidade: 1 },
-      { runaId: 'thurisaz', quantidade: 1 },
-      { runaId: 'ansuz',    quantidade: 1 },
+      { runaId: 'pergaminho', quantidade: 2 },
+      { runaId: 'pergaminho', quantidade: 2 },
+      { runaId: 'selo',       quantidade: 1 },
+      { runaId: 'fehu',       quantidade: 1 },
+      { runaId: 'mannaz',     quantidade: 1 },
+      { runaId: 'thurisaz',   quantidade: 1 },
+      { runaId: 'ansuz',      quantidade: 1 },
     ],
   },
 ]
@@ -134,7 +139,7 @@ export const PISTAS: Pista[] = [
   { nivel: 0, label: 'Pista +0', runas: ['ansuz', 'uraz', 'thurisaz', 'fehu', 'raidho'] },
   { nivel: 1, label: 'Pista +1', runas: ['thurisaz', 'fehu', 'raidho', 'kenaz', 'naudhiz', 'gebo'] },
   { nivel: 2, label: 'Pista +2', runas: ['kenaz', 'naudhiz', 'gebo', 'wunjo', 'hagalaz', 'isa'] },
-  { nivel: 3, label: 'Pista +3', runas: ['isa', 'jara', 'eihwaz', 'perthro', 'elhaz', 'sowilo', 'berkano'] },
+  { nivel: 3, label: 'Pista +3', runas: ['isa', 'jara', 'eihwaz', 'perthro', 'elhaz', 'sowilo', 'berkano', 'selo'] },
   { nivel: 4, label: 'Pista +4', runas: ['elhaz', 'sowilo', 'berkano', 'ehwaz', 'tiwaz', 'mannaz', 'laguz'] },
   { nivel: 5, label: 'Pista +5', runas: ['wunjo', 'hagalaz', 'isa', 'jara', 'eihwaz', 'perthro'] },
   { nivel: 6, label: 'Pista +6', runas: ['tiwaz', 'mannaz', 'laguz', 'dagaz', 'ing', 'othel'] },
