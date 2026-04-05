@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils'
 import {
   ChevronDownIcon, PencilIcon, TrashIcon,
-  PlusIcon, DownloadIcon, UploadIcon, CheckIcon, HistoryIcon,
+  PlusIcon, DownloadIcon, UploadIcon, CheckIcon,
 } from 'lucide-react'
 
 interface ProfileSelectorProps {
@@ -17,13 +17,12 @@ interface ProfileSelectorProps {
   onRename: (id: string, name: string) => void
   onDelete: (id: string) => void
   onExport: (id: string) => void
-  onImport: (file: File) => void
-  onImportLegacy: (file: File) => void
+  onImportAny: (file: File) => void
 }
 
 export function ProfileSelector({
   profiles, activeId, onSelect, onAdd, onRename,
-  onDelete, onExport, onImport, onImportLegacy,
+  onDelete, onExport, onImportAny,
 }: ProfileSelectorProps) {
   const [open, setOpen]           = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -31,7 +30,6 @@ export function ProfileSelector({
   const [adding, setAdding]       = useState(false)
   const [newName, setNewName]     = useState('')
   const importRef                 = useRef<HTMLInputElement>(null)
-  const importLegacyRef           = useRef<HTMLInputElement>(null)
 
   const activeProfile = profiles.find(p => p.id === activeId)
 
@@ -57,13 +55,7 @@ export function ProfileSelector({
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file) onImport(file)
-    e.target.value = ''
-  }
-
-  const handleImportLegacy = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) onImportLegacy(file)
+    if (file) onImportAny(file)
     e.target.value = ''
   }
 
@@ -81,7 +73,6 @@ export function ProfileSelector({
         <PopoverContent className="w-64 p-2" align="start">
           <div className="space-y-1">
 
-            {/* Lista de perfis */}
             {profiles.map(profile => (
               <div
                 key={profile.id}
@@ -141,7 +132,6 @@ export function ProfileSelector({
               </div>
             ))}
 
-            {/* Ações */}
             <div className="border-t pt-1 mt-1 space-y-0.5">
               {adding ? (
                 <div className="flex items-center gap-1 px-2 py-1">
@@ -177,18 +167,7 @@ export function ProfileSelector({
                 <UploadIcon className="w-3.5 h-3.5" />
                 Importar perfil
               </button>
-
-              {/* Importar JSON legado */}
-              <button
-                onClick={() => importLegacyRef.current?.click()}
-                className="flex items-center gap-2 w-full px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md"
-              >
-                <HistoryIcon className="w-3.5 h-3.5" />
-                Importar histórico antigo
-              </button>
-
               <input ref={importRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
-              <input ref={importLegacyRef} type="file" accept=".json" className="hidden" onChange={handleImportLegacy} />
             </div>
           </div>
         </PopoverContent>

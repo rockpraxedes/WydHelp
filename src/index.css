@@ -119,6 +119,16 @@
     --detalhes: oklch(43.919% 0.2576 284.492);
 }
 
+/* Scroll mais bonito */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.5); /* violeta */
+  border-radius: 999px;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

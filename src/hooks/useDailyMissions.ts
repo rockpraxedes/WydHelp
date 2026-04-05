@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { DayHistory } from '@/data/missions'
+import { DAILY_MISSIONS } from '@/data/missions'
 
 const HISTORY_KEY = (profileId: string) => `wyd_history_${profileId}`
 const DAY_KEY     = (profileId: string, dateKey: string) => `wyd_day_${profileId}_${dateKey}`
@@ -26,22 +27,56 @@ function saveForDate(profileId: string, dateKey: string, state: TodayState) {
 export function loadHistory(profileId: string): DayHistory[] {
   try {
     const raw = localStorage.getItem(HISTORY_KEY(profileId))
-    if (raw) return JSON.parse(raw)
+    if (raw) {
+      const hist: DayHistory[] = JSON.parse(raw)
+      // Ordena por data mais recente primeiro
+      return hist.sort((a, b) => {
+        const parse = (d: string) => {
+          const [day, month, year] = d.split('/').map(Number)
+          return new Date(year, month - 1, day).getTime()
+        }
+        return parse(b.date) - parse(a.date)
+      })
+    }
   } catch {}
   return []
 }
 
 function saveHistory(profileId: string, history: DayHistory[]) {
-  localStorage.setItem(HISTORY_KEY(profileId), JSON.stringify(history.slice(0, 30)))
+  localStorage.setItem(HISTORY_KEY(profileId), JSON.stringify(history.slice(0, 60)))
+}
+
+// Converte nomes de missões salvas em estado de checks
+function missionsToChecked(missions: string[]): Record<string, boolean> {
+  const checked: Record<string, boolean> = {}
+  DAILY_MISSIONS.forEach(m => {
+    checked[m.id] = missions.includes(m.name)
+  })
+  return checked
 }
 
 export function useDailyMissions(profileId: string, dateKey: string) {
-  const [state, setState]   = useState<TodayState>(() => loadForDate(profileId, dateKey))
+  const [state, setState]     = useState<TodayState>(() => loadForDate(profileId, dateKey))
   const [history, setHistory] = useState<DayHistory[]>(() => loadHistory(profileId))
 
-  // Recarrega quando muda perfil ou data
   useEffect(() => {
-    setState(loadForDate(profileId, dateKey))
+    const fromStorage = loadForDate(profileId, dateKey)
+
+    // Se não há estado salvo mas há entrada no histórico, restaura os checks
+    const hasStoredState = !!localStorage.getItem(DAY_KEY(profileId, dateKey))
+    if (!hasStoredState) {
+      const histEntry = loadHistory(profileId).find(h => h.date === dateKey)
+      if (histEntry) {
+        const restored: TodayState = {
+          checked: missionsToChecked(histEntry.missions),
+          eventActive: histEntry.eventActive,
+        }
+        setState(restored)
+        return
+      }
+    }
+
+    setState(fromStorage)
     setHistory(loadHistory(profileId))
   }, [profileId, dateKey])
 
@@ -69,7 +104,7 @@ export function useDailyMissions(profileId: string, dateKey: string) {
     if (idx >= 0) updated[idx] = entry
     else updated.unshift(entry)
     saveHistory(profileId, updated)
-    setHistory([...updated])
+    setHistory(loadHistory(profileId))
     return true
   }, [profileId, dateKey, state.eventActive])
 

@@ -1,11 +1,9 @@
 // src/components/DailyTracker.tsx
 
-import { useState } from 'react'
+import { useState, ReactNode } from 'react'
 import { ptBR } from 'date-fns/locale'
 import { useDailyMissions } from '@/hooks/useDailyMissions'
-import { useProfiles } from '@/hooks/useProfiles'
 import { DAILY_MISSIONS } from '@/data/missions'
-import { ProfileSelector } from '@/components/ProfileSelector'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -14,20 +12,18 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils'
 import { CheckIcon, CalendarIcon } from 'lucide-react'
 
-export function DailyTracker() {
-  const {
-    profiles, activeId: profileId, setActive,
-    addProfile, renameProfile, deleteProfile,
-    exportProfile, importProfile, importLegacy,
-  } = useProfiles()
+interface DailyTrackerProps {
+  profileId: string
+  profileSelector: ReactNode
+}
 
+export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [calOpen, setCalOpen] = useState(false)
 
   const dateKey = selectedDate.toLocaleDateString('pt-BR')
   const isToday = dateKey === new Date().toLocaleDateString('pt-BR')
 
-  // Sempre usa o profileId e dateKey atuais — recarrega automaticamente quando mudam
   const { checked, eventActive, history, toggle, toggleEvent, saveDay } = useDailyMissions(profileId, dateKey)
 
   const fixedMissions = DAILY_MISSIONS.filter(m => !m.isEvent)
@@ -42,12 +38,17 @@ export function DailyTracker() {
     if (!ok) alert('Marque ao menos uma missão!')
   }
 
+  const handleHistoryClick = (date: string) => {
+    const [d, m, y] = date.split('/').map(Number)
+    setSelectedDate(new Date(y, m - 1, d))
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
 
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <h2 className="text-lg font-medium">Missões do dia</h2>
 
           <Popover open={calOpen} onOpenChange={setCalOpen}>
@@ -66,37 +67,21 @@ export function DailyTracker() {
                 selected={selectedDate}
                 onSelect={(date) => { if (date) { setSelectedDate(date); setCalOpen(false) } }}
                 locale={ptBR}
-                disabled={{ after: new Date() }}
               />
             </PopoverContent>
           </Popover>
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
-          {/* Seletor de perfil — estado gerenciado aqui, passado via props */}
-          <ProfileSelector
-            profiles={profiles}
-            activeId={profileId}
-            onSelect={setActive}
-            onAdd={addProfile}
-            onRename={renameProfile}
-            onDelete={(id) => deleteProfile(id, profileId)}
-            onExport={exportProfile}
-            onImport={importProfile}
-            onImportLegacy={importLegacy}
-          />
-
-          <div className="w-px h-4 bg-border" />
-
+          {profileSelector}
+          <div className="w-px h-4 bg-border hidden sm:block" />
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Evento</span>
             <Badge
               variant="outline"
               className={cn(
                 'text-xs font-medium transition-colors',
-                eventActive
-                  ? 'border-amber-400 text-amber-600 bg-amber-50'
-                  : 'text-muted-foreground'
+                eventActive ? 'border-amber-400 text-amber-600 bg-amber-50' : 'text-muted-foreground'
               )}
             >
               {eventActive ? 'ON' : 'OFF'}
@@ -107,11 +92,11 @@ export function DailyTracker() {
       </div>
 
       {/* Progresso */}
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <p className="text-sm text-muted-foreground">{doneCount} de {total} concluídas</p>
         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
           <div
-            className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+            className="h-full rounded-full bg-violet-500 transition-all duration-300"
             style={{ width: total > 0 ? `${(doneCount / total) * 100}%` : '0%' }}
           />
         </div>
@@ -149,48 +134,56 @@ export function DailyTracker() {
       {/* Salvar */}
       <Button
         variant="outline"
-        className="w-full border-emerald-500 text-emerald-600 hover:bg-emerald-50"
+        className="w-full border-violet-500 text-violet-600 hover:bg-violet-50"
         onClick={handleSave}
       >
         Salvar progresso do dia
       </Button>
 
-      {/* Histórico */}
+      {/* Histórico scrollável */}
       <div className="space-y-3 pt-4 border-t">
-        <h3 className="text-base font-medium">Histórico</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-base font-medium">Histórico</h3>
+          {history.length > 4 && (
+            <span className="text-xs text-muted-foreground">{history.length} dias</span>
+          )}
+        </div>
+
         {history.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">Nenhum dia salvo ainda.</p>
         ) : (
-          history.map(entry => (
-            <div
-              key={entry.date}
-              className={cn(
-                'rounded-lg bg-muted/50 p-3 space-y-2 cursor-pointer transition-colors hover:bg-muted',
-                entry.date === dateKey && 'ring-1 ring-emerald-400'
-              )}
-              onClick={() => {
-                const [d, m, y] = entry.date.split('/').map(Number)
-                setSelectedDate(new Date(y, m - 1, d))
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{entry.date}</span>
-                <span className="text-xs text-muted-foreground">{entry.missions.length} missão(ões)</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {entry.missions.map(name => (
-                  <Badge key={name} variant="outline" className="text-xs font-normal">
-                    {name}
-                  </Badge>
-                ))}
-                {entry.eventActive && (
-                  <Badge variant="outline" className="text-xs border-amber-400 text-amber-600">
-                    Evento
-                  </Badge>
+          <div
+            className="space-y-2 overflow-y-auto pr-1"
+            style={{ maxHeight: '320px' }}
+          >
+            {history.map(entry => (
+              <div
+                key={entry.date}
+                className={cn(
+                  'rounded-lg bg-muted/50 p-3 space-y-2 cursor-pointer transition-colors hover:bg-muted',
+                  entry.date === dateKey && 'ring-1 ring-violet-400 bg-violet-50/30'
                 )}
+                onClick={() => handleHistoryClick(entry.date)}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">{entry.date}</span>
+                  <span className="text-xs text-muted-foreground">{entry.missions.length} missão(ões)</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {entry.missions.map(name => (
+                    <Badge key={name} variant="outline" className="text-xs font-normal">
+                      {name}
+                    </Badge>
+                  ))}
+                  {entry.eventActive && (
+                    <Badge variant="outline" className="text-xs border-amber-400 text-amber-600">
+                      Evento
+                    </Badge>
+                  )}
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
     </div>
@@ -209,8 +202,7 @@ function MissionCard({ name, checked, isEvent = false, onClick }: MissionCardPro
     <button
       onClick={onClick}
       className={cn(
-        'w-full flex items-center gap-3 rounded-md border px-4 py-3 text-left transition-colors',
-        'hover:bg-muted/50',
+        'w-full flex items-center gap-3 rounded-md border px-4 py-3 text-left transition-colors hover:bg-muted/50',
         isEvent && 'border-amber-300',
         checked && 'opacity-60'
       )}
@@ -218,7 +210,7 @@ function MissionCard({ name, checked, isEvent = false, onClick }: MissionCardPro
       <div className={cn(
         'w-5 h-5 rounded flex items-center justify-center shrink-0 border transition-colors',
         checked
-          ? isEvent ? 'bg-amber-500 border-amber-500' : 'bg-emerald-500 border-emerald-500'
+          ? isEvent ? 'bg-amber-500 border-amber-500' : 'bg-violet-500 border-violet-500'
           : 'border-border'
       )}>
         {checked && <CheckIcon className="w-3 h-3 text-white" />}

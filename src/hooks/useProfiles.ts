@@ -1,7 +1,7 @@
 // src/hooks/useProfiles.ts
 
 import { useState, useCallback } from 'react'
-import { migrateLegacyJson } from '@/utils/migrateLegacy'
+import { migrateLegacyJson } from '@/hooks/migrateLegacy'
 
 export interface Profile {
   id: string
@@ -9,9 +9,9 @@ export interface Profile {
   createdAt: string
 }
 
-const PROFILES_KEY = 'wyd_profiles'
-const ACTIVE_KEY   = 'wyd_active_profile'
-const HISTORY_KEY  = (id: string) => `wyd_history_${id}`
+const PROFILES_KEY  = 'wyd_profiles'
+const ACTIVE_KEY    = 'wyd_active_profile'
+const HISTORY_KEY   = (id: string) => `wyd_history_${id}`
 
 const DEFAULT_PROFILES: Profile[] = [
   { id: 'principal',  name: 'Principal',  createdAt: new Date().toISOString() },
@@ -48,6 +48,17 @@ export function purgeProfileData(profileId: string) {
   Object.keys(localStorage)
     .filter(k => k.includes(profileId))
     .forEach(k => localStorage.removeItem(k))
+}
+
+// Detecta se o JSON é legado ou novo
+function isLegacyJson(data: Record<string, unknown>): boolean {
+  return Array.isArray(data.profiles) &&
+    typeof data.profileData === 'object' &&
+    !('_profile' in data)
+}
+
+function isNewProfileJson(data: Record<string, unknown>): boolean {
+  return '_profile' in data
 }
 
 export function useProfiles() {
@@ -93,8 +104,8 @@ export function useProfiles() {
   }, [])
 
   const exportProfile = useCallback((id: string) => {
-    const profiles = loadProfiles()
-    const profile = profiles.find(p => p.id === id)
+    const allProfiles = loadProfiles()
+    const profile = allProfiles.find(p => p.id === id)
     if (!profile) return
     const data: Record<string, string> = { _profile: JSON.stringify(profile) }
     Object.keys(localStorage)
@@ -109,76 +120,83 @@ export function useProfiles() {
     URL.revokeObjectURL(url)
   }, [])
 
-  const importProfile = useCallback((file: File) => {
+  // Botão único — detecta automaticamente o formato
+  const importAny = useCallback((file: File) => {
     const reader = new FileReader()
     reader.onload = (e) => {
       try {
         const raw = e.target?.result as string
-        const data: Record<string, string> = JSON.parse(raw)
-        const profile: Profile = JSON.parse(data._profile)
-        const existingProfiles = loadProfiles()
-        const exists = existingProfiles.find(p => p.id === profile.id)
-        const finalId = exists ? genId() : profile.id
-        const finalProfile = { ...profile, id: finalId }
-        Object.entries(data).forEach(([k, v]) => {
-          if (k === '_profile') return
-          localStorage.setItem(k.replace(profile.id, finalId), v)
-        })
-        setProfiles(prev => {
-          const updated = [...prev, finalProfile]
-          saveProfiles(updated)
-          return updated
-        })
-        setActive(finalId)
+        const data = JSON.parse(raw)
+
+        if (isLegacyJson(data)) {
+          // ── Formato legado ──
+          const migrated = migrateLegacyJson(raw)
+          if (!migrated) { alert('Arquivo inválido!'); return }
+
+          const newProfiles: Profile[] = migrated.map(p => ({
+            id: genId(),
+            name: p.name,
+            createdAt: new Date().toISOString(),
+          }))
+
+          // Salva histórico de cada perfil com a chave correta ANTES de atualizar state
+          newProfiles.forEach((profile, idx) => {
+            localStorage.setItem(
+              HISTORY_KEY(profile.id),
+              JSON.stringify(migrated[idx].history)
+            )
+          })
+
+          // Atualiza profiles e ativa o primeiro — tudo junto
+          setProfiles(prev => {
+            const updated = [...prev, ...newProfiles]
+            saveProfiles(updated)
+            return updated
+          })
+
+          const firstId = newProfiles[0].id
+          setActiveIdState(firstId)
+          localStorage.setItem(ACTIVE_KEY, firstId)
+
+          alert(`${newProfiles.length} perfil(is) importado(s) com sucesso!\nAtivando: ${newProfiles[0].name}`)
+
+        } else if (isNewProfileJson(data)) {
+          // ── Formato novo (exportado pelo próprio WydHelp) ──
+          const profile: Profile = JSON.parse(data._profile)
+          const allProfiles = loadProfiles()
+          const exists = allProfiles.find(p => p.id === profile.id)
+          const finalId = exists ? genId() : profile.id
+          const finalProfile = { ...profile, id: finalId }
+
+          Object.entries(data).forEach(([k, v]) => {
+            if (k === '_profile') return
+            localStorage.setItem(k.replace(profile.id, finalId), v as string)
+          })
+
+          setProfiles(prev => {
+            const updated = [...prev, finalProfile]
+            saveProfiles(updated)
+            return updated
+          })
+
+          setActiveIdState(finalId)
+          localStorage.setItem(ACTIVE_KEY, finalId)
+
+        } else {
+          alert('Formato de arquivo não reconhecido!')
+        }
       } catch {
-        alert('Arquivo inválido!')
+        alert('Erro ao ler o arquivo!')
       }
     }
     reader.readAsText(file)
-  }, [setActive])
-
-  // Importação do JSON legado — cria todos os perfis de uma vez
-  const importLegacy = useCallback((file: File) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const raw = e.target?.result as string
-      const migrated = migrateLegacyJson(raw)
-
-      if (!migrated) {
-        alert('Arquivo inválido ou formato não reconhecido!')
-        return
-      }
-
-      const newProfiles: Profile[] = migrated.map(p => ({
-        id: genId(),
-        name: p.name,
-        createdAt: new Date().toISOString(),
-      }))
-
-      // Salva histórico de cada perfil
-      newProfiles.forEach((profile, idx) => {
-        localStorage.setItem(HISTORY_KEY(profile.id), JSON.stringify(migrated[idx].history))
-      })
-
-      setProfiles(prev => {
-        const updated = [...prev, ...newProfiles]
-        saveProfiles(updated)
-        return updated
-      })
-
-      // Ativa o primeiro perfil importado
-      setActive(newProfiles[0].id)
-
-      alert(`${newProfiles.length} perfil(is) importado(s) com sucesso!`)
-    }
-    reader.readAsText(file)
-  }, [setActive])
+  }, [])
 
   const activeProfile = profiles.find(p => p.id === activeId) ?? profiles[0]
 
   return {
     profiles, activeId, activeProfile,
     setActive, addProfile, renameProfile, deleteProfile,
-    exportProfile, importProfile, importLegacy,
+    exportProfile, importAny,
   }
 }
