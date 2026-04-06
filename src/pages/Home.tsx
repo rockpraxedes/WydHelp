@@ -1,5 +1,3 @@
-// src/pages/Home.tsx
-
 import { useState } from 'react'
 import { DailyTracker } from '@/components/DailyTracker'
 import { ScheduleBoard } from '@/components/ScheduleBoard'
@@ -15,7 +13,7 @@ type Tab = 'missoes' | 'runas'
 type MissaoSubTab = 'diarias' | 'horarios'
 
 export function Home() {
-  const [tab, setTab]               = useState<Tab>('missoes')
+  const [tab, setTab]                   = useState<Tab>('missoes')
   const [missaoSubTab, setMissaoSubTab] = useState<MissaoSubTab>('diarias')
 
   const { toasts, addToast, removeToast } = useToast()
@@ -29,7 +27,7 @@ export function Home() {
   const activeProfile = profiles.find(p => p.id === profileId)
 
   const NAV_TABS = [
-    { id: 'missoes' as Tab, label: 'Missões',        Icon: SwordIcon },
+    { id: 'missoes' as Tab, label: 'Missões',         Icon: SwordIcon },
     { id: 'runas'   as Tab, label: 'Runas & Crafting', Icon: GemIcon  },
   ]
 
@@ -37,23 +35,26 @@ export function Home() {
     <div className="min-h-screen bg-background flex flex-col">
 
       {/* ── HEADER ── */}
-      <header className="relative w-full overflow-hidden" style={{ height: '200px' }}>
-        <img
-          src="/images/header3.png"
-          alt="WYD Global"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-105"
-          style={{ objectPosition: 'center 40%' }}
-        />
-        <div className="absolute inset-0" style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)'
-        }} />
-        <div className="absolute inset-0" style={{
-          background: 'linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%)'
-        }} />
+      <header className="relative w-full" style={{ height: '200px' }}>
+        {/* Imagem com overflow hidden isolado */}
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src="/images/header3.png"
+            alt="WYD Global"
+            className="w-full h-full object-cover object-center scale-105"
+            style={{ objectPosition: 'center 40%' }}
+          />
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)'
+          }} />
+          <div className="absolute inset-0" style={{
+            background: 'linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%)'
+          }} />
+        </div>
 
         {/* Perfil ativo — canto superior esquerdo */}
         {activeProfile && (
-          <div className="absolute top-3 left-4">
+          <div className="absolute top-3 left-4 z-10">
             <div
               className="flex items-center gap-2 text-xs text-white/80"
               style={{
@@ -71,7 +72,7 @@ export function Home() {
         )}
 
         {/* Botão site do jogo — canto superior direito */}
-        <div className="absolute top-3 right-4">
+        <div className="absolute top-3 right-4 z-10">
           <a
             href="https://wydglobal.raidhut.com/pt-br/"
             target="_blank"
@@ -94,7 +95,7 @@ export function Home() {
         </div>
 
         {/* Título */}
-        <div className="absolute inset-0 flex flex-col items-center justify-end pb-4 px-4">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-4 px-4">
           <div className="flex items-center gap-2 mb-1">
             <div className="h-px w-8 bg-violet-400 opacity-70" />
             <span className="text-[10px] tracking-[0.3em] text-violet-300 uppercase font-medium">
@@ -133,11 +134,11 @@ export function Home() {
         {/* ── ABA MISSÕES ── */}
         {tab === 'missoes' && (
           <>
-            {/* Sub-nav mobile — Diárias | Horários */}
+            {/* Sub-nav mobile */}
             <div className="flex lg:hidden gap-1 bg-muted/50 rounded-lg p-1">
               {([
-                { id: 'diarias',  label: 'Diárias',   Icon: SwordIcon },
-                { id: 'horarios', label: 'Horários',   Icon: ClockIcon },
+                { id: 'diarias',  label: 'Diárias',  Icon: SwordIcon },
+                { id: 'horarios', label: 'Horários', Icon: ClockIcon },
               ] as { id: MissaoSubTab; label: string; Icon: typeof SwordIcon }[]).map(({ id, label, Icon }) => (
                 <button
                   key={id}
@@ -156,7 +157,6 @@ export function Home() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-              {/* Coluna esquerda — Diárias (esconde no mobile quando aba Horários ativa) */}
               <div className={cn(missaoSubTab === 'horarios' ? 'hidden lg:block' : 'block')}>
                 <DailyTracker
                   key={profileId}
@@ -177,7 +177,6 @@ export function Home() {
                 />
               </div>
 
-              {/* Coluna direita — Horários (esconde no mobile quando aba Diárias ativa) */}
               <div className={cn(
                 'lg:sticky lg:top-6',
                 missaoSubTab === 'diarias' ? 'hidden lg:block' : 'block'
@@ -200,7 +199,6 @@ export function Home() {
         </p>
       </footer>
 
-      {/* ── TOASTS ── */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
 
     </div>
