@@ -36,6 +36,30 @@ export function Home() {
 
       {/* ── HEADER ── */}
       <header className="relative w-full" style={{ height: '200px' }}>
+
+        {/* Botão site do jogo — canto superior direito */}
+        <div className="absolute top-3 right-4 z-10">
+          <a
+            href="https://wydglobal.raidhut.com/pt-br/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-xs font-medium text-white transition-all hover:scale-105 active:scale-95"
+            style={{
+              background: 'rgba(109,40,217,0.35)',
+              border: '1px solid rgba(167,139,250,0.45)',
+              backdropFilter: 'blur(8px)',
+              borderRadius: '999px',
+              padding: '6px 14px',
+              textDecoration: 'none',
+            }}
+          >
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style={{ flexShrink: 0 }}>
+              <path d="M1.5 9.5L9.5 1.5M9.5 1.5H4.5M9.5 1.5V6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Jogar WYD Global
+          </a>
+        </div>
+        
         {/* Imagem com overflow hidden isolado */}
         <div className="absolute inset-0 overflow-hidden">
           <img
@@ -71,28 +95,7 @@ export function Home() {
           </div>
         )}
 
-        {/* Botão site do jogo — canto superior direito */}
-        <div className="absolute top-3 right-4 z-10">
-          <a
-            href="https://wydglobal.raidhut.com/pt-br/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-white transition-all hover:scale-105 active:scale-95"
-            style={{
-              background: 'rgba(109,40,217,0.35)',
-              border: '1px solid rgba(167,139,250,0.45)',
-              backdropFilter: 'blur(8px)',
-              borderRadius: '999px',
-              padding: '6px 14px',
-              textDecoration: 'none',
-            }}
-          >
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style={{ flexShrink: 0 }}>
-              <path d="M1.5 9.5L9.5 1.5M9.5 1.5H4.5M9.5 1.5V6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            Jogar WYD Global
-          </a>
-        </div>
+        
 
         {/* Título */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-4 px-4">
