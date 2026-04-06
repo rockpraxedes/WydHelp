@@ -39,7 +39,7 @@ export function Home() {
       {/* ── HEADER ── */}
       <header className="relative w-full overflow-hidden" style={{ height: '200px' }}>
         <img
-          src="public\images\header3.png"
+          src="/images/header3.png"
           alt="WYD Global"
           className="absolute inset-0 w-full h-full object-cover object-center scale-105"
           style={{ objectPosition: 'center 40%' }}
