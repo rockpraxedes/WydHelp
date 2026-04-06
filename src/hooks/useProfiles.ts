@@ -1,7 +1,7 @@
 // src/hooks/useProfiles.ts
 
 import { useState, useCallback } from 'react'
-import { migrateLegacyJson } from '@/hooks/migrateLegacy'
+import { migrateLegacyJson } from '@/utils/migrateLegacy'
 
 export interface Profile {
   id: string

@@ -5,13 +5,20 @@ import { DailyTracker } from '@/components/DailyTracker'
 import { ScheduleBoard } from '@/components/ScheduleBoard'
 import { Runas } from '@/pages/Runas'
 import { useProfiles } from '@/hooks/useProfiles'
+import { useToast } from '@/hooks/useToast'
 import { ProfileSelector } from '@/components/ProfileSelector'
+import { ToastContainer } from '@/components/ToastContainer'
 import { cn } from '@/lib/utils'
+import { SwordIcon, GemIcon, ClockIcon } from 'lucide-react'
 
-type Tab = 'missoes' | 'runas' 
+type Tab = 'missoes' | 'runas'
+type MissaoSubTab = 'diarias' | 'horarios'
 
 export function Home() {
-  const [tab, setTab] = useState<Tab>('missoes')
+  const [tab, setTab]               = useState<Tab>('missoes')
+  const [missaoSubTab, setMissaoSubTab] = useState<MissaoSubTab>('diarias')
+
+  const { toasts, addToast, removeToast } = useToast()
 
   const {
     profiles, activeId: profileId, setActive,
@@ -19,29 +26,52 @@ export function Home() {
     exportProfile, importAny,
   } = useProfiles()
 
+  const activeProfile = profiles.find(p => p.id === profileId)
+
+  const NAV_TABS = [
+    { id: 'missoes' as Tab, label: 'Missões',        Icon: SwordIcon },
+    { id: 'runas'   as Tab, label: 'Runas & Crafting', Icon: GemIcon  },
+  ]
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
 
       {/* ── HEADER ── */}
-      <header className="relative w-full overflow-hidden" style={{ height: '180px' }}>
-
-        
+      <header className="relative w-full overflow-hidden" style={{ height: '200px' }}>
         <img
-            src="/src/images/header3.png"
-            alt="WYD Global"
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1100px] h-full object-cover object-center"
-            style={{
-              objectPosition: 'center 52%',
-              WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 30%, black 70%, transparent 100%)',
-              maskImage: 'linear-gradient(to right, transparent 0%, black 20%, black 80%, transparent 100%)'
-            }}
-          />
-        
-        
+          src="public\images\header3.png"
+          alt="WYD Global"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-105"
+          style={{ objectPosition: 'center 40%' }}
+        />
+        <div className="absolute inset-0" style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)'
+        }} />
+        <div className="absolute inset-0" style={{
+          background: 'linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%)'
+        }} />
 
+        {/* Perfil ativo — canto superior esquerdo */}
+        {activeProfile && (
+          <div className="absolute top-3 left-4">
+            <div
+              className="flex items-center gap-2 text-xs text-white/80"
+              style={{
+                background: 'rgba(0,0,0,0.3)',
+                backdropFilter: 'blur(6px)',
+                borderRadius: '999px',
+                padding: '5px 12px',
+                border: '1px solid rgba(255,255,255,0.1)',
+              }}
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+              {activeProfile.name}
+            </div>
+          </div>
+        )}
 
-         {/* Botão site do jogo — canto superior direito */}
-        <div className="absolute top-3 right-4 z-50">
+        {/* Botão site do jogo — canto superior direito */}
+        <div className="absolute top-3 right-4">
           <a
             href="https://wydglobal.raidhut.com/pt-br/"
             target="_blank"
@@ -59,13 +89,11 @@ export function Home() {
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style={{ flexShrink: 0 }}>
               <path d="M1.5 9.5L9.5 1.5M9.5 1.5H4.5M9.5 1.5V6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            WYD Global
+            Jogar WYD Global
           </a>
         </div>
 
-        {/* Título centralizado */}
-
-        {/* Conteúdo do header 
+        {/* Título */}
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-4 px-4">
           <div className="flex items-center gap-2 mb-1">
             <div className="h-px w-8 bg-violet-400 opacity-70" />
@@ -75,71 +103,105 @@ export function Home() {
             <div className="h-px w-8 bg-violet-400 opacity-70" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-wide text-white drop-shadow-lg">
-            Wyd<span className="text-violet-400">Help</span>
+            WYD<span className="text-violet-400">Help</span>
           </h1>
-        </div>*/}
+        </div>
       </header>
 
       {/* ── CONTEÚDO ── */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-6 space-y-6">
 
-        {/* Nav */}
+        {/* Nav principal */}
         <nav className="flex items-center gap-1 border-b">
-          {([
-            { id: 'missoes', label: 'Missões' },
-            { id: 'runas',   label: 'Runas & Crafting' },
-          ] as { id: Tab; label: string }[]).map(t => (
+          {NAV_TABS.map(({ id, label, Icon }) => (
             <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
+              key={id}
+              onClick={() => setTab(id)}
               className={cn(
-                'px-4 py-2 text-sm transition-colors border-b-2 -mb-px',
-                tab === t.id
+                'flex items-center gap-2 px-4 py-2 text-sm transition-colors border-b-2 -mb-px',
+                tab === id
                   ? 'border-violet-500 text-violet-600 font-medium'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
               )}
             >
-              {t.label}
+              <Icon className="w-3.5 h-3.5" />
+              {label}
             </button>
           ))}
         </nav>
 
+        {/* ── ABA MISSÕES ── */}
         {tab === 'missoes' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-            <DailyTracker
-              key={profileId}
-              profileId={profileId}
-              profileSelector={
-                <ProfileSelector
-                  profiles={profiles}
-                  activeId={profileId}
-                  onSelect={setActive}
-                  onAdd={addProfile}
-                  onRename={renameProfile}
-                  onDelete={(id) => deleteProfile(id, profileId)}
-                  onExport={exportProfile}
-                  onImportAny={importAny}
-                />
-              }
-            />
-            <div className="lg:sticky lg:top-6">
-              <ScheduleBoard />
+          <>
+            {/* Sub-nav mobile — Diárias | Horários */}
+            <div className="flex lg:hidden gap-1 bg-muted/50 rounded-lg p-1">
+              {([
+                { id: 'diarias',  label: 'Diárias',   Icon: SwordIcon },
+                { id: 'horarios', label: 'Horários',   Icon: ClockIcon },
+              ] as { id: MissaoSubTab; label: string; Icon: typeof SwordIcon }[]).map(({ id, label, Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setMissaoSubTab(id)}
+                  className={cn(
+                    'flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded-md transition-colors',
+                    missaoSubTab === id
+                      ? 'bg-background text-violet-600 font-medium shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {label}
+                </button>
+              ))}
             </div>
-          </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+              {/* Coluna esquerda — Diárias (esconde no mobile quando aba Horários ativa) */}
+              <div className={cn(missaoSubTab === 'horarios' ? 'hidden lg:block' : 'block')}>
+                <DailyTracker
+                  key={profileId}
+                  profileId={profileId}
+                  onToast={addToast}
+                  profileSelector={
+                    <ProfileSelector
+                      profiles={profiles}
+                      activeId={profileId}
+                      onSelect={setActive}
+                      onAdd={addProfile}
+                      onRename={renameProfile}
+                      onDelete={(id) => deleteProfile(id, profileId)}
+                      onExport={exportProfile}
+                      onImportAny={importAny}
+                    />
+                  }
+                />
+              </div>
+
+              {/* Coluna direita — Horários (esconde no mobile quando aba Diárias ativa) */}
+              <div className={cn(
+                'lg:sticky lg:top-6',
+                missaoSubTab === 'diarias' ? 'hidden lg:block' : 'block'
+              )}>
+                <ScheduleBoard />
+              </div>
+            </div>
+          </>
         )}
 
-        {tab === 'runas' && <Runas />}
+        {tab === 'runas' && <Runas onToast={addToast} />}
 
       </main>
-      <div className="pb-10"></div>
 
       {/* ── RODAPÉ ── */}
-      <footer className="fixed bottom-0 left-0 w-full border-t py-4 bg-background z-50">
-  <p className="text-center text-xs text-muted-foreground">
-    © {new Date().getFullYear()} · Desenvolvido por{' '}
-    <span className="text-violet-500 font-medium">Sérgio Praxedes</span>
-  </p>
-</footer>
+      <footer className="border-t py-4 mt-8">
+        <p className="text-center text-xs text-muted-foreground">
+          © {new Date().getFullYear()} · Desenvolvido por{' '}
+          <span className="text-violet-500 font-medium">Sérgio Praxedes</span>
+        </p>
+      </footer>
+
+      {/* ── TOASTS ── */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
 
     </div>
   )

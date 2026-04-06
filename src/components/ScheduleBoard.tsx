@@ -31,17 +31,11 @@ function getNextExpedicaoSlots(now: Date, count = 3): string[] {
   let h = now.getHours()
   let m = now.getMinutes()
   let iterations = 0
-
   while (results.length < count && iterations < 200) {
     iterations++
     const nextMin = MINUTES.find(em => em > m) ?? null
-    if (nextMin !== null) {
-      results.push(`${pad(h)}:${pad(nextMin)}`)
-      m = nextMin
-    } else {
-      h = (h + 1) % 24
-      m = -1
-    }
+    if (nextMin !== null) { results.push(`${pad(h)}:${pad(nextMin)}`); m = nextMin }
+    else { h = (h + 1) % 24; m = -1 }
   }
   return results
 }
@@ -52,10 +46,8 @@ function getNextExpedicaoSec(now: Date): { sec: number; label: string } {
   const curMin = now.getMinutes()
   const curSec = now.getSeconds()
   const nextMin = EXP_MINUTES.find(m => m > curMin) ?? null
-
   let diffSec: number
   let label: string
-
   if (nextMin !== null) {
     diffSec = (nextMin - curMin) * 60 - curSec
     label = `${pad(now.getHours())}:${pad(nextMin)}`
@@ -64,7 +56,6 @@ function getNextExpedicaoSec(now: Date): { sec: number; label: string } {
     diffSec = (EXP_MINUTES[0] + 60 - curMin) * 60 - curSec
     label = `${pad(nextH)}:${pad(EXP_MINUTES[0])}`
   }
-
   return { sec: nowSec + diffSec, label }
 }
 
@@ -79,21 +70,14 @@ function findNextFixed(times: string[], nowSec: number): { nextSec: number; next
 
 function getGlobalNext(now: Date): { names: string[]; label: string } | null {
   const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()
-
   const fixedCandidates = SCHEDULED_MISSIONS
     .filter(m => m.type === 'fixed')
-    .flatMap(m =>
-      m.times.map(t => ({
-        name: m.name,
-        label: t,
-        sec: toTotalSeconds(t) > nowSec ? toTotalSeconds(t) : toTotalSeconds(t) + 86400,
-      }))
-    )
-
+    .flatMap(m => m.times.map(t => ({
+      name: m.name, label: t,
+      sec: toTotalSeconds(t) > nowSec ? toTotalSeconds(t) : toTotalSeconds(t) + 86400,
+    })))
   const exp = getNextExpedicaoSec(now)
-  const expCandidate = { name: 'Expedição', label: exp.label, sec: exp.sec }
-
-  const candidates = [...fixedCandidates, expCandidate]
+  const candidates = [...fixedCandidates, { name: 'Expedição', label: exp.label, sec: exp.sec }]
   const minSec = Math.min(...candidates.map(c => c.sec))
   const tied = candidates.filter(c => c.sec === minSec)
   return { names: tied.map(c => c.name), label: tied[0].label }
@@ -101,7 +85,6 @@ function getGlobalNext(now: Date): { names: string[]; label: string } | null {
 
 export function ScheduleBoard() {
   const now = useBrasiliaTime()
-
   const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
   const nowSec  = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()
 
@@ -109,7 +92,7 @@ export function ScheduleBoard() {
   const expSlots   = useMemo(() => getNextExpedicaoSlots(now, 3), [now])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
 
       {/* Relógio */}
       <div className="flex items-center justify-between rounded-xl border bg-card px-5 py-4">
@@ -126,9 +109,13 @@ export function ScheduleBoard() {
         )}
       </div>
 
-      <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        Quadro de horários
-      </p>
+      {/* Título da seção */}
+      <div className="flex items-center gap-3">
+        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Próximos horários
+        </p>
+        <div className="flex-1 h-px bg-border" />
+      </div>
 
       {/* Portão Infernal */}
       <FixedMissionBlock

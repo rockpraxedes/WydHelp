@@ -3,6 +3,7 @@
 import { useState, ReactNode } from 'react'
 import { ptBR } from 'date-fns/locale'
 import { useDailyMissions } from '@/hooks/useDailyMissions'
+import { Toast } from '@/hooks/useToast'
 import { DAILY_MISSIONS } from '@/data/missions'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
@@ -15,9 +16,10 @@ import { CheckIcon, CalendarIcon } from 'lucide-react'
 interface DailyTrackerProps {
   profileId: string
   profileSelector: ReactNode
+  onToast: (msg: string, type?: Toast['type']) => void
 }
 
-export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) {
+export function DailyTracker({ profileId, profileSelector, onToast }: DailyTrackerProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [calOpen, setCalOpen] = useState(false)
 
@@ -26,16 +28,18 @@ export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) 
 
   const { checked, eventActive, history, toggle, toggleEvent, saveDay } = useDailyMissions(profileId, dateKey)
 
-  const fixedMissions = DAILY_MISSIONS.filter(m => !m.isEvent)
-  const eventMissions = DAILY_MISSIONS.filter(m => m.isEvent)
-  const visibleAll    = eventActive ? DAILY_MISSIONS : fixedMissions
-  const total         = visibleAll.length
-  const doneCount     = visibleAll.filter(m => checked[m.id]).length
+  const fixedMissions  = DAILY_MISSIONS.filter(m => !m.isEvent)
+  const eventMissions  = DAILY_MISSIONS.filter(m => m.isEvent)
+  const visibleAll     = eventActive ? DAILY_MISSIONS : fixedMissions
+  const total          = visibleAll.length
+  const doneCount      = visibleAll.filter(m => checked[m.id]).length
+  const allDone        = doneCount === total && total > 0
 
   const handleSave = () => {
     const names = visibleAll.filter(m => checked[m.id]).map(m => m.name)
+    if (!names.length) { onToast('Marque ao menos uma missão!', 'error'); return }
     const ok = saveDay(names)
-    if (!ok) alert('Marque ao menos uma missão!')
+    if (ok) onToast(allDone ? '🎉 Dia completo salvo!' : 'Progresso salvo!', 'success')
   }
 
   const handleHistoryClick = (date: string) => {
@@ -44,13 +48,12 @@ export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) 
   }
 
   return (
-    <div className="space-y-5 ">
+    <div className="space-y-5">
 
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3 flex-wrap ">
+        <div className="flex items-center gap-3 flex-wrap">
           <h2 className="text-lg font-medium">Missões do dia</h2>
-
           <Popover open={calOpen} onOpenChange={setCalOpen}>
             <PopoverTrigger asChild>
               <button className={cn(
@@ -77,13 +80,10 @@ export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) 
           <div className="w-px h-4 bg-border hidden sm:block" />
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Evento</span>
-            <Badge
-              variant="outline"
-              className={cn(
-                'text-xs font-medium transition-colors',
-                eventActive ? 'border-amber-400 text-amber-600 bg-amber-50' : 'text-muted-foreground'
-              )}
-            >
+            <Badge variant="outline" className={cn(
+              'text-xs font-medium transition-colors',
+              eventActive ? 'border-amber-400 text-amber-600 bg-amber-50' : 'text-muted-foreground'
+            )}>
               {eventActive ? 'ON' : 'OFF'}
             </Badge>
             <Switch checked={eventActive} onCheckedChange={toggleEvent} />
@@ -93,10 +93,18 @@ export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) 
 
       {/* Progresso */}
       <div className="space-y-1.5">
-        <p className="text-sm text-muted-foreground">{doneCount} de {total} concluídas</p>
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-muted-foreground">{doneCount} de {total} concluídas</p>
+          {allDone && (
+            <span className="text-xs font-medium text-violet-600">✓ Tudo completo!</span>
+          )}
+        </div>
         <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
           <div
-            className="h-full rounded-full bg-violet-500 transition-all duration-300"
+            className={cn(
+              'h-full rounded-full transition-all duration-300',
+              allDone ? 'bg-violet-500' : 'bg-violet-400'
+            )}
             style={{ width: total > 0 ? `${(doneCount / total) * 100}%` : '0%' }}
           />
         </div>
@@ -118,26 +126,33 @@ export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) 
       {/* Evento */}
       {eventActive && (
         <div className="space-y-2">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Evento</p>
-          {eventMissions.map(mission => (
-            <MissionCard
-              key={mission.id}
-              name={mission.name}
-              checked={!!checked[mission.id]}
-              isEvent
-              onClick={() => toggle(mission.id)}
-            />
-          ))}
+          <p className="text-xs font-medium uppercase tracking-wider text-amber-600">Evento</p>
+          <div className="rounded-xl border border-amber-200 bg-amber-70/30 p-3 space-y-2">
+            {eventMissions.map(mission => (
+              <MissionCard
+                key={mission.id}
+                name={mission.name}
+                checked={!!checked[mission.id]}
+                isEvent
+                onClick={() => toggle(mission.id)}
+              />
+            ))}
+          </div>
         </div>
       )}
 
-      {/* Salvar */}
+      {/* Botão salvar inteligente */}
       <Button
         variant="outline"
-        className="w-full border-violet-500 text-violet-600 hover:bg-violet-50"
+        className={cn(
+          'w-full transition-all',
+          allDone
+            ? 'border-violet-500 bg-violet-500 text-white hover:bg-violet-600 hover:border-violet-600'
+            : 'border-violet-400 text-violet-600 hover:bg-violet-50'
+        )}
         onClick={handleSave}
       >
-        Salvar progresso do dia
+        {allDone ? '✓ Tudo completo — Salvar' : 'Salvar progresso do dia'}
       </Button>
 
       {/* Histórico scrollável */}
@@ -148,14 +163,10 @@ export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) 
             <span className="text-xs text-muted-foreground">{history.length} dias</span>
           )}
         </div>
-
         {history.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">Nenhum dia salvo ainda.</p>
         ) : (
-          <div
-            className="space-y-2 overflow-y-auto pr-1"
-            style={{ maxHeight: '320px' }}
-          >
+          <div className="space-y-2 overflow-y-auto pr-1 p-1" style={{ maxHeight: '320px' }}>
             {history.map(entry => (
               <div
                 key={entry.date}
@@ -171,14 +182,10 @@ export function DailyTracker({ profileId, profileSelector }: DailyTrackerProps) 
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {entry.missions.map(name => (
-                    <Badge key={name} variant="outline" className="text-xs font-normal">
-                      {name}
-                    </Badge>
+                    <Badge key={name} variant="outline" className="text-xs font-normal">{name}</Badge>
                   ))}
                   {entry.eventActive && (
-                    <Badge variant="outline" className="text-xs border-amber-400 text-amber-600">
-                      Evento
-                    </Badge>
+                    <Badge variant="outline" className="text-xs border-amber-400 text-amber-600">Evento</Badge>
                   )}
                 </div>
               </div>
@@ -203,7 +210,7 @@ function MissionCard({ name, checked, isEvent = false, onClick }: MissionCardPro
       onClick={onClick}
       className={cn(
         'w-full flex items-center gap-3 rounded-md border px-4 py-3 text-left transition-colors bg-muted/50 hover:bg-muted',
-        isEvent && 'border-amber-300',
+        isEvent && 'border-amber-200 bg-amber-50/30 hover:bg-amber-50/60',
         checked && 'opacity-60'
       )}
     >
