@@ -16,35 +16,43 @@ import { CheckIcon, CalendarIcon } from 'lucide-react'
 interface DailyTrackerProps {
   profileId: string
   profileSelector: ReactNode
-  onToast: (msg: string, type?: Toast['type']) => void
+  onToast: ( msg: string, type?: Toast[ 'type' ] ) => void
 }
 
-export function DailyTracker({ profileId, profileSelector, onToast }: DailyTrackerProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-  const [calOpen, setCalOpen] = useState(false)
+export function DailyTracker( { profileId, profileSelector, onToast }: DailyTrackerProps ) {
+  const [ selectedDate, setSelectedDate ] = useState<Date>( new Date() )
+  const [ calOpen, setCalOpen ] = useState( false )
 
-  const dateKey = selectedDate.toLocaleDateString('pt-BR')
-  const isToday = dateKey === new Date().toLocaleDateString('pt-BR')
+  const dateKey = selectedDate.toLocaleDateString( 'pt-BR' )
+  const isToday = dateKey === new Date().toLocaleDateString( 'pt-BR' )
 
-  const { checked, eventActive, history, toggle, toggleEvent, saveDay } = useDailyMissions(profileId, dateKey)
+  const { checked, eventActive, guildActive, history, toggle, toggleEvent, toggleGuild, saveDay } =
+    useDailyMissions( profileId, dateKey )
 
-  const fixedMissions  = DAILY_MISSIONS.filter(m => !m.isEvent)
-  const eventMissions  = DAILY_MISSIONS.filter(m => m.isEvent)
-  const visibleAll     = eventActive ? DAILY_MISSIONS : fixedMissions
-  const total          = visibleAll.length
-  const doneCount      = visibleAll.filter(m => checked[m.id]).length
-  const allDone        = doneCount === total && total > 0
+  const fixedMissions = DAILY_MISSIONS.filter( m => !m.isEvent && !m.isGuild )
+  const guildMissions = DAILY_MISSIONS.filter( m => m.isGuild )
+  const eventMissions = DAILY_MISSIONS.filter( m => m.isEvent )
+
+  // Missões visíveis para contagem de progresso
+  const visibleAll = [
+    ...fixedMissions,
+    ...( guildActive ? guildMissions : [] ),
+    ...( eventActive ? eventMissions : [] ),
+  ]
+  const total = visibleAll.length
+  const doneCount = visibleAll.filter( m => checked[ m.id ] ).length
+  const allDone = doneCount === total && total > 0
 
   const handleSave = () => {
-    const names = visibleAll.filter(m => checked[m.id]).map(m => m.name)
-    if (!names.length) { onToast('Marque ao menos uma missão!', 'error'); return }
-    const ok = saveDay(names)
-    if (ok) onToast(allDone ? '🎉 Dia completo salvo!' : 'Progresso salvo!', 'success')
+    const names = visibleAll.filter( m => checked[ m.id ] ).map( m => m.name )
+    if ( !names.length ) { onToast( 'Marque ao menos uma missão!', 'error' ); return }
+    const ok = saveDay( names )
+    if ( ok ) onToast( allDone ? '🎉 Dia completo salvo!' : 'Progresso salvo!', 'success' )
   }
 
-  const handleHistoryClick = (date: string) => {
-    const [d, m, y] = date.split('/').map(Number)
-    setSelectedDate(new Date(y, m - 1, d))
+  const handleHistoryClick = ( date: string ) => {
+    const [ d, m, y ] = date.split( '/' ).map( Number )
+    setSelectedDate( new Date( y, m - 1, d ) )
   }
 
   return (
@@ -68,7 +76,7 @@ export function DailyTracker({ profileId, profileSelector, onToast }: DailyTrack
               <Calendar
                 mode="single"
                 selected={selectedDate}
-                onSelect={(date) => { if (date) { setSelectedDate(date); setCalOpen(false) } }}
+                onSelect={( date ) => { if ( date ) { setSelectedDate( date ); setCalOpen( false ) } }}
                 locale={ptBR}
               />
             </PopoverContent>
@@ -78,6 +86,22 @@ export function DailyTracker({ profileId, profileSelector, onToast }: DailyTrack
         <div className="flex items-center gap-3 flex-wrap">
           {profileSelector}
           <div className="w-px h-4 bg-border hidden sm:block" />
+
+          {/* Toggle Guild */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Guild</span>
+            <Badge variant="outline" className={cn(
+              'text-xs font-medium transition-colors',
+              guildActive ? 'border-emerald-400 text-emerald-600 bg-emerald-50' : 'text-muted-foreground'
+            )}>
+              {guildActive ? 'SIM' : 'NÃO'}
+            </Badge>
+            <Switch checked={guildActive} onCheckedChange={toggleGuild} />
+          </div>
+
+          <div className="w-px h-4 bg-border hidden sm:block" />
+
+          {/* Toggle Evento */}
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Evento</span>
             <Badge variant="outline" className={cn(
@@ -105,22 +129,31 @@ export function DailyTracker({ profileId, profileSelector, onToast }: DailyTrack
               'h-full rounded-full transition-all duration-300',
               allDone ? 'bg-violet-500' : 'bg-violet-400'
             )}
-            style={{ width: total > 0 ? `${(doneCount / total) * 100}%` : '0%' }}
+            style={{ width: total > 0 ? `${( doneCount / total ) * 100}%` : '0%' }}
           />
         </div>
       </div>
 
-      {/* Diárias */}
+      {/* Diárias (fixas + guild se ativo) */}
       <div className="space-y-2">
         <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Diárias</p>
-        {fixedMissions.map(mission => (
+        {fixedMissions.map( mission => (
           <MissionCard
             key={mission.id}
             name={mission.name}
-            checked={!!checked[mission.id]}
-            onClick={() => toggle(mission.id)}
+            checked={!!checked[ mission.id ]}
+            onClick={() => toggle( mission.id )}
           />
-        ))}
+        ) )}
+        {guildActive && guildMissions.map( mission => (
+          <MissionCard
+            key={mission.id}
+            name={mission.name}
+            checked={!!checked[ mission.id ]}
+            isGuild
+            onClick={() => toggle( mission.id )}
+          />
+        ) )}
       </div>
 
       {/* Evento */}
@@ -128,15 +161,15 @@ export function DailyTracker({ profileId, profileSelector, onToast }: DailyTrack
         <div className="space-y-2">
           <p className="text-xs font-medium uppercase tracking-wider text-amber-600">Evento</p>
           <div className="rounded-xl border border-amber-200 bg-amber-70/30 p-3 space-y-2">
-            {eventMissions.map(mission => (
+            {eventMissions.map( mission => (
               <MissionCard
                 key={mission.id}
                 name={mission.name}
-                checked={!!checked[mission.id]}
+                checked={!!checked[ mission.id ]}
                 isEvent
-                onClick={() => toggle(mission.id)}
+                onClick={() => toggle( mission.id )}
               />
-            ))}
+            ) )}
           </div>
         </div>
       )}
@@ -167,29 +200,32 @@ export function DailyTracker({ profileId, profileSelector, onToast }: DailyTrack
           <p className="text-sm text-muted-foreground text-center py-4">Nenhum dia salvo ainda.</p>
         ) : (
           <div className="space-y-2 overflow-y-auto pr-1 p-1" style={{ maxHeight: '320px' }}>
-            {history.map(entry => (
+            {history.map( entry => (
               <div
                 key={entry.date}
                 className={cn(
                   'rounded-lg bg-muted/50 p-3 space-y-2 cursor-pointer transition-colors hover:bg-muted',
                   entry.date === dateKey && 'ring-1 ring-violet-400 bg-violet-50/30'
                 )}
-                onClick={() => handleHistoryClick(entry.date)}
+                onClick={() => handleHistoryClick( entry.date )}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">{entry.date}</span>
                   <span className="text-xs text-muted-foreground">{entry.missions.length} missão(ões)</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {entry.missions.map(name => (
+                  {entry.missions.map( name => (
                     <Badge key={name} variant="outline" className="text-xs font-normal">{name}</Badge>
-                  ))}
+                  ) )}
                   {entry.eventActive && (
                     <Badge variant="outline" className="text-xs border-amber-400 text-amber-600">Evento</Badge>
                   )}
+                  {entry.guildActive && (
+                    <Badge variant="outline" className="text-xs border-emerald-400 text-emerald-600">Guild</Badge>
+                  )}
                 </div>
               </div>
-            ))}
+            ) )}
           </div>
         )}
       </div>
@@ -201,10 +237,11 @@ interface MissionCardProps {
   name: string
   checked: boolean
   isEvent?: boolean
+  isGuild?: boolean
   onClick: () => void
 }
 
-function MissionCard({ name, checked, isEvent = false, onClick }: MissionCardProps) {
+function MissionCard( { name, checked, isEvent = false, isGuild = false, onClick }: MissionCardProps ) {
   return (
     <button
       onClick={onClick}
@@ -217,12 +254,14 @@ function MissionCard({ name, checked, isEvent = false, onClick }: MissionCardPro
       <div className={cn(
         'w-5 h-5 rounded flex items-center justify-center shrink-0 border transition-colors',
         checked
-          ? isEvent ? 'bg-amber-500 border-amber-500' : 'bg-violet-500 border-violet-500'
+          ? isEvent
+            ? 'bg-amber-500 border-amber-500'
+            : 'bg-violet-500 border-violet-500'
           : 'border-border'
       )}>
         {checked && <CheckIcon className="w-3 h-3 text-white" />}
       </div>
-      <span className={cn('text-sm flex-1', checked && 'line-through text-muted-foreground')}>
+      <span className={cn( 'text-sm flex-1', checked && 'line-through text-muted-foreground' )}>
         {name}
       </span>
     </button>
