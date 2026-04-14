@@ -12,7 +12,7 @@ const API_URL = process.env.NODE_ENV === 'development'
 const CLASS_MAP: Record<string, string> = {
   '0': 'TK',
   '1': 'HT',
-  '2': 'Foema',
+  '2': 'FM',
   '3': 'BM',
 }
 
@@ -21,10 +21,10 @@ function getClassName(classId: number) {
 }
 
 const CLASS_BADGE_VARIANT: Record<string, string> = {
-  TK:    'bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700',
-  HT:    'bg-ambar-100 text-ambar-100 border-ambar-100 dark:bg-ambar-900/30 dark:text-ambar-100 dark:border-ambar-400',
-  FM:    'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-700',
-  BM:    'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700',
+  TK:    'bg-teal-100  text-teal-700 border-teal-300 dark:bg-teal-900/30 dark:text-teal-300 dark:border-teal-700',
+  HT:    'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700',
+  FM:    'bg-rose-100  text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-700',
+  BM:    'bg-lime-100  text-lime-700 border-lime-300 dark:bg-lime-900/30 dark:text-lime-300 dark:border-lime-700',
 }
 
 interface Player {
