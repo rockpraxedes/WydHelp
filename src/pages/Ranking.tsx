@@ -22,8 +22,8 @@ function getClassName(classId: number) {
 
 const CLASS_BADGE_VARIANT: Record<string, string> = {
   TK:    'bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700',
-  HT:    'bg-gray-100 text-gray-100 border-gray-100 dark:bg-gray-900/30 dark:text-gray-100 dark:border-gray-400',
-  Foema: 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-700',
+  HT:    'bg-ambar-100 text-ambar-100 border-ambar-100 dark:bg-ambar-900/30 dark:text-ambar-100 dark:border-ambar-400',
+  FM:    'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-700',
   BM:    'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700',
 }
 
