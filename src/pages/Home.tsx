@@ -8,9 +8,11 @@ import { useToast } from '@/hooks/useToast'
 import { ProfileSelector } from '@/components/ProfileSelector'
 import { ToastContainer } from '@/components/ToastContainer'
 import { cn } from '@/lib/utils'
-import { SwordIcon, GemIcon, ClockIcon, TrophyIcon } from 'lucide-react'
+import { SwordIcon, GemIcon, ClockIcon, TrophyIcon, HammerIcon } from 'lucide-react'
+import { Craft } from '@/pages/Craft'
 
-type Tab = 'missoes' | 'runas' | 'ranking'
+
+type Tab = 'missoes' | 'runas' | 'ranking' | 'craft'
 type MissaoSubTab = 'diarias' | 'horarios'
 
 export function Home() {
@@ -29,8 +31,9 @@ export function Home() {
 
   const NAV_TABS = [
     { id: 'missoes' as Tab, label: 'Missões', Icon: SwordIcon },
-    { id: 'runas' as Tab, label: 'Runas & Crafting', Icon: GemIcon },
+    { id: 'runas' as Tab, label: 'Runas & Secretas', Icon: GemIcon },
     { id: 'ranking' as Tab, label: 'Ranking', Icon: TrophyIcon },
+    { id: 'craft' as Tab, label: 'Craft', Icon: HammerIcon },
   ]
 
   return (
@@ -192,6 +195,7 @@ export function Home() {
 
         {tab === 'runas' && <Runas onToast={addToast} />}
         {tab === 'ranking' && <Ranking />}
+        {tab === 'craft' && <Craft />}
 
       </main>
 

@@ -7,13 +7,12 @@ import App from './App'
 import './index.css'
 
 
-document.documentElement.classList.add("dark");
+document.documentElement.classList.add( "dark" );
 
 runMigrationIfNeeded()
- 
-createRoot(document.getElementById('root')!).render(
+
+createRoot( document.getElementById( 'root' )! ).render(
   <StrictMode>
     <App />
   </StrictMode>,
 )
- 
