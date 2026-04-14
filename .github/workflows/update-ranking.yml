@@ -1,0 +1,40 @@
+name: Update Ranking
+
+on:
+  schedule:
+    # De 5 em 5 min — 13:20 às 14:00 BRT (16:20 às 17:00 UTC)
+    - cron: '20,25,30,35,40,45,50,55 16 * * *'
+    - cron: '0 17 * * *'
+
+    # De 5 em 5 min — 19:20 às 00:00 BRT (22:20 às 03:00 UTC)
+    - cron: '20,25,30,35,40,45,50,55 22 * * *'
+    - cron: '*/5 23 * * *'
+    - cron: '*/5 0  * * *'
+    - cron: '*/5 1  * * *'
+    - cron: '*/5 2  * * *'
+    - cron: '0   3  * * *'
+
+    # Resto do tempo — de 30 em 30 min
+    - cron: '0,30 3,4,5,6,7,8,9,10,11,12,13,14,15 * * *'
+    - cron: '0,30 17,18,19,20,21 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch ranking data
+        run: |
+          curl -s "https://rn3xfhamppsetddkod6vwc24lu0lhcek.lambda-url.us-east-1.on.aws/royal-arena" \
+            -o public/ranking.json
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add public/ranking.json
+          git diff --staged --quiet || git commit -m "chore: update ranking data"
+          git push
