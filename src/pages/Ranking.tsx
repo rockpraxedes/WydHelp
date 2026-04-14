@@ -10,21 +10,21 @@ const API_URL = process.env.NODE_ENV === 'development'
   : '/ranking.json'
 
 const CLASS_MAP: Record<string, string> = {
-  '0': 'Foema',
-  '1': 'Transknight',
-  '2': 'Huntress',
-  '3': 'Beastmaster',
+  '0': 'TK',
+  '1': 'HT',
+  '2': 'Foema',
+  '3': 'BM',
 }
 
 function getClassName(classId: number) {
-  return CLASS_MAP[String(classId)] ?? 'Desconhecido'
+  return CLASS_MAP[String(classId)] ?? '?'
 }
 
 const CLASS_BADGE_VARIANT: Record<string, string> = {
-  Foema:       'bg-violet-100 text-violet-700 border-violet-300 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-700',
-  Transknight: 'bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700',
-  Huntress:    'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-700',
-  Beastmaster: 'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700',
+  TK:    'bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700',
+  HT:    'bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-700',
+  Foema: 'bg-violet-100 text-violet-700 border-violet-300 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-700',
+  BM:    'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700',
 }
 
 interface Player {
@@ -176,14 +176,15 @@ export function Ranking() {
                   <tr><td colSpan={7} className="py-12 text-center text-sm text-muted-foreground">Nenhum personagem encontrado</td></tr>
                 )}
                 {rows.map((player, i) => {
-                  const cls = getClassName(player.class)
+                  const cls    = getClassName(player.class)
+                  const subCls = getClassName(player.subClass)
                   return (
                     <tr key={`${player.charName}-${i}`} className="border-b last:border-0 hover:bg-muted/40 transition-colors">
                       <td className="px-3 py-3 w-10"><RankBadge rank={i + 1} /></td>
                       <td className="px-3 py-3 font-medium">{player.charName}</td>
                       <td className="px-3 py-3">
                         <Badge variant="outline" className={cn('text-[10px] px-2 py-0 h-5', CLASS_BADGE_VARIANT[cls])}>
-                          {cls}
+                          {cls}/{subCls}
                         </Badge>
                       </td>
                       <td className={cn('px-3 py-3 font-medium tabular-nums', player.points > 0 ? 'text-violet-600' : player.points < 0 ? 'text-destructive' : '')}>
