@@ -14,8 +14,8 @@ type Tab = 'missoes' | 'runas' | 'ranking'
 type MissaoSubTab = 'diarias' | 'horarios'
 
 export function Home() {
-  const [tab, setTab]                   = useState<Tab>('missoes')
-  const [missaoSubTab, setMissaoSubTab] = useState<MissaoSubTab>('diarias')
+  const [ tab, setTab ] = useState<Tab>( 'missoes' )
+  const [ missaoSubTab, setMissaoSubTab ] = useState<MissaoSubTab>( 'diarias' )
 
   const { toasts, addToast, removeToast } = useToast()
 
@@ -25,12 +25,12 @@ export function Home() {
     exportProfile, importAny,
   } = useProfiles()
 
-  const activeProfile = profiles.find(p => p.id === profileId)
+  const activeProfile = profiles.find( p => p.id === profileId )
 
   const NAV_TABS = [
-    { id: 'missoes' as Tab, label: 'Missões',          Icon: SwordIcon  },
-    { id: 'runas'   as Tab, label: 'Runas & Crafting', Icon: GemIcon    },
-    { id: 'ranking' as Tab, label: 'Ranking',          Icon: TrophyIcon },
+    { id: 'missoes' as Tab, label: 'Missões', Icon: SwordIcon },
+    { id: 'runas' as Tab, label: 'Runas & Crafting', Icon: GemIcon },
+    { id: 'ranking' as Tab, label: 'Ranking', Icon: TrophyIcon },
   ]
 
   return (
@@ -56,7 +56,7 @@ export function Home() {
             }}
           >
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style={{ flexShrink: 0 }}>
-              <path d="M1.5 9.5L9.5 1.5M9.5 1.5H4.5M9.5 1.5V6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M1.5 9.5L9.5 1.5M9.5 1.5H4.5M9.5 1.5V6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             Jogar WYD Global
           </a>
@@ -117,10 +117,10 @@ export function Home() {
 
         {/* Nav principal */}
         <nav className="flex items-center gap-1 border-b">
-          {NAV_TABS.map(({ id, label, Icon }) => (
+          {NAV_TABS.map( ( { id, label, Icon } ) => (
             <button
               key={id}
-              onClick={() => setTab(id)}
+              onClick={() => setTab( id )}
               className={cn(
                 'flex items-center gap-2 px-4 py-2 text-sm transition-colors border-b-2 -mb-px',
                 tab === id
@@ -131,7 +131,7 @@ export function Home() {
               <Icon className="w-3.5 h-3.5" />
               {label}
             </button>
-          ))}
+          ) )}
         </nav>
 
         {/* ── ABA MISSÕES ── */}
@@ -139,13 +139,13 @@ export function Home() {
           <>
             {/* Sub-nav mobile */}
             <div className="flex lg:hidden gap-1 bg-muted/50 rounded-lg p-1">
-              {([
-                { id: 'diarias',  label: 'Diárias',  Icon: SwordIcon },
+              {( [
+                { id: 'diarias', label: 'Diárias', Icon: SwordIcon },
                 { id: 'horarios', label: 'Horários', Icon: ClockIcon },
-              ] as { id: MissaoSubTab; label: string; Icon: typeof SwordIcon }[]).map(({ id, label, Icon }) => (
+              ] as { id: MissaoSubTab; label: string; Icon: typeof SwordIcon }[] ).map( ( { id, label, Icon } ) => (
                 <button
                   key={id}
-                  onClick={() => setMissaoSubTab(id)}
+                  onClick={() => setMissaoSubTab( id )}
                   className={cn(
                     'flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded-md transition-colors',
                     missaoSubTab === id
@@ -156,11 +156,11 @@ export function Home() {
                   <Icon className="w-3.5 h-3.5" />
                   {label}
                 </button>
-              ))}
+              ) )}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-              <div className={cn(missaoSubTab === 'horarios' ? 'hidden lg:block' : 'block')}>
+              <div className={cn( missaoSubTab === 'horarios' ? 'hidden lg:block' : 'block' )}>
                 <DailyTracker
                   key={profileId}
                   profileId={profileId}
@@ -172,7 +172,7 @@ export function Home() {
                       onSelect={setActive}
                       onAdd={addProfile}
                       onRename={renameProfile}
-                      onDelete={(id) => deleteProfile(id, profileId)}
+                      onDelete={( id ) => deleteProfile( id, profileId )}
                       onExport={exportProfile}
                       onImportAny={importAny}
                     />
@@ -190,7 +190,7 @@ export function Home() {
           </>
         )}
 
-        {tab === 'runas'   && <Runas onToast={addToast} />}
+        {tab === 'runas' && <Runas onToast={addToast} />}
         {tab === 'ranking' && <Ranking />}
 
       </main>
