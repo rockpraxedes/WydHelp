@@ -22,8 +22,8 @@ function getClassName(classId: number) {
 
 const CLASS_BADGE_VARIANT: Record<string, string> = {
   TK:    'bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700',
-  HT:    'bg-gray-100 text-gray-700 border-gray-300 dark:bg-gray-900/30 dark:text-gray-300 dark:border-gray-700',
-  Foema: 'bg-violet-100 text-violet-700 border-violet-300 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-700',
+  HT:    'bg-gray-100 text-gray-100 border-gray-100 dark:bg-gray-900/30 dark:text-gray-100 dark:border-gray-400',
+  Foema: 'bg-rose-100 text-rose-700 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-700',
   BM:    'bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-700',
 }
 
@@ -175,17 +175,22 @@ export function Ranking() {
                 {rows.length === 0 && (
                   <tr><td colSpan={7} className="py-12 text-center text-sm text-muted-foreground">Nenhum personagem encontrado</td></tr>
                 )}
-                {rows.map((player, i) => {
+                {rows.map((player) => {
                   const cls    = getClassName(player.class)
                   const subCls = getClassName(player.subClass)
                   return (
-                    <tr key={`${player.charName}-${i}`} className="border-b last:border-0 hover:bg-muted/40 transition-colors">
-                      <td className="px-3 py-3 w-10"><RankBadge rank={i + 1} /></td>
+                    <tr key={`${player.charName}-${player._origRank}`} className="border-b last:border-0 hover:bg-muted/40 transition-colors">
+                      <td className="px-3 py-3 w-10"><RankBadge rank={player._origRank} /></td>
                       <td className="px-3 py-3 font-medium">{player.charName}</td>
                       <td className="px-3 py-3">
-                        <Badge variant="outline" className={cn('text-[10px] px-2 py-0 h-5', CLASS_BADGE_VARIANT[cls])}>
-                          {cls}/{subCls}
-                        </Badge>
+                        <div className="flex items-center gap-1">
+                          <Badge variant="outline" className={cn('text-[10px] px-2 py-0 h-5', CLASS_BADGE_VARIANT[cls])}>
+                            {cls}
+                          </Badge>
+                            <Badge variant="outline" className={cn('text-[10px] px-2 py-0 h-5', CLASS_BADGE_VARIANT[subCls])}>
+                              {subCls}
+                            </Badge>
+                        </div>
                       </td>
                       <td className={cn('px-3 py-3 font-medium tabular-nums', player.points > 0 ? 'text-violet-600' : player.points < 0 ? 'text-destructive' : '')}>
                         {player.points > 0 ? `+${player.points}` : player.points}
