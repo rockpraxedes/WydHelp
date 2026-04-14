@@ -2,14 +2,15 @@ import { useState } from 'react'
 import { DailyTracker } from '@/components/DailyTracker'
 import { ScheduleBoard } from '@/components/ScheduleBoard'
 import { Runas } from '@/pages/Runas'
+import { Ranking } from '@/pages/Ranking'
 import { useProfiles } from '@/hooks/useProfiles'
 import { useToast } from '@/hooks/useToast'
 import { ProfileSelector } from '@/components/ProfileSelector'
 import { ToastContainer } from '@/components/ToastContainer'
 import { cn } from '@/lib/utils'
-import { SwordIcon, GemIcon, ClockIcon } from 'lucide-react'
+import { SwordIcon, GemIcon, ClockIcon, TrophyIcon } from 'lucide-react'
 
-type Tab = 'missoes' | 'runas'
+type Tab = 'missoes' | 'runas' | 'ranking'
 type MissaoSubTab = 'diarias' | 'horarios'
 
 export function Home() {
@@ -27,8 +28,9 @@ export function Home() {
   const activeProfile = profiles.find(p => p.id === profileId)
 
   const NAV_TABS = [
-    { id: 'missoes' as Tab, label: 'Missões',         Icon: SwordIcon },
-    { id: 'runas'   as Tab, label: 'Runas & Crafting', Icon: GemIcon  },
+    { id: 'missoes' as Tab, label: 'Missões',          Icon: SwordIcon  },
+    { id: 'runas'   as Tab, label: 'Runas & Crafting', Icon: GemIcon    },
+    { id: 'ranking' as Tab, label: 'Ranking',          Icon: TrophyIcon },
   ]
 
   return (
@@ -59,7 +61,7 @@ export function Home() {
             Jogar WYD Global
           </a>
         </div>
-        
+
         {/* Imagem com overflow hidden isolado */}
         <div className="absolute inset-0 overflow-hidden">
           <img
@@ -94,8 +96,6 @@ export function Home() {
             </div>
           </div>
         )}
-
-        
 
         {/* Título */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-4 px-4">
@@ -190,7 +190,8 @@ export function Home() {
           </>
         )}
 
-        {tab === 'runas' && <Runas onToast={addToast} />}
+        {tab === 'runas'   && <Runas onToast={addToast} />}
+        {tab === 'ranking' && <Ranking />}
 
       </main>
 
