@@ -40,7 +40,7 @@ export function Home() {
       <header className="relative w-full" style={{ height: '200px' }}>
 
         {/* Botão site do jogo — canto superior direito */}
-        <div className="absolute top-3 right-4 z-10">
+        <div className="absolute top-3 right-4 z-50">
           <a
             href="https://wydglobal.raidhut.com/pt-br/"
             target="_blank"
