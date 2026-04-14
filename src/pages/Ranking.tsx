@@ -5,7 +5,9 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { TrophyIcon, UserIcon, ArrowUpDownIcon, ArrowDownIcon, ArrowUpIcon } from 'lucide-react'
 
-const API_URL = '/ranking.json'
+const API_URL = process.env.NODE_ENV === 'development'
+  ? '/api/royal-arena'
+  : '/ranking.json'
 
 const CLASS_MAP: Record<string, string> = {
   '0': 'Foema',
