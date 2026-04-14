@@ -74,10 +74,24 @@ export function Ranking() {
 
   const rows = useMemo( () => {
     if ( !data ) return []
+
     const list = ( data[ tab ] ?? [] ).map( ( p, i ) => ( { ...p, _origRank: i + 1 } ) )
-    const filtered = search.trim()
-      ? list.filter( p => p.charName.toLowerCase().includes( search.toLowerCase() ) )
+
+    // 🔥 NOVA LÓGICA DE BUSCA MÚLTIPLA
+    const terms = search
+      .toLowerCase()
+      .split( /\|\||\||&&|&|\//g )
+      .map( t => t.trim() )
+      .filter( Boolean )
+
+    const filtered = terms.length
+      ? list.filter( p =>
+        terms.some( term =>
+          p.charName.toLowerCase().includes( term )
+        )
+      )
       : list
+
     return [ ...filtered ].sort( ( a, b ) => {
       const mul = sort.dir === 'desc' ? -1 : 1
       if ( sort.key === 'rank' ) return ( a._origRank - b._origRank ) * mul
