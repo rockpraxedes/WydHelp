@@ -11,9 +11,9 @@ const API_URL = process.env.NODE_ENV === 'development'
 
 const CLASS_MAP: Record<string, string> = {
   '0': 'TK',
-  '1': 'HT',
-  '2': 'FM',
-  '3': 'BM',
+  '1': 'FM',
+  '2': 'BM',
+  '3': 'HT',
 }
 
 function getClassName(classId: number) {
