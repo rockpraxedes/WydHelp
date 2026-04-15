@@ -26,15 +26,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Fetch ranking data
         run: |
           curl -s "https://rn3xfhamppsetddkod6vwc24lu0lhcek.lambda-url.us-east-1.on.aws/royal-arena" \
             -o public/ranking.json
 
-      - name: Commit if changed
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to gh-pages
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add public/ranking.json
-          git diff --staged --quiet || git commit -m "chore: update ranking data"
-          git push
+          npx gh-pages -d dist --message "chore: update ranking data"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
