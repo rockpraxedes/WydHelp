@@ -26,31 +26,124 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Fetch ranking data
+      - name: Fetch ranking data and update history
         run: |
+          # Baixa o ranking novo
           curl -s "https://rn3xfhamppsetddkod6vwc24lu0lhcek.lambda-url.us-east-1.on.aws/royal-arena" \
-          -o public/ranking.json
+            -o public/ranking-new.json
+
+          node -e "
+            const fs = require('fs');
+
+            const newData = JSON.parse(fs.readFileSync('public/ranking-new.json', 'utf8'));
+            const oldData = fs.existsSync('public/ranking.json')
+              ? JSON.parse(fs.readFileSync('public/ranking.json', 'utf8'))
+              : null;
+
+            // Verifica se houve diferença de wins
+            let hasWinDiff = false;
+            if (oldData) {
+              const allNew = [...(newData.champion || []), ...(newData.aspirant || [])];
+              const allOld = [...(oldData.champion || []), ...(oldData.aspirant || [])];
+              const oldMap = Object.fromEntries(allOld.map(p => [p.charName, p]));
+              for (const p of allNew) {
+                const old = oldMap[p.charName];
+                if (old && p.wins > old.wins) { hasWinDiff = true; break; }
+              }
+            }
+
+            // Atualiza ranking.json
+            fs.copyFileSync('public/ranking-new.json', 'public/ranking.json');
+
+            if (!hasWinDiff) {
+              console.log('Sem diferença de wins, pulando history.');
+              process.exit(0);
+            }
+
+            // Descobre horário da arena pelo timestamp UTC atual (BRT = UTC-3)
+            const now = new Date();
+            const brtHour = (now.getUTCHours() - 3 + 24) % 24;
+            const brtMin  = now.getUTCMinutes();
+            const arenaSlots = [
+              { h: 13, m: 0  },
+              { h: 19, m: 0  },
+              { h: 20, m: 30 },
+              { h: 23, m: 0  },
+            ];
+            const brtTotal = brtHour * 60 + brtMin;
+            let arenaLabel = '??:??';
+            let minDiff = Infinity;
+            for (const slot of arenaSlots) {
+              const slotTotal = slot.h * 60 + slot.m;
+              const diff = brtTotal - slotTotal;
+              if (diff >= 0 && diff < minDiff) {
+                minDiff = diff;
+                arenaLabel = String(slot.h).padStart(2,'0') + ':' + String(slot.m).padStart(2,'0');
+              }
+            }
+
+            // Calcula vencedores (quem teve +1 win)
+            const allNew = [...(newData.champion || []), ...(newData.aspirant || [])];
+            const allOld = oldData ? [...(oldData.champion || []), ...(oldData.aspirant || [])] : [];
+            const oldMap = Object.fromEntries(allOld.map(p => [p.charName, p]));
+
+            const winners = allNew.filter(p => {
+              const old = oldMap[p.charName];
+              return old && p.wins > old.wins;
+            });
+
+            if (winners.length === 0) {
+              console.log('Nenhum vencedor encontrado.');
+              process.exit(0);
+            }
+
+            const mostKills  = winners.reduce((a, b) => a.kills  > b.kills  ? a : b);
+            const leastDeaths = winners.reduce((a, b) => a.deaths < b.deaths ? a : b);
+
+            const entry = {
+              timestamp: now.toISOString(),
+              arenaLabel,
+              winners: winners.map(p => p.charName),
+              mostKills:   { name: mostKills.charName,   kills:  mostKills.kills  },
+              leastDeaths: { name: leastDeaths.charName, deaths: leastDeaths.deaths },
+            };
+
+            // Carrega histórico existente
+            const historyPath = 'public/arena-history.json';
+            let history = fs.existsSync(historyPath)
+              ? JSON.parse(fs.readFileSync(historyPath, 'utf8'))
+              : [];
+
+            // Adiciona novo e remove entradas com mais de 3 dias
+            history.unshift(entry);
+            const cutoff = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
+            history = history.filter(e => e.timestamp >= cutoff);
+
+            fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
+            console.log('History atualizado com arena das ' + arenaLabel);
+          "
+
+          rm -f public/ranking-new.json
 
       - name: Build
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          commit_message: "chore: update ranking data"
+      - name: Deploy to gh-pages
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          npx gh-pages -d dist --message "chore: update ranking data"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
