@@ -52,7 +52,7 @@ jobs:
               ? JSON.parse(fs.readFileSync('public/ranking.json', 'utf8'))
               : null;
 
-            // Verifica se houve diferença de wins
+            // Verifica se houve diferença de wins em qualquer liga
             let hasWinDiff = false;
             if (oldData) {
               const allNew = [...(newData.champion || []), ...(newData.aspirant || [])];
@@ -94,31 +94,39 @@ jobs:
               }
             }
 
-            // Calcula vencedores (quem teve +1 win)
-            const allNew = [...(newData.champion || []), ...(newData.aspirant || [])];
-            const allOld = oldData ? [...(oldData.champion || []), ...(oldData.aspirant || [])] : [];
-            const oldMap = Object.fromEntries(allOld.map(p => [p.charName, p]));
+            // Processa cada liga separadamente e gera uma entry por liga
+            const leagues = ['champion', 'aspirant'];
+            const entries = [];
 
-            const winners = allNew.filter(p => {
-              const old = oldMap[p.charName];
-              return old && p.wins > old.wins;
-            });
+            for (const leagueType of leagues) {
+              const newPlayers = newData[leagueType] || [];
+              const oldPlayers = oldData ? (oldData[leagueType] || []) : [];
+              const oldMap = Object.fromEntries(oldPlayers.map(p => [p.charName, p]));
 
-            if (winners.length === 0) {
+              const winners = newPlayers.filter(p => {
+                const old = oldMap[p.charName];
+                return old && p.wins > old.wins;
+              });
+
+              if (winners.length === 0) continue;
+
+              const mostKills   = winners.reduce((a, b) => a.kills  > b.kills  ? a : b);
+              const leastDeaths = winners.reduce((a, b) => a.deaths < b.deaths ? a : b);
+
+              entries.push({
+                timestamp:   now.toISOString(),
+                arenaLabel,
+                type:        leagueType,
+                winners:     winners.map(p => p.charName),
+                mostKills:   { name: mostKills.charName,   kills:  mostKills.kills   },
+                leastDeaths: { name: leastDeaths.charName, deaths: leastDeaths.deaths },
+              });
+            }
+
+            if (entries.length === 0) {
               console.log('Nenhum vencedor encontrado.');
               process.exit(0);
             }
-
-            const mostKills  = winners.reduce((a, b) => a.kills  > b.kills  ? a : b);
-            const leastDeaths = winners.reduce((a, b) => a.deaths < b.deaths ? a : b);
-
-            const entry = {
-              timestamp: now.toISOString(),
-              arenaLabel,
-              winners: winners.map(p => p.charName),
-              mostKills:   { name: mostKills.charName,   kills:  mostKills.kills  },
-              leastDeaths: { name: leastDeaths.charName, deaths: leastDeaths.deaths },
-            };
 
             // Carrega histórico existente
             const historyPath = 'public/arena-history.json';
@@ -126,13 +134,13 @@ jobs:
               ? JSON.parse(fs.readFileSync(historyPath, 'utf8'))
               : [];
 
-            // Adiciona novo e remove entradas com mais de 3 dias
-            history.unshift(entry);
+            // Insere as novas entries no início (champion antes de aspirant) e remove entradas com mais de 3 dias
+            history.unshift(...entries);
             const cutoff = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
             history = history.filter(e => e.timestamp >= cutoff);
 
             fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
-            console.log('History atualizado com arena das ' + arenaLabel);
+            console.log('History atualizado — ligas: ' + entries.map(e => e.type).join(', ') + ' | arena das ' + arenaLabel);
           "
 
           rm -f public/ranking-new.json

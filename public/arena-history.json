@@ -14,9 +14,7 @@
             "kills": 42
         },
         "leastDeaths": {
-            "name": [
-                "Jogador3"
-            ],
+            "name": "Jogador3",
             "deaths": 2
         }
     },
@@ -33,9 +31,7 @@
             "kills": 15
         },
         "leastDeaths": {
-            "name": [
-                "InicianteB"
-            ],
+            "name": "InicianteB",
             "deaths": 1
         }
     }
