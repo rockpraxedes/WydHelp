@@ -152,6 +152,8 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          npx gh-pages -d dist --message "chore: update ranking data"
+          npx gh-pages -d dist \
+            -r https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git \
+            --message "chore: update ranking data"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
