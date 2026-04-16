@@ -1,0 +1,42 @@
+[
+    {
+        "timestamp": "2026-04-16T22:05:00Z",
+        "arenaLabel": "19:00",
+        "type": "champion",
+        "winners": [
+            "Jogador1",
+            "Jogador2",
+            "Jogador3",
+            "Jogador4"
+        ],
+        "mostKills": {
+            "name": "Jogador1",
+            "kills": 42
+        },
+        "leastDeaths": {
+            "name": [
+                "Jogador3"
+            ],
+            "deaths": 2
+        }
+    },
+    {
+        "timestamp": "2026-04-16T22:05:00Z",
+        "arenaLabel": "19:00",
+        "type": "aspirant",
+        "winners": [
+            "InicianteA",
+            "InicianteB"
+        ],
+        "mostKills": {
+            "name": "InicianteA",
+            "kills": 15
+        },
+        "leastDeaths": {
+            "name": [
+                "InicianteB"
+            ],
+            "deaths": 1
+        }
+    }
+]
