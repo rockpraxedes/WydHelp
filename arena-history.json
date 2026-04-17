@@ -1,5 +1,61 @@
 [
   {
+    "timestamp": "2026-04-17T17:06:53.526Z",
+    "arenaLabel": "13:00",
+    "type": "champion",
+    "winners": [
+      "JogoRuim-",
+      "Duel",
+      "xPedro",
+      "Karinud",
+      "Stuk4",
+      "-StarWade",
+      "Divinius",
+      "-WaveBeast-",
+      "DeathQuick",
+      "xHuntin",
+      "Bias",
+      "TREMBORAGE",
+      "���L��o��"
+    ],
+    "mostKills": {
+      "name": "JogoRuim-",
+      "kills": 16
+    },
+    "leastDeaths": {
+      "name": "Duel",
+      "deaths": 0
+    }
+  },
+  {
+    "timestamp": "2026-04-17T17:06:53.526Z",
+    "arenaLabel": "13:00",
+    "type": "aspirant",
+    "winners": [
+      "�padre",
+      "BMastodonte",
+      "Th3LiFeSnaKe",
+      "-Kaboom",
+      "rfaell",
+      "Sekh",
+      "joaozk7",
+      "L1ND1NH4",
+      "AnaarK-",
+      "��-MORFEU-��",
+      "ADC-Ashe",
+      "MrPopo",
+      "YcketyGS"
+    ],
+    "mostKills": {
+      "name": "��-MORFEU-��",
+      "kills": 5
+    },
+    "leastDeaths": {
+      "name": "Th3LiFeSnaKe",
+      "deaths": 0
+    }
+  },
+  {
     "timestamp": "2026-04-17T03:59:26.674Z",
     "arenaLabel": "23:00",
     "type": "champion",
