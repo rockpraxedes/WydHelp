@@ -1,7 +1,7 @@
 [
   {
     "timestamp": "2026-04-17T03:59:26.674Z",
-    "arenaLabel": "??:??",
+    "arenaLabel": "23:00",
     "type": "champion",
     "winners": [
       "JogoRuim-",
@@ -20,16 +20,16 @@
     ],
     "mostKills": {
       "name": "JogoRuim-",
-      "kills": 1197
+      "kills": 0
     },
     "leastDeaths": {
       "name": "-GoDeViL",
-      "deaths": 47
+      "deaths": 0
     }
   },
   {
     "timestamp": "2026-04-17T03:59:26.674Z",
-    "arenaLabel": "??:??",
+    "arenaLabel": "23:00",
     "type": "aspirant",
     "winners": [
       "ArenaKids",
@@ -48,11 +48,11 @@
     ],
     "mostKills": {
       "name": "ArenaKids",
-      "kills": 406
+      "kills": 0
     },
     "leastDeaths": {
       "name": "ArenaKids",
-      "deaths": 45
+      "deaths": 0
     }
   }
 ]
