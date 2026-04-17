@@ -1,47 +1,56 @@
-import { useState } from 'react'
-import { DailyTracker } from '@/components/DailyTracker'
-import { ScheduleBoard } from '@/components/ScheduleBoard'
-import { Runas } from '@/pages/Runas'
-import { Ranking } from '@/pages/Ranking'
-import { useProfiles } from '@/hooks/useProfiles'
-import { useToast } from '@/hooks/useToast'
-import { ProfileSelector } from '@/components/ProfileSelector'
-import { ToastContainer } from '@/components/ToastContainer'
-import { cn } from '@/lib/utils'
-import { SwordIcon, GemIcon, ClockIcon, TrophyIcon, HammerIcon } from 'lucide-react'
-import { Craft } from '@/pages/Craft'
+import { useState } from "react";
+import { DailyTracker } from "@/components/DailyTracker";
+import { ScheduleBoard } from "@/components/ScheduleBoard";
+import { Runas } from "@/pages/Runas";
+import { Ranking } from "@/pages/Ranking";
+import { useProfiles } from "@/hooks/useProfiles";
+import { useToast } from "@/hooks/useToast";
+import { ProfileSelector } from "@/components/ProfileSelector";
+import { ToastContainer } from "@/components/ToastContainer";
+import { cn } from "@/lib/utils";
+import {
+  SwordIcon,
+  GemIcon,
+  ClockIcon,
+  TrophyIcon,
+  HammerIcon,
+} from "lucide-react";
+import { Craft } from "@/pages/Craft";
+import { ServerStatusWidget } from "@/components/ServerStatusWidget";
 
-
-type Tab = 'missoes' | 'runas' | 'ranking' | 'craft'
-type MissaoSubTab = 'diarias' | 'horarios'
+type Tab = "missoes" | "runas" | "ranking" | "craft";
+type MissaoSubTab = "diarias" | "horarios";
 
 export function Home() {
-  const [ tab, setTab ] = useState<Tab>( 'missoes' )
-  const [ missaoSubTab, setMissaoSubTab ] = useState<MissaoSubTab>( 'diarias' )
+  const [tab, setTab] = useState<Tab>("missoes");
+  const [missaoSubTab, setMissaoSubTab] = useState<MissaoSubTab>("diarias");
 
-  const { toasts, addToast, removeToast } = useToast()
+  const { toasts, addToast, removeToast } = useToast();
 
   const {
-    profiles, activeId: profileId, setActive,
-    addProfile, renameProfile, deleteProfile,
-    exportProfile, importAny,
-  } = useProfiles()
+    profiles,
+    activeId: profileId,
+    setActive,
+    addProfile,
+    renameProfile,
+    deleteProfile,
+    exportProfile,
+    importAny,
+  } = useProfiles();
 
-  const activeProfile = profiles.find( p => p.id === profileId )
+  const activeProfile = profiles.find((p) => p.id === profileId);
 
   const NAV_TABS = [
-    { id: 'missoes' as Tab, label: 'Missões', Icon: SwordIcon },
-    { id: 'runas' as Tab, label: 'Runas & Secretas', Icon: GemIcon },
-    { id: 'ranking' as Tab, label: 'Ranking', Icon: TrophyIcon },
-    { id: 'craft' as Tab, label: 'Craft', Icon: HammerIcon },
-  ]
+    { id: "missoes" as Tab, label: "Missões", Icon: SwordIcon },
+    { id: "runas" as Tab, label: "Runas & Secretas", Icon: GemIcon },
+    { id: "ranking" as Tab, label: "Ranking", Icon: TrophyIcon },
+    { id: "craft" as Tab, label: "Craft", Icon: HammerIcon },
+  ];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-
       {/* ── HEADER ── */}
-      <header className="relative w-full" style={{ height: '200px' }}>
-
+      <header className="relative w-full" style={{ height: "200px" }}>
         {/* Botão site do jogo — canto superior direito */}
         <div className="absolute top-3 right-4 z-50">
           <a
@@ -50,16 +59,28 @@ export function Home() {
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs font-medium text-white transition-all hover:scale-105 active:scale-95"
             style={{
-              background: 'rgba(109,40,217,0.35)',
-              border: '1px solid rgba(167,139,250,0.45)',
-              backdropFilter: 'blur(8px)',
-              borderRadius: '999px',
-              padding: '6px 14px',
-              textDecoration: 'none',
+              background: "rgba(109,40,217,0.35)",
+              border: "1px solid rgba(167,139,250,0.45)",
+              backdropFilter: "blur(8px)",
+              borderRadius: "999px",
+              padding: "6px 14px",
+              textDecoration: "none",
             }}
           >
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" style={{ flexShrink: 0 }}>
-              <path d="M1.5 9.5L9.5 1.5M9.5 1.5H4.5M9.5 1.5V6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 11 11"
+              fill="none"
+              style={{ flexShrink: 0 }}
+            >
+              <path
+                d="M1.5 9.5L9.5 1.5M9.5 1.5H4.5M9.5 1.5V6.5"
+                stroke="white"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             Jogar WYD Global
           </a>
@@ -71,14 +92,22 @@ export function Home() {
             src="/images/header3.png"
             alt="WYD Global"
             className="w-full h-full object-cover object-center scale-105"
-            style={{ objectPosition: 'center 40%' }}
+            style={{ objectPosition: "center 40%" }}
           />
-          <div className="absolute inset-0" style={{
-            background: 'linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)'
-          }} />
-          <div className="absolute inset-0" style={{
-            background: 'linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%)'
-          }} />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)",
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%)",
+            }}
+          />
         </div>
 
         {/* Perfil ativo — canto superior esquerdo */}
@@ -87,11 +116,11 @@ export function Home() {
             <div
               className="flex items-center gap-2 text-xs text-white/80"
               style={{
-                background: 'rgba(0,0,0,0.3)',
-                backdropFilter: 'blur(6px)',
-                borderRadius: '999px',
-                padding: '5px 12px',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: "rgba(0,0,0,0.3)",
+                backdropFilter: "blur(6px)",
+                borderRadius: "999px",
+                padding: "5px 12px",
+                border: "1px solid rgba(255,255,255,0.1)",
               }}
             >
               <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
@@ -117,53 +146,65 @@ export function Home() {
 
       {/* ── CONTEÚDO ── */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-6 space-y-6">
-
         {/* Nav principal */}
         <nav className="flex items-center gap-1 border-b">
-          {NAV_TABS.map( ( { id, label, Icon } ) => (
+          {NAV_TABS.map(({ id, label, Icon }) => (
             <button
               key={id}
-              onClick={() => setTab( id )}
+              onClick={() => setTab(id)}
               className={cn(
-                'flex items-center gap-2 px-4 py-2 text-sm transition-colors border-b-2 -mb-px',
+                "flex items-center gap-2 px-4 py-2 text-sm transition-colors border-b-2 -mb-px",
                 tab === id
-                  ? 'border-violet-500 text-violet-600 font-medium'
-                  : 'border-transparent text-muted-foreground hover:text-foreground'
+                  ? "border-violet-500 text-violet-600 font-medium"
+                  : "border-transparent text-muted-foreground hover:text-foreground",
               )}
             >
               <Icon className="w-3.5 h-3.5" />
               {label}
             </button>
-          ) )}
+          ))}
+          <div className="ml-auto pb-1">
+            <ServerStatusWidget />
+          </div>
         </nav>
 
         {/* ── ABA MISSÕES ── */}
-        {tab === 'missoes' && (
+        {tab === "missoes" && (
           <>
             {/* Sub-nav mobile */}
             <div className="flex lg:hidden gap-1 bg-muted/50 rounded-lg p-1">
-              {( [
-                { id: 'diarias', label: 'Diárias', Icon: SwordIcon },
-                { id: 'horarios', label: 'Horários', Icon: ClockIcon },
-              ] as { id: MissaoSubTab; label: string; Icon: typeof SwordIcon }[] ).map( ( { id, label, Icon } ) => (
+              {(
+                [
+                  { id: "diarias", label: "Diárias", Icon: SwordIcon },
+                  { id: "horarios", label: "Horários", Icon: ClockIcon },
+                ] as {
+                  id: MissaoSubTab;
+                  label: string;
+                  Icon: typeof SwordIcon;
+                }[]
+              ).map(({ id, label, Icon }) => (
                 <button
                   key={id}
-                  onClick={() => setMissaoSubTab( id )}
+                  onClick={() => setMissaoSubTab(id)}
                   className={cn(
-                    'flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded-md transition-colors',
+                    "flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded-md transition-colors",
                     missaoSubTab === id
-                      ? 'bg-background text-violet-600 font-medium shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground'
+                      ? "bg-background text-violet-600 font-medium shadow-sm"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   {label}
                 </button>
-              ) )}
+              ))}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-              <div className={cn( missaoSubTab === 'horarios' ? 'hidden lg:block' : 'block' )}>
+              <div
+                className={cn(
+                  missaoSubTab === "horarios" ? "hidden lg:block" : "block",
+                )}
+              >
                 <DailyTracker
                   key={profileId}
                   profileId={profileId}
@@ -175,7 +216,7 @@ export function Home() {
                       onSelect={setActive}
                       onAdd={addProfile}
                       onRename={renameProfile}
-                      onDelete={( id ) => deleteProfile( id, profileId )}
+                      onDelete={(id) => deleteProfile(id, profileId)}
                       onExport={exportProfile}
                       onImportAny={importAny}
                     />
@@ -183,32 +224,32 @@ export function Home() {
                 />
               </div>
 
-              <div className={cn(
-                'lg:sticky lg:top-6',
-                missaoSubTab === 'diarias' ? 'hidden lg:block' : 'block'
-              )}>
+              <div
+                className={cn(
+                  "lg:sticky lg:top-6",
+                  missaoSubTab === "diarias" ? "hidden lg:block" : "block",
+                )}
+              >
                 <ScheduleBoard />
               </div>
             </div>
           </>
         )}
 
-        {tab === 'runas' && <Runas onToast={addToast} />}
-        {tab === 'ranking' && <Ranking />}
-        {tab === 'craft' && <Craft />}
-
+        {tab === "runas" && <Runas onToast={addToast} />}
+        {tab === "ranking" && <Ranking />}
+        {tab === "craft" && <Craft />}
       </main>
 
       {/* ── RODAPÉ ── */}
       <footer className="border-t py-4 mt-8">
         <p className="text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} · Desenvolvido por{' '}
+          © {new Date().getFullYear()} · Desenvolvido por{" "}
           <span className="text-violet-500 font-medium">Sérgio Praxedes</span>
         </p>
       </footer>
 
       <ToastContainer toasts={toasts} onRemove={removeToast} />
-
     </div>
-  )
+  );
 }
