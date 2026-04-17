@@ -163,10 +163,17 @@ export function Home() {
               {label}
             </button>
           ))}
-          <div className="ml-auto pb-1">
+
+          {/* Desktop: mantém no canto direito do nav */}
+          <div className="ml-auto pb-1 hidden sm:block">
             <ServerStatusWidget />
           </div>
         </nav>
+
+        {/* Mobile: aparece abaixo do nav, largura total */}
+        <div className="sm:hidden">
+          <ServerStatusWidget />
+        </div>
 
         {/* ── ABA MISSÕES ── */}
         {tab === "missoes" && (
@@ -244,7 +251,7 @@ export function Home() {
       {/* ── RODAPÉ ── */}
       <footer className="border-t py-4 mt-8">
         <p className="text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} · Desenvolvido por{" "}
+          © Desenvolvido por
           <span className="text-violet-500 font-medium">Sérgio Praxedes</span>
         </p>
       </footer>
