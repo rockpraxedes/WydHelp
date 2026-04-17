@@ -2,21 +2,7 @@ name: Update Ranking
 
 on:
   schedule:
-    # De 5 em 5 min — 13:20 às 14:00 BRT (16:20 às 17:00 UTC)
-    - cron: '20,25,30,35,40,45,50,55 16 * * *'
-    - cron: '0 17 * * *'
-
-    # De 5 em 5 min — 19:20 às 00:00 BRT (22:20 às 03:00 UTC)
-    - cron: '20,25,30,35,40,45,50,55 22 * * *'
-    - cron: '*/5 23 * * *'
-    - cron: '*/5 0  * * *'
-    - cron: '*/5 1  * * *'
-    - cron: '*/5 2  * * *'
-    - cron: '0   3  * * *'
-
-    # Resto do tempo — de 30 em 30 min
-    - cron: '0,30 3,4,5,6,7,8,9,10,11,12,13,14,15 * * *'
-    - cron: '0,30 17,18,19,20,21 * * *'
+    - cron: "*/10 * * * *"
 
   workflow_dispatch:
 
@@ -33,7 +19,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -72,29 +58,52 @@ jobs:
               process.exit(0);
             }
 
-            // Descobre horário da arena pelo timestamp UTC atual (BRT = UTC-3)
+            // ── Horário da arena ──────────────────────────────────────────────
+            // BRT = UTC-3
             const now = new Date();
             const brtHour = (now.getUTCHours() - 3 + 24) % 24;
             const brtMin  = now.getUTCMinutes();
+            const brtTotal = brtHour * 60 + brtMin;
+
             const arenaSlots = [
               { h: 13, m: 0  },
               { h: 19, m: 0  },
               { h: 20, m: 30 },
               { h: 23, m: 0  },
             ];
-            const brtTotal = brtHour * 60 + brtMin;
+
+            // Pega o slot mais próximo no passado (menor diff >= 0).
+            // Se nenhum slot já passou hoje, pega o último slot do dia anterior.
             let arenaLabel = '??:??';
-            let minDiff = Infinity;
+            let minPosDiff = Infinity;
+
             for (const slot of arenaSlots) {
               const slotTotal = slot.h * 60 + slot.m;
               const diff = brtTotal - slotTotal;
-              if (diff >= 0 && diff < minDiff) {
-                minDiff = diff;
-                arenaLabel = String(slot.h).padStart(2,'0') + ':' + String(slot.m).padStart(2,'0');
+              const label = String(slot.h).padStart(2,'0') + ':' + String(slot.m).padStart(2,'0');
+
+              if (diff >= 0 && diff < minPosDiff) {
+                minPosDiff = diff;
+                arenaLabel = label;
               }
             }
 
-            // Processa cada liga separadamente e gera uma entry por liga
+            // Se nenhum slot passou ainda hoje (ex: execução antes das 13h BRT),
+            // usa o slot mais recente considerando virada de dia (módulo 1440 min)
+            if (arenaLabel === '??:??') {
+              let minAbsDiff = Infinity;
+              for (const slot of arenaSlots) {
+                const slotTotal = slot.h * 60 + slot.m;
+                const diff = (brtTotal - slotTotal + 1440) % 1440;
+                const label = String(slot.h).padStart(2,'0') + ':' + String(slot.m).padStart(2,'0');
+                if (diff < minAbsDiff) {
+                  minAbsDiff = diff;
+                  arenaLabel = label;
+                }
+              }
+            }
+
+            // ── Processa cada liga ────────────────────────────────────────────
             const leagues = ['champion', 'aspirant'];
             const entries = [];
 
@@ -103,6 +112,7 @@ jobs:
               const oldPlayers = oldData ? (oldData[leagueType] || []) : [];
               const oldMap = Object.fromEntries(oldPlayers.map(p => [p.charName, p]));
 
+              // Vencedores = quem teve wins a mais em relação ao snapshot anterior
               const winners = newPlayers.filter(p => {
                 const old = oldMap[p.charName];
                 return old && p.wins > old.wins;
@@ -110,16 +120,30 @@ jobs:
 
               if (winners.length === 0) continue;
 
-              const mostKills   = winners.reduce((a, b) => a.kills  > b.kills  ? a : b);
-              const leastDeaths = winners.reduce((a, b) => a.deaths < b.deaths ? a : b);
+              // Maior diferença de kills nesta arena (entre os vencedores)
+              const mostKills = winners.reduce((best, p) => {
+                const diffNew  = p.kills  - (oldMap[p.charName]?.kills  ?? p.kills);
+                const diffBest = best.kills - (oldMap[best.charName]?.kills ?? best.kills);
+                return diffNew > diffBest ? p : best;
+              });
+
+              // Menor diferença de deaths nesta arena (entre os vencedores)
+              const leastDeaths = winners.reduce((best, p) => {
+                const diffNew  = p.deaths  - (oldMap[p.charName]?.deaths  ?? p.deaths);
+                const diffBest = best.deaths - (oldMap[best.charName]?.deaths ?? best.deaths);
+                return diffNew < diffBest ? p : best;
+              });
+
+              const killsDiff  = mostKills.kills   - (oldMap[mostKills.charName]?.kills   ?? mostKills.kills);
+              const deathsDiff = leastDeaths.deaths - (oldMap[leastDeaths.charName]?.deaths ?? leastDeaths.deaths);
 
               entries.push({
                 timestamp:   now.toISOString(),
                 arenaLabel,
                 type:        leagueType,
                 winners:     winners.map(p => p.charName),
-                mostKills:   { name: mostKills.charName,   kills:  mostKills.kills   },
-                leastDeaths: { name: leastDeaths.charName, deaths: leastDeaths.deaths },
+                mostKills:   { name: mostKills.charName,   kills:  killsDiff  },
+                leastDeaths: { name: leastDeaths.charName, deaths: deathsDiff },
               });
             }
 
@@ -128,13 +152,12 @@ jobs:
               process.exit(0);
             }
 
-            // Carrega histórico existente
+            // ── Histórico ─────────────────────────────────────────────────────
             const historyPath = 'public/arena-history.json';
             let history = fs.existsSync(historyPath)
               ? JSON.parse(fs.readFileSync(historyPath, 'utf8'))
               : [];
 
-            // Insere as novas entries no início (champion antes de aspirant) e remove entradas com mais de 3 dias
             history.unshift(...entries);
             const cutoff = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
             history = history.filter(e => e.timestamp >= cutoff);
@@ -145,7 +168,7 @@ jobs:
 
           rm -f public/ranking-new.json
 
-      - name: Commit updated files        # ← ADICIONA AQUI
+      - name: Commit updated files
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
