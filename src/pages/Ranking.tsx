@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { TrophyIcon, UserIcon, ArrowUpDownIcon, ArrowDownIcon, ArrowUpIcon, SwordIcon, ShieldIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
 
-const SHOW_ARENA = false;
+const SHOW_ARENA = true;
 
 const API_URL = process.env.NODE_ENV === 'development'
   ? '/api/royal-arena'
