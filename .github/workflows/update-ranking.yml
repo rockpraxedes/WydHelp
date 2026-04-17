@@ -37,37 +37,23 @@ jobs:
             fs.copyFileSync('public/ranking-new.json', 'public/ranking.json');
 
             // ── Horário da arena (BRT = UTC-3) ────────────────────────────
+            // Janelas fixas:
+            //   13:00 até 18:59 → 13:00
+            //   19:00 até 20:29 → 19:00
+            //   20:30 até 22:59 → 20:30
+            //   23:00 até 12:59 → 23:00
             const now      = new Date();
             const brtHour  = (now.getUTCHours() - 3 + 24) % 24;
             const brtMin   = now.getUTCMinutes();
             const brtTotal = brtHour * 60 + brtMin;
 
-            const arenaSlots = [
-              { h: 13, m: 0  },
-              { h: 19, m: 0  },
-              { h: 20, m: 30 },
-              { h: 23, m: 0  },
-            ];
+            let arenaLabel;
+            if      (brtTotal >= 13*60        && brtTotal < 19*60)      arenaLabel = '13:00';
+            else if (brtTotal >= 19*60        && brtTotal < 20*60 + 30) arenaLabel = '19:00';
+            else if (brtTotal >= 20*60 + 30   && brtTotal < 23*60)      arenaLabel = '20:30';
+            else                                                          arenaLabel = '23:00';
 
-            // Slot mais próximo no passado
-            let arenaLabel = '??:??';
-            let minPosDiff = Infinity;
-            for (const slot of arenaSlots) {
-              const slotTotal = slot.h * 60 + slot.m;
-              const diff  = brtTotal - slotTotal;
-              const label = String(slot.h).padStart(2,'0') + ':' + String(slot.m).padStart(2,'0');
-              if (diff >= 0 && diff < minPosDiff) { minPosDiff = diff; arenaLabel = label; }
-            }
-            // Antes do primeiro slot do dia → pega o último slot (virada)
-            if (arenaLabel === '??:??') {
-              let minAbsDiff = Infinity;
-              for (const slot of arenaSlots) {
-                const slotTotal = slot.h * 60 + slot.m;
-                const diff  = (brtTotal - slotTotal + 1440) % 1440;
-                const label = String(slot.h).padStart(2,'0') + ':' + String(slot.m).padStart(2,'0');
-                if (diff < minAbsDiff) { minAbsDiff = diff; arenaLabel = label; }
-              }
-            }
+            console.log('BRT: ' + String(brtHour).padStart(2,'0') + ':' + String(brtMin).padStart(2,'0') + ' → arena: ' + arenaLabel);
 
             // ── Snapshot por arena + liga ─────────────────────────────────
             // Estrutura: { 'champion_19:00': [...players], 'aspirant_19:00': [...], ... }
@@ -104,21 +90,21 @@ jobs:
                 continue;
               }
 
-              // ── Kills: pega o maior diff e todos que empataram ────────
-              const killsDiffs = winners.map(p => ({
+              // ── Kills: maior diff, todos que empataram ────────────────
+              const killsDiffs   = winners.map(p => ({
                 name: p.charName,
                 diff: p.kills - (snapMap[p.charName]?.kills ?? p.kills),
               }));
               const maxKills     = Math.max(...killsDiffs.map(x => x.diff));
               const mostKillsAll = killsDiffs.filter(x => x.diff === maxKills).map(x => x.name);
 
-              // ── Deaths: pega o menor diff e todos que empataram ───────
+              // ── Deaths: menor diff, todos que empataram ───────────────
               const deathsDiffs    = winners.map(p => ({
                 name: p.charName,
                 diff: p.deaths - (snapMap[p.charName]?.deaths ?? p.deaths),
               }));
-              const minDeaths       = Math.min(...deathsDiffs.map(x => x.diff));
-              const leastDeathsAll  = deathsDiffs.filter(x => x.diff === minDeaths).map(x => x.name);
+              const minDeaths      = Math.min(...deathsDiffs.map(x => x.diff));
+              const leastDeathsAll = deathsDiffs.filter(x => x.diff === minDeaths).map(x => x.name);
 
               entries.push({
                 timestamp:   now.toISOString(),
