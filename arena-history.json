@@ -1,38 +1,93 @@
 [
-    {
-        "timestamp": "2026-04-16T22:05:00Z",
-        "arenaLabel": "19:00",
-        "type": "champion",
-        "winners": [
-            "Jogador1",
-            "Jogador2",
-            "Jogador3",
-            "Jogador4"
-        ],
-        "mostKills": {
-            "name": "Jogador1",
-            "kills": 42
-        },
-        "leastDeaths": {
-            "name": "Jogador3",
-            "deaths": 2
-        }
+  {
+    "timestamp": "2026-04-17T00:56:13.354Z",
+    "arenaLabel": "20:30",
+    "type": "champion",
+    "winners": [
+      "-GoDeViL",
+      "SheelVPower",
+      "Qtpie",
+      "TAQUEPARIO",
+      "Releva",
+      "-oliveedu-",
+      "REIdoSERTAO",
+      "Japa-",
+      "Zarch",
+      "DARKZAOo",
+      "-onnn",
+      "PoneyCrazzy"
+    ],
+    "mostKills": {
+      "name": "Releva",
+      "kills": 312
     },
-    {
-        "timestamp": "2026-04-16T22:05:00Z",
-        "arenaLabel": "19:00",
-        "type": "aspirant",
-        "winners": [
-            "InicianteA",
-            "InicianteB"
-        ],
-        "mostKills": {
-            "name": "InicianteA",
-            "kills": 15
-        },
-        "leastDeaths": {
-            "name": "InicianteB",
-            "deaths": 1
-        }
+    "leastDeaths": {
+      "name": "Japa-",
+      "deaths": 3
     }
+  },
+  {
+    "timestamp": "2026-04-17T00:56:13.354Z",
+    "arenaLabel": "20:30",
+    "type": "aspirant",
+    "winners": [
+      "DrWyd",
+      "-Rice",
+      "-Pityzera-",
+      "Th3LiFeSnaKe",
+      "XxXDestroXxX",
+      "Monegasca",
+      "TioTk",
+      "CoisaLindaBB",
+      "BYLLYBOLADO",
+      "iNotfounD",
+      "Tijoloman",
+      "HT-BotaFull",
+      "Bowers"
+    ],
+    "mostKills": {
+      "name": "DrWyd",
+      "kills": 648
+    },
+    "leastDeaths": {
+      "name": "Tijoloman",
+      "deaths": 3
+    }
+  },
+  {
+    "timestamp": "2026-04-16T22:05:00Z",
+    "arenaLabel": "19:00",
+    "type": "champion",
+    "winners": [
+      "Jogador1",
+      "Jogador2",
+      "Jogador3",
+      "Jogador4"
+    ],
+    "mostKills": {
+      "name": "Jogador1",
+      "kills": 42
+    },
+    "leastDeaths": {
+      "name": "Jogador3",
+      "deaths": 2
+    }
+  },
+  {
+    "timestamp": "2026-04-16T22:05:00Z",
+    "arenaLabel": "19:00",
+    "type": "aspirant",
+    "winners": [
+      "InicianteA",
+      "InicianteB"
+    ],
+    "mostKills": {
+      "name": "InicianteA",
+      "kills": 15
+    },
+    "leastDeaths": {
+      "name": "InicianteB",
+      "deaths": 1
+    }
+  }
 ]
