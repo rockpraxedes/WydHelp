@@ -107,10 +107,10 @@ const SECTIONS: Record<ItemType, Section[]> = {
     {
       title: "Criação",
       items: [
-        { type: "simple", id: "pedra_sol", label: "Pedra do Sol" },
-        { type: "simple", id: "pedra_vento", label: "Pedra do Vento" },
-        { type: "simple", id: "pedra_agua", label: "Pedra da Água" },
-        { type: "simple", id: "pedra_terra", label: "Pedra da Terra" },
+        { type: "simple", id: "pedra_sol", label: "Secreta do Sol" },
+        { type: "simple", id: "pedra_vento", label: "Secreta do Vento" },
+        { type: "simple", id: "pedra_agua", label: "Secreta da Água" },
+        { type: "simple", id: "pedra_terra", label: "Secreta da Terra" },
         { type: "simple", id: "pedra_lunar", label: "Pedra Lunar" },
         { type: "simple", id: "pedra_escuridao", label: "Pedra da Escuridão" },
       ],
@@ -131,10 +131,10 @@ const SECTIONS: Record<ItemType, Section[]> = {
       items: [
         { type: "simple", id: "mark_bahamut", label: "Mark of Bahamut" },
         { type: "simple", id: "rd_scale", label: "Red Dragon Scale" },
-        { type: "simple", id: "pedra_sol", label: "Pedra do Sol" },
-        { type: "simple", id: "pedra_vento", label: "Pedra do Vento" },
-        { type: "simple", id: "pedra_agua", label: "Pedra da Água" },
-        { type: "simple", id: "pedra_terra", label: "Pedra da Terra" },
+        { type: "simple", id: "pedra_sol", label: "Secreta do Sol" },
+        { type: "simple", id: "pedra_vento", label: "Secreta do Vento" },
+        { type: "simple", id: "pedra_agua", label: "Secreta da Água" },
+        { type: "simple", id: "pedra_terra", label: "Secreta da Terra" },
         {
           type: "leveled",
           id: "dragon_soul",
@@ -201,7 +201,7 @@ const ITEMS_NECESSARIOS: Record<ItemType, Section[]> = {
         {
           type: "leveled",
           id: "ref_abencoada",
-          label: "Ref. Abençoada",
+          label: "4x - Ref. Abençoada",
           levels: 10,
         },
       ],
@@ -211,23 +211,23 @@ const ITEMS_NECESSARIOS: Record<ItemType, Section[]> = {
     {
       title: "Criação",
       items: [
-        { type: "simple", id: "pedra_sol", label: "Pedra do Sol" },
-        { type: "simple", id: "pedra_vento", label: "Pedra do Vento" },
-        { type: "simple", id: "pedra_agua", label: "Pedra da Água" },
-        { type: "simple", id: "pedra_terra", label: "Pedra da Terra" },
         { type: "simple", id: "item_selado_9", label: "Item Selado +9" },
         { type: "simple", id: "item_arch_15", label: "Item Arch +15" },
-        { type: "simple", id: "pedra_lunar", label: "Pedra Lunar" },
-        { type: "simple", id: "pedra_escuridao", label: "Pedra da Escuridão" },
+        { type: "simple", id: "pedra_sol", label: "1x - Secreta do Sol" },
+        { type: "simple", id: "pedra_vento", label: "1x - Secreta do Vento" },
+        { type: "simple", id: "pedra_agua", label: "1x - Secreta da Água" },
+        { type: "simple", id: "pedra_terra", label: "1x - Secreta da Terra" },
+        { type: "simple", id: "pedra_lunar", label: "1x - Pedra Lunar ou Pedra Escuridão" },
       ],
     },
     {
       title: "Refinação",
       items: [
-        { type: "simple", id: "essence_gods", label: "Essence of Gods" },
-        { type: "simple", id: "essence_gods_9", label: "Essence of Gods +9" },
-        { type: "simple", id: "pedra_valkiria", label: "Pedra da Valkiria" },
-        { type: "simple", id: "soul_fragment", label: "Soul Fragment" },
+        { type: "simple", id: "essence_gods", label: "4x - Essence of Gods (+12/+13)" },
+        { type: "simple", id: "essence_gods_9", label: "4x - Essence of Gods +9 (+14/+15)" },
+        { type: "simple", id: "pedra_valkiria", label: "1x Pedra da Valkiria +0" },
+        { type: "simple", id: "soul_fragment", label: "10x -Soul Fragment" },
+        { type: "simple", id: "gold", label: "75kk ~ 200kk em Gold" },
       ],
     },
   ],
@@ -235,32 +235,34 @@ const ITEMS_NECESSARIOS: Record<ItemType, Section[]> = {
     {
       title: "Criação",
       items: [
-        { type: "simple", id: "mark_bahamut", label: "Mark of Bahamut" },
-        { type: "simple", id: "rd_scale", label: "Red Dragon Scale" },
-        { type: "simple", id: "pedra_sol", label: "Pedra do Sol" },
-        { type: "simple", id: "pedra_vento", label: "Pedra do Vento" },
-        { type: "simple", id: "pedra_agua", label: "Pedra da Água" },
-        { type: "simple", id: "pedra_terra", label: "Pedra da Terra" },
         { type: "simple", id: "item_cel_15", label: "Item Celestial +15" },
+        { type: "simple", id: "mark_bahamut", label: "1x - Mark of Bahamut" },
+        { type: "simple", id: "rd_scale", label: "10x - Red Dragon Scale" },
+        { type: "simple", id: "pedra_sol", label: "1x - Secreta do Sol" },
+        { type: "simple", id: "pedra_vento", label: "1x - Secreta do Vento" },
+        { type: "simple", id: "pedra_agua", label: "1x - Secreta da Água" },
+        { type: "simple", id: "pedra_terra", label: "1x - Secreta da Terra" },
         {
           type: "leveled",
           id: "dragon_soul",
-          label: "Dragon Soul",
+          label: "1x - Dragon Soul",
           levels: 10,
         },
+        { type: "simple", id: "gold", label: "200kk em gold" },
       ],
     },
     {
       title: "Refinação",
       items: [
-        { type: "simple", id: "valkiria_9", label: "Valkiria +9" },
-        { type: "simple", id: "rd_scale", label: "Red Dragon Scale" },
+        { type: "simple", id: "valkiria_9", label: "1x - Valkiria +9" },
+        { type: "simple", id: "rd_scale", label: "10x - Red Dragon Scale" },
         {
           type: "leveled",
           id: "dragon_soul",
-          label: "Dragon Soul",
+          label: "1x - Dragon Soul",
           levels: 10,
         },
+        { type: "simple", id: "gold", label: "200kk em gold" },
       ],
     },
   ],
@@ -269,30 +271,33 @@ const ITEMS_NECESSARIOS: Record<ItemType, Section[]> = {
       title: "Criação",
       items: [
         { type: "simple", id: "item_rd_15", label: "Item RD +15" },
-        { type: "simple", id: "bahamut_horn", label: "Bahamut Horn" },
-        { type: "simple", id: "bahamut_rune", label: "Bahamut Rune" },
-        { type: "simple", id: "rd_scale", label: "Red Dragon Scale" },
-        { type: "simple", id: "bahamut_blood", label: "Bahamut Blood" },
+        { type: "simple", id: "bahamut_horn", label: "1x - Bahamut Horn" },
+        { type: "simple", id: "bahamut_rune", label: "20x - Bahamut Rune" },
+        { type: "simple", id: "rd_scale", label: "20x - Red Dragon Scale" },
+        { type: "simple", id: "bahamut_blood", label: "3x - Bahamut Blood" },
         {
           type: "leveled",
           id: "bahamut_soul",
-          label: "Bahamut Soul",
+          label: "1x - Bahamut Soul",
           levels: 10,
         },
+        { type: "simple", id: "gold", label: "200kk em gold" },
       ],
     },
     {
       title: "Refinação",
       items: [
-        { type: "simple", id: "valkiria_9", label: "Valkiria +9" },
+        { type: "simple", id: "valkiria_9", label: "1x - Valkiria +9" },
         {
           type: "leveled",
           id: "bahamut_soul",
-          label: "Bahamut Soul",
+          label: "1x - Bahamut Soul",
           levels: 10,
         },
-        { type: "simple", id: "bahamut_horn", label: "Bahamut Horn" },
-        { type: "simple", id: "bahamut_rune", label: "Bahamut Rune" },
+        { type: "simple", id: "bahamut_horn", label: "1x - Bahamut Horn" },
+        { type: "simple", id: "bahamut_rune", label: "10x - Bahamut Rune" },
+        { type: "simple", id: "rd_scale", label: "10x - Red Dragon Scale" },
+        { type: "simple", id: "gold", label: "200kk em gold" },
       ],
     },
   ],
@@ -617,7 +622,7 @@ function ItensModal({
                       key="pl"
                       className="text-xs text-muted-foreground flex items-center gap-2"
                     >
-                      {dot} PL (Gold)
+                      {dot} 20x - Poeiras de Lac
                     </li>
                   );
                 if (item.type === "leveled")
