@@ -1,5 +1,33 @@
 [
   {
+    "timestamp": "2026-04-17T22:49:37.207Z",
+    "arenaLabel": "19:00",
+    "type": "aspirant",
+    "winners": [
+      "-Rice",
+      "-deePy",
+      "OrNeLaS",
+      "CrookedYoung",
+      "Aizz",
+      "L1ND1NH4",
+      "MrPopo",
+      "SddsMalech",
+      "L3thyn",
+      "HOTS",
+      "CHAPOL1N",
+      "Entei",
+      "-ShurpZ-"
+    ],
+    "mostKills": {
+      "name": "-Rice",
+      "kills": 4
+    },
+    "leastDeaths": {
+      "name": "-Rice",
+      "deaths": 0
+    }
+  },
+  {
     "timestamp": "2026-04-17T17:06:53.526Z",
     "arenaLabel": "13:00",
     "type": "champion",
