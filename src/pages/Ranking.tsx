@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { TrophyIcon, UserIcon, ArrowUpDownIcon, ArrowDownIcon, ArrowUpIcon, SwordIcon, ShieldIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
 
+const SHOW_ARENA = false;
+
 const API_URL = process.env.NODE_ENV === 'development'
   ? '/api/royal-arena'
   : '/ranking.json'
@@ -286,7 +288,7 @@ export function Ranking() {
         </div>
 
         <div className="w-full lg:flex-1 max-w-2xl">
-          {latestArena && (
+          {SHOW_ARENA && latestArena && (
             <div className="relative group">
               <ArenaHistoryCard entry={latestArena} compact={true} />
               {olderHistory.length > 0 && (
@@ -302,7 +304,7 @@ export function Ranking() {
         </div>
       </div>
 
-      {showHistory && (
+      {SHOW_ARENA && showHistory && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-4 duration-300">
           {olderHistory.map( ( entry, i ) => (
             <ArenaHistoryCard key={i} entry={entry} />
