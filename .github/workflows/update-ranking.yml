@@ -3,7 +3,6 @@ name: Update Ranking
 on:
   schedule:
     - cron: "*/10 * * * *"
-
   workflow_dispatch:
 
 permissions:
@@ -26,7 +25,6 @@ jobs:
 
       - name: Fetch ranking data and update history
         run: |
-          # Baixa o ranking novo
           curl -s "https://rn3xfhamppsetddkod6vwc24lu0lhcek.lambda-url.us-east-1.on.aws/royal-arena" \
             -o public/ranking-new.json
 
@@ -34,35 +32,14 @@ jobs:
             const fs = require('fs');
 
             const newData = JSON.parse(fs.readFileSync('public/ranking-new.json', 'utf8'));
-            const oldData = fs.existsSync('public/ranking.json')
-              ? JSON.parse(fs.readFileSync('public/ranking.json', 'utf8'))
-              : null;
 
-            // Verifica se houve diferença de wins em qualquer liga
-            let hasWinDiff = false;
-            if (oldData) {
-              const allNew = [...(newData.champion || []), ...(newData.aspirant || [])];
-              const allOld = [...(oldData.champion || []), ...(oldData.aspirant || [])];
-              const oldMap = Object.fromEntries(allOld.map(p => [p.charName, p]));
-              for (const p of allNew) {
-                const old = oldMap[p.charName];
-                if (old && p.wins > old.wins) { hasWinDiff = true; break; }
-              }
-            }
-
-            // Atualiza ranking.json
+            // ranking.json = dados frescos pro frontend
             fs.copyFileSync('public/ranking-new.json', 'public/ranking.json');
 
-            if (!hasWinDiff) {
-              console.log('Sem diferença de wins, pulando history.');
-              process.exit(0);
-            }
-
-            // ── Horário da arena ──────────────────────────────────────────────
-            // BRT = UTC-3
-            const now = new Date();
-            const brtHour = (now.getUTCHours() - 3 + 24) % 24;
-            const brtMin  = now.getUTCMinutes();
+            // ── Horário da arena (BRT = UTC-3) ────────────────────────────
+            const now      = new Date();
+            const brtHour  = (now.getUTCHours() - 3 + 24) % 24;
+            const brtMin   = now.getUTCMinutes();
             const brtTotal = brtHour * 60 + brtMin;
 
             const arenaSlots = [
@@ -72,87 +49,106 @@ jobs:
               { h: 23, m: 0  },
             ];
 
-            // Pega o slot mais próximo no passado (menor diff >= 0).
-            // Se nenhum slot já passou hoje, pega o último slot do dia anterior.
+            // Slot mais próximo no passado
             let arenaLabel = '??:??';
             let minPosDiff = Infinity;
-
             for (const slot of arenaSlots) {
               const slotTotal = slot.h * 60 + slot.m;
-              const diff = brtTotal - slotTotal;
+              const diff  = brtTotal - slotTotal;
               const label = String(slot.h).padStart(2,'0') + ':' + String(slot.m).padStart(2,'0');
-
-              if (diff >= 0 && diff < minPosDiff) {
-                minPosDiff = diff;
-                arenaLabel = label;
-              }
+              if (diff >= 0 && diff < minPosDiff) { minPosDiff = diff; arenaLabel = label; }
             }
-
-            // Se nenhum slot passou ainda hoje (ex: execução antes das 13h BRT),
-            // usa o slot mais recente considerando virada de dia (módulo 1440 min)
+            // Antes do primeiro slot do dia → pega o último slot (virada)
             if (arenaLabel === '??:??') {
               let minAbsDiff = Infinity;
               for (const slot of arenaSlots) {
                 const slotTotal = slot.h * 60 + slot.m;
-                const diff = (brtTotal - slotTotal + 1440) % 1440;
+                const diff  = (brtTotal - slotTotal + 1440) % 1440;
                 const label = String(slot.h).padStart(2,'0') + ':' + String(slot.m).padStart(2,'0');
-                if (diff < minAbsDiff) {
-                  minAbsDiff = diff;
-                  arenaLabel = label;
-                }
+                if (diff < minAbsDiff) { minAbsDiff = diff; arenaLabel = label; }
               }
             }
 
-            // ── Processa cada liga ────────────────────────────────────────────
+            // ── Snapshot por arena + liga ─────────────────────────────────
+            // Estrutura: { 'champion_19:00': [...players], 'aspirant_19:00': [...], ... }
+            const snapshotPath = 'public/ranking-snapshot.json';
+            const snapshots = fs.existsSync(snapshotPath)
+              ? JSON.parse(fs.readFileSync(snapshotPath, 'utf8'))
+              : {};
+
+            // ── Processa cada liga ────────────────────────────────────────
             const leagues = ['champion', 'aspirant'];
             const entries = [];
 
             for (const leagueType of leagues) {
+              const snapKey    = leagueType + '_' + arenaLabel;
               const newPlayers = newData[leagueType] || [];
-              const oldPlayers = oldData ? (oldData[leagueType] || []) : [];
-              const oldMap = Object.fromEntries(oldPlayers.map(p => [p.charName, p]));
 
-              // Vencedores = quem teve wins a mais em relação ao snapshot anterior
+              // Se não tem snapshot desta arena+liga ainda, inicializa e aguarda
+              if (!snapshots[snapKey]) {
+                snapshots[snapKey] = newPlayers;
+                console.log(snapKey + ': snapshot inicializado, aguardando próxima rodada.');
+                continue;
+              }
+
+              const snapPlayers = snapshots[snapKey];
+              const snapMap     = Object.fromEntries(snapPlayers.map(p => [p.charName, p]));
+
               const winners = newPlayers.filter(p => {
-                const old = oldMap[p.charName];
-                return old && p.wins > old.wins;
+                const snap = snapMap[p.charName];
+                return snap && p.wins > snap.wins;
               });
 
-              if (winners.length === 0) continue;
+              if (winners.length === 0) {
+                console.log(snapKey + ': sem diff de wins, snapshot congelado.');
+                continue;
+              }
 
-              // Maior diferença de kills nesta arena (entre os vencedores)
-              const mostKills = winners.reduce((best, p) => {
-                const diffNew  = p.kills  - (oldMap[p.charName]?.kills  ?? p.kills);
-                const diffBest = best.kills - (oldMap[best.charName]?.kills ?? best.kills);
-                return diffNew > diffBest ? p : best;
-              });
+              // ── Kills: pega o maior diff e todos que empataram ────────
+              const killsDiffs = winners.map(p => ({
+                name: p.charName,
+                diff: p.kills - (snapMap[p.charName]?.kills ?? p.kills),
+              }));
+              const maxKills     = Math.max(...killsDiffs.map(x => x.diff));
+              const mostKillsAll = killsDiffs.filter(x => x.diff === maxKills).map(x => x.name);
 
-              // Menor diferença de deaths nesta arena (entre os vencedores)
-              const leastDeaths = winners.reduce((best, p) => {
-                const diffNew  = p.deaths  - (oldMap[p.charName]?.deaths  ?? p.deaths);
-                const diffBest = best.deaths - (oldMap[best.charName]?.deaths ?? best.deaths);
-                return diffNew < diffBest ? p : best;
-              });
-
-              const killsDiff  = mostKills.kills   - (oldMap[mostKills.charName]?.kills   ?? mostKills.kills);
-              const deathsDiff = leastDeaths.deaths - (oldMap[leastDeaths.charName]?.deaths ?? leastDeaths.deaths);
+              // ── Deaths: pega o menor diff e todos que empataram ───────
+              const deathsDiffs    = winners.map(p => ({
+                name: p.charName,
+                diff: p.deaths - (snapMap[p.charName]?.deaths ?? p.deaths),
+              }));
+              const minDeaths       = Math.min(...deathsDiffs.map(x => x.diff));
+              const leastDeathsAll  = deathsDiffs.filter(x => x.diff === minDeaths).map(x => x.name);
 
               entries.push({
                 timestamp:   now.toISOString(),
                 arenaLabel,
                 type:        leagueType,
                 winners:     winners.map(p => p.charName),
-                mostKills:   { name: mostKills.charName,   kills:  killsDiff  },
-                leastDeaths: { name: leastDeaths.charName, deaths: deathsDiff },
+                mostKills:   {
+                  name:  mostKillsAll.length === 1 ? mostKillsAll[0] : mostKillsAll,
+                  kills: maxKills,
+                },
+                leastDeaths: {
+                  name:   leastDeathsAll.length === 1 ? leastDeathsAll[0] : leastDeathsAll,
+                  deaths: minDeaths,
+                },
               });
+
+              // Avança snapshot SOMENTE desta arena+liga
+              snapshots[snapKey] = newPlayers;
+              console.log(snapKey + ': diff detectado, snapshot avançado.');
             }
 
+            // Salva snapshots (todas as chaves, incluindo as não alteradas)
+            fs.writeFileSync(snapshotPath, JSON.stringify(snapshots, null, 2));
+
             if (entries.length === 0) {
-              console.log('Nenhum vencedor encontrado.');
+              console.log('Nenhuma liga com vencedores nesta rodada.');
               process.exit(0);
             }
 
-            // ── Histórico ─────────────────────────────────────────────────────
+            // ── Histórico (3 dias) ────────────────────────────────────────
             const historyPath = 'public/arena-history.json';
             let history = fs.existsSync(historyPath)
               ? JSON.parse(fs.readFileSync(historyPath, 'utf8'))
@@ -163,7 +159,7 @@ jobs:
             history = history.filter(e => e.timestamp >= cutoff);
 
             fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
-            console.log('History atualizado — ligas: ' + entries.map(e => e.type).join(', ') + ' | arena das ' + arenaLabel);
+            console.log('History atualizado — ' + entries.map(e => e.type + '@' + e.arenaLabel).join(', '));
           "
 
           rm -f public/ranking-new.json
@@ -172,7 +168,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add public/ranking.json public/arena-history.json
+          git add public/ranking.json public/ranking-snapshot.json public/arena-history.json
           git diff --staged --quiet || git commit -m "chore: update ranking data"
           git push
 
