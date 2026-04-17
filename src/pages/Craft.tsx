@@ -800,7 +800,7 @@ export function Craft() {
                 color: accent,
               }}
             >
-              <span>📦</span> Itens
+              <span>📦</span> Itens Necessários
             </button>
           </div>
 
