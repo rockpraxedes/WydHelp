@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "timestamp": "2026-04-17T03:59:26.674Z",
+    "arenaLabel": "??:??",
+    "type": "champion",
+    "winners": [
+      "JogoRuim-",
+      "-GoDeViL",
+      "xGandalf",
+      "SheelVPower",
+      "An�ra�e",
+      "-oliveedu-",
+      "meury---",
+      "chocola12",
+      "Bringer",
+      "yTr0n",
+      "oPola",
+      "REIdoSERTAO",
+      "Meiow"
+    ],
+    "mostKills": {
+      "name": "JogoRuim-",
+      "kills": 1197
+    },
+    "leastDeaths": {
+      "name": "-GoDeViL",
+      "deaths": 47
+    }
+  },
+  {
+    "timestamp": "2026-04-17T03:59:26.674Z",
+    "arenaLabel": "??:??",
+    "type": "aspirant",
+    "winners": [
+      "ArenaKids",
+      "S0uryuu",
+      "BMastodonte",
+      "RENEGATE",
+      "-PRETORIUSS-",
+      "Monegasca",
+      "IzzyWilde",
+      "CrookedYoung",
+      "SouDeFoz",
+      "-Cesote-",
+      "Danz3xx",
+      "-AlcheMisT-",
+      "Bowers"
+    ],
+    "mostKills": {
+      "name": "ArenaKids",
+      "kills": 406
+    },
+    "leastDeaths": {
+      "name": "ArenaKids",
+      "deaths": 45
+    }
+  }
+]
