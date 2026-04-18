@@ -22,6 +22,13 @@ interface Section {
   items: ItemKind[];
 }
 
+interface Requirement {
+  id: string;
+  qty: number;
+  leveled?: boolean;       // soma todos os níveis do item
+  alternatives?: string[]; // ids alternativos cujo estoque soma junto (OR)
+}
+
 // ── DADOS CALCULADORA ─────────────────────────────────────────────────────
 
 const DATA: Record<
@@ -84,7 +91,7 @@ const DATA: Record<
   },
 };
 
-const BLESSED_BONUS_PER = [2, 3, 4, 5, 6, 7, 8, 10, 12, 15];
+const BLESSED_BONUS_PER = [ 2, 3, 4, 5, 6, 7, 8, 10, 12, 15 ];
 
 // ── DADOS INVENTÁRIO ──────────────────────────────────────────────────────
 
@@ -303,6 +310,69 @@ const ITEMS_NECESSARIOS: Record<ItemType, Section[]> = {
   ],
 };
 
+// ── REQUISITOS PARA ALERTAS ───────────────────────────────────────────────
+// Apenas itens rastreados no inventário. Gold é ignorado.
+
+const REQUIREMENTS: Record<
+  ItemType,
+  { creation?: Requirement[]; refine?: Requirement[] }
+> = {
+  mortal: {
+    refine: [
+      { id: "pl", qty: 20 },
+      { id: "ref_abencoada", qty: 4, leveled: true },
+    ],
+  },
+  celestial: {
+    creation: [
+      { id: "pedra_sol", qty: 1 },
+      { id: "pedra_vento", qty: 1 },
+      { id: "pedra_agua", qty: 1 },
+      { id: "pedra_terra", qty: 1 },
+      // Pedra Lunar OU Pedra da Escuridão — soma os dois estoques
+      { id: "pedra_lunar", qty: 1, alternatives: [ "pedra_escuridao" ] },
+    ],
+    refine: [
+      // Essence of Gods (normal) OU +9 — qualquer um serve dependendo do step
+      { id: "essence_gods", qty: 4, alternatives: [ "essence_gods_9" ] },
+      { id: "pedra_valkiria", qty: 1 },
+      { id: "soul_fragment", qty: 10 },
+    ],
+  },
+  reddragon: {
+    creation: [
+      { id: "mark_bahamut", qty: 1 },
+      { id: "rd_scale", qty: 10 },
+      { id: "pedra_sol", qty: 1 },
+      { id: "pedra_vento", qty: 1 },
+      { id: "pedra_agua", qty: 1 },
+      { id: "pedra_terra", qty: 1 },
+      { id: "dragon_soul", qty: 1, leveled: true },
+    ],
+    refine: [
+      { id: "valkiria_9", qty: 1 },
+      { id: "rd_scale", qty: 10 },
+      { id: "dragon_soul", qty: 1, leveled: true },
+    ],
+  },
+  bahamut: {
+    creation: [
+      { id: "bahamut_horn", qty: 1 },
+      { id: "bahamut_rune", qty: 20 },
+      { id: "rd_scale", qty: 20 },
+      { id: "bahamut_blood", qty: 3 },
+      { id: "bahamut_soul", qty: 1, leveled: true },
+    ],
+    refine: [
+      { id: "valkiria_9", qty: 1 },
+      { id: "bahamut_soul", qty: 1, leveled: true },
+      { id: "bahamut_horn", qty: 1 },
+      { id: "bahamut_rune", qty: 10 },
+      { id: "rd_scale", qty: 10 },
+    ],
+  },
+};
+
 // ── CORES ─────────────────────────────────────────────────────────────────
 
 const TYPE_ACCENT: Record<ItemType, string> = {
@@ -319,63 +389,103 @@ const TYPE_LABEL: Record<ItemType, string> = {
   bahamut: "Bahamut",
 };
 
-const TYPE_ORDER: ItemType[] = ["mortal", "celestial", "reddragon", "bahamut"];
+const TYPE_ORDER: ItemType[] = [ "mortal", "celestial", "reddragon", "bahamut" ];
 
 // ── STORAGE ───────────────────────────────────────────────────────────────
 
 const STORAGE_KEY = "wyd_inventario";
+const TOGGLE_KEY = "wyd_show_inventario";
+
 type Estoque = Record<string, number>;
 
 function loadEstoque(): Estoque {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {}
+    const raw = localStorage.getItem( STORAGE_KEY );
+    if ( raw ) return JSON.parse( raw );
+  } catch { }
   return {};
 }
 
-function saveEstoque(e: Estoque) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(e));
+function saveEstoque( e: Estoque ) {
+  localStorage.setItem( STORAGE_KEY, JSON.stringify( e ) );
+}
+
+function loadShowInventario(): boolean {
+  try {
+    const raw = localStorage.getItem( TOGGLE_KEY );
+    if ( raw !== null ) return raw === "true";
+  } catch { }
+  return true;
+}
+
+function saveShowInventario( v: boolean ) {
+  try {
+    localStorage.setItem( TOGGLE_KEY, String( v ) );
+  } catch { }
 }
 
 function useInventario() {
-  const [estoque, setEstoque] = useState<Estoque>(loadEstoque);
-  const get = useCallback((key: string) => estoque[key] ?? 0, [estoque]);
-  const inc = useCallback((key: string, delta: number) => {
-    setEstoque((prev) => {
-      const next = { ...prev, [key]: Math.max(0, (prev[key] ?? 0) + delta) };
-      saveEstoque(next);
+  const [ estoque, setEstoque ] = useState<Estoque>( loadEstoque );
+  const get = useCallback( ( key: string ) => estoque[ key ] ?? 0, [ estoque ] );
+  const inc = useCallback( ( key: string, delta: number ) => {
+    setEstoque( ( prev ) => {
+      const next = { ...prev, [ key ]: Math.max( 0, ( prev[ key ] ?? 0 ) + delta ) };
+      saveEstoque( next );
       return next;
-    });
-  }, []);
+    } );
+  }, [] );
   return { get, inc };
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────
 
-function flatItems(itemType: ItemType): ItemKind[] {
+function flatItems( itemType: ItemType ): ItemKind[] {
   const seen = new Set<string>();
   const result: ItemKind[] = [];
-  for (const section of SECTIONS[itemType]) {
-    for (const item of section.items) {
+  for ( const section of SECTIONS[ itemType ] ) {
+    for ( const item of section.items ) {
       const key =
         item.type === "pl"
           ? "pl"
           : item.type === "leveled"
             ? `leveled_${item.id}`
             : item.id;
-      if (!seen.has(key)) {
-        seen.add(key);
-        result.push(item);
+      if ( !seen.has( key ) ) {
+        seen.add( key );
+        result.push( item );
       }
     }
   }
   return result;
 }
 
+/** Retorna quantas vezes a operação pode ser executada com o estoque atual. */
+function calcAvailable(
+  reqs: Requirement[],
+  get: ( k: string ) => number
+): number {
+  let result = Infinity;
+  for ( const req of reqs ) {
+    let stock = req.leveled
+      ? Array.from( { length: 10 }, ( _, i ) => get( `${req.id}_${i}` ) ).reduce(
+        ( a, b ) => a + b,
+        0
+      )
+      : get( req.id );
+
+    if ( req.alternatives ) {
+      stock += req.alternatives.reduce( ( sum, altId ) => sum + get( altId ), 0 );
+    }
+
+    result = Math.min( result, Math.floor( stock / req.qty ) );
+    if ( result === 0 ) return 0; // curto-circuito
+  }
+  return result === Infinity ? 0 : result;
+}
+
 // ── INVENTÁRIO — SUB-COMPONENTES ──────────────────────────────────────────
 
-function SimpleRow({
+function SimpleRow( {
   label,
   stockKey,
   accent,
@@ -385,15 +495,15 @@ function SimpleRow({
   label: string;
   stockKey: string;
   accent: string;
-  get: (k: string) => number;
-  inc: (k: string, d: number) => void;
-}) {
-  const val = get(stockKey);
+  get: ( k: string ) => number;
+  inc: ( k: string, d: number ) => void;
+} ) {
+  const val = get( stockKey );
   return (
     <div className="flex items-center gap-2 py-1.5 border-b border-white/5 last:border-0">
       <span className="flex-1 text-xs text-muted-foreground">{label}</span>
       <button
-        onClick={() => inc(stockKey, -1)}
+        onClick={() => inc( stockKey, -1 )}
         disabled={val === 0}
         className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 disabled:opacity-30 transition-all"
       >
@@ -406,7 +516,7 @@ function SimpleRow({
         {val}
       </span>
       <button
-        onClick={() => inc(stockKey, 1)}
+        onClick={() => inc( stockKey, 1 )}
         className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 transition-all"
       >
         +
@@ -415,21 +525,21 @@ function SimpleRow({
   );
 }
 
-function PLRow({
+function PLRow( {
   accent,
   get,
   inc,
 }: {
   accent: string;
-  get: (k: string) => number;
-  inc: (k: string, d: number) => void;
-}) {
-  const val = get("pl");
+  get: ( k: string ) => number;
+  inc: ( k: string, d: number ) => void;
+} ) {
+  const val = get( "pl" );
   return (
     <div className="flex items-center gap-2 py-1.5 border-b border-white/5 last:border-0">
       <span className="flex-1 text-xs text-muted-foreground">PL</span>
       <button
-        onClick={() => inc("pl", -10)}
+        onClick={() => inc( "pl", -10 )}
         disabled={val === 0}
         className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 disabled:opacity-30 transition-all"
       >
@@ -442,7 +552,7 @@ function PLRow({
         {val.toLocaleString()}
       </span>
       <button
-        onClick={() => inc("pl", 10)}
+        onClick={() => inc( "pl", 10 )}
         className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 transition-all"
       >
         +
@@ -451,7 +561,7 @@ function PLRow({
   );
 }
 
-function LeveledBlock({
+function LeveledBlock( {
   baseId,
   label,
   levels,
@@ -463,18 +573,18 @@ function LeveledBlock({
   label: string;
   levels: number;
   accent: string;
-  get: (k: string) => number;
-  inc: (k: string, d: number) => void;
-}) {
+  get: ( k: string ) => number;
+  inc: ( k: string, d: number ) => void;
+} ) {
   return (
     <div className="py-1.5 border-b border-white/5 last:border-0">
       <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-1.5">
         {label}
       </p>
       <div className="grid grid-cols-5 gap-1">
-        {Array.from({ length: levels }, (_, i) => {
+        {Array.from( { length: levels }, ( _, i ) => {
           const key = `${baseId}_${i}`;
-          const val = get(key);
+          const val = get( key );
           const hasVal = val > 0;
           return (
             <div key={i} className="flex flex-col items-center gap-0.5">
@@ -483,27 +593,27 @@ function LeveledBlock({
               </span>
               <div className="relative">
                 <button
-                  onClick={() => inc(key, 1)}
+                  onClick={() => inc( key, 1 )}
                   className="w-9 h-9 rounded-lg border text-xs font-semibold transition-all duration-150"
                   style={
                     hasVal
                       ? {
-                          background: `${accent}22`,
-                          borderColor: accent,
-                          color: accent,
-                        }
+                        background: `${accent}22`,
+                        borderColor: accent,
+                        color: accent,
+                      }
                       : {
-                          background: "transparent",
-                          borderColor: "rgba(255,255,255,0.10)",
-                          color: "rgba(255,255,255,0.3)",
-                        }
+                        background: "transparent",
+                        borderColor: "rgba(255,255,255,0.10)",
+                        color: "rgba(255,255,255,0.3)",
+                      }
                   }
                 >
                   {val}
                 </button>
                 {hasVal && (
                   <button
-                    onClick={() => inc(key, -1)}
+                    onClick={() => inc( key, -1 )}
                     className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-black/60 border border-white/20 text-[9px] text-white/60 hover:text-white hover:border-white/50 flex items-center justify-center transition-all"
                   >
                     −
@@ -512,16 +622,26 @@ function LeveledBlock({
               </div>
             </div>
           );
-        })}
+        } )}
       </div>
     </div>
   );
 }
 
-function InventarioPanel({ itemType }: { itemType: ItemType }) {
-  const { get, inc } = useInventario();
-  const accent = TYPE_ACCENT[itemType];
-  const items = useMemo(() => flatItems(itemType), [itemType]);
+// ── INVENTÁRIO — PAINEL ───────────────────────────────────────────────────
+// get/inc agora vêm de fora (lifted para Craft)
+
+function InventarioPanel( {
+  itemType,
+  get,
+  inc,
+}: {
+  itemType: ItemType;
+  get: ( k: string ) => number;
+  inc: ( k: string, d: number ) => void;
+} ) {
+  const accent = TYPE_ACCENT[ itemType ];
+  const items = useMemo( () => flatItems( itemType ), [ itemType ] );
 
   return (
     <div
@@ -535,10 +655,10 @@ function InventarioPanel({ itemType }: { itemType: ItemType }) {
         Inventário
       </p>
       <div>
-        {items.map((item, idx) => {
-          if (item.type === "pl")
+        {items.map( ( item, idx ) => {
+          if ( item.type === "pl" )
             return <PLRow key="pl" accent={accent} get={get} inc={inc} />;
-          if (item.type === "leveled")
+          if ( item.type === "leveled" )
             return (
               <LeveledBlock
                 key={`${item.id}_${idx}`}
@@ -560,7 +680,95 @@ function InventarioPanel({ itemType }: { itemType: ItemType }) {
               inc={inc}
             />
           );
-        })}
+        } )}
+      </div>
+    </div>
+  );
+}
+
+// ── ALERTAS DE DISPONIBILIDADE ────────────────────────────────────────────
+
+function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
+  const summary = useMemo(
+    () =>
+      TYPE_ORDER.map( ( type ) => {
+        const reqs = REQUIREMENTS[ type ];
+        const creation = reqs.creation
+          ? calcAvailable( reqs.creation, get )
+          : null;
+        const refine = reqs.refine ? calcAvailable( reqs.refine, get ) : null;
+        const hasAny = ( creation ?? 0 ) > 0 || ( refine ?? 0 ) > 0;
+        return { type, creation, refine, hasAny };
+      } ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ get ]
+  );
+
+  return (
+    <div>
+      <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-2">
+        Disponibilidade
+      </p>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {summary.map( ( { type, creation, refine, hasAny } ) => {
+          const accent = TYPE_ACCENT[ type ];
+          return (
+            <div
+              key={type}
+              className="rounded-lg border p-2.5 space-y-1.5 transition-all duration-300"
+              style={{
+                borderColor: hasAny
+                  ? `${accent}50`
+                  : "rgba(255,255,255,0.06)",
+                background: hasAny ? `${accent}10` : "transparent",
+              }}
+            >
+              <p
+                className="text-[10px] font-semibold uppercase tracking-wider"
+                style={{
+                  color: hasAny ? accent : "rgba(255,255,255,0.25)",
+                }}
+              >
+                {TYPE_LABEL[ type ]}
+              </p>
+
+              {creation !== null && (
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-[10px] text-muted-foreground">
+                    Criação
+                  </span>
+                  <span
+                    className="text-[11px] font-bold tabular-nums px-1.5 py-0.5 rounded"
+                    style={{
+                      color: creation > 0 ? "#fff" : "rgba(255,255,255,0.2)",
+                      background:
+                        creation > 0 ? `${accent}44` : "transparent",
+                    }}
+                  >
+                    {creation}x
+                  </span>
+                </div>
+              )}
+
+              {refine !== null && (
+                <div className="flex items-center justify-between gap-1">
+                  <span className="text-[10px] text-muted-foreground">
+                    Refinação
+                  </span>
+                  <span
+                    className="text-[11px] font-bold tabular-nums px-1.5 py-0.5 rounded"
+                    style={{
+                      color: refine > 0 ? "#fff" : "rgba(255,255,255,0.2)",
+                      background: refine > 0 ? `${accent}44` : "transparent",
+                    }}
+                  >
+                    {refine}x
+                  </span>
+                </div>
+              )}
+            </div>
+          );
+        } )}
       </div>
     </div>
   );
@@ -568,7 +776,7 @@ function InventarioPanel({ itemType }: { itemType: ItemType }) {
 
 // ── MODAL DE ITENS NECESSÁRIOS ────────────────────────────────────────────
 
-function ItensModal({
+function ItensModal( {
   itemType,
   accent,
   onClose,
@@ -576,8 +784,8 @@ function ItensModal({
   itemType: ItemType;
   accent: string;
   onClose: () => void;
-}) {
-  const sections = ITEMS_NECESSARIOS[itemType];
+} ) {
+  const sections = ITEMS_NECESSARIOS[ itemType ];
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -587,11 +795,11 @@ function ItensModal({
       <div
         className="w-full max-w-md rounded-2xl border p-5 space-y-4 max-h-[80vh] overflow-y-auto"
         style={{ borderColor: `${accent}40`, background: "#0f1117" }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={( e ) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold" style={{ color: accent }}>
-            Itens Necessários — {TYPE_LABEL[itemType]}
+            Itens Necessários — {TYPE_LABEL[ itemType ]}
           </p>
           <button
             onClick={onClose}
@@ -600,7 +808,7 @@ function ItensModal({
             ✕
           </button>
         </div>
-        {sections.map((section) => (
+        {sections.map( ( section ) => (
           <div key={section.title}>
             <p
               className="text-[10px] font-medium uppercase tracking-wider mb-2 pb-1 border-b"
@@ -609,14 +817,14 @@ function ItensModal({
               {section.title}
             </p>
             <ul className="space-y-1">
-              {section.items.map((item, idx) => {
+              {section.items.map( ( item, idx ) => {
                 const dot = (
                   <span
                     className="w-1.5 h-1.5 rounded-full shrink-0"
                     style={{ background: accent }}
                   />
                 );
-                if (item.type === "pl")
+                if ( item.type === "pl" )
                   return (
                     <li
                       key="pl"
@@ -625,7 +833,7 @@ function ItensModal({
                       {dot} 20x - Poeiras de Lac
                     </li>
                   );
-                if (item.type === "leveled")
+                if ( item.type === "leveled" )
                   return (
                     <li
                       key={`${item.id}_${idx}`}
@@ -645,10 +853,10 @@ function ItensModal({
                     {dot} {item.label}
                   </li>
                 );
-              })}
+              } )}
             </ul>
           </div>
-        ))}
+        ) )}
       </div>
     </div>
   );
@@ -656,20 +864,20 @@ function ItensModal({
 
 // ── SWITCH ────────────────────────────────────────────────────────────────
 
-function Toggle({
+function Toggle( {
   checked,
   onChange,
   accent,
   label,
 }: {
   checked: boolean;
-  onChange: (v: boolean) => void;
+  onChange: ( v: boolean ) => void;
   accent: string;
   label: string;
-}) {
+} ) {
   return (
     <button
-      onClick={() => onChange(!checked)}
+      onClick={() => onChange( !checked )}
       className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors select-none"
     >
       <span>{label}</span>
@@ -695,37 +903,47 @@ function Toggle({
 // ── PÁGINA PRINCIPAL ──────────────────────────────────────────────────────
 
 export function Craft() {
-  const [itemType, setItemType] = useState<ItemType>("mortal");
-  const [stepIdx, setStepIdx] = useState(0);
-  const [soulLvl, setSoulLvl] = useState(0);
-  const [blessedLvl, setBlessedLvl] = useState(0);
-  const [showInventario, setShowInventario] = useState(true);
-  const [showItensModal, setShowItensModal] = useState(false);
+  const [ itemType, setItemType ] = useState<ItemType>( "mortal" );
+  const [ stepIdx, setStepIdx ] = useState( 0 );
+  const [ soulLvl, setSoulLvl ] = useState( 0 );
+  const [ blessedLvl, setBlessedLvl ] = useState( 0 );
+  const [ showInventario, setShowInventario ] = useState<boolean>(
+    loadShowInventario
+  );
+  const [ showItensModal, setShowItensModal ] = useState( false );
 
-  const config = DATA[itemType];
-  const safeStepIdx = Math.min(stepIdx, config.steps.length - 1);
-  const step = config.steps[safeStepIdx];
-  const accent = TYPE_ACCENT[itemType];
+  // useInventario agora fica aqui — compartilhado entre InventarioPanel e AlertasBanner
+  const { get, inc } = useInventario();
+
+  const config = DATA[ itemType ];
+  const safeStepIdx = Math.min( stepIdx, config.steps.length - 1 );
+  const step = config.steps[ safeStepIdx ];
+  const accent = TYPE_ACCENT[ itemType ];
 
   const base = step.base;
   let bonus = 0;
   let bonusLabel = "";
 
-  if (config.hasSoul && step.soulBonus) {
-    bonus = parseFloat((step.soulBonus * soulLvl).toFixed(4));
+  if ( config.hasSoul && step.soulBonus ) {
+    bonus = parseFloat( ( step.soulBonus * soulLvl ).toFixed( 4 ) );
     bonusLabel = `Bônus ${config.soulLabel} +${soulLvl}`;
-  } else if (itemType === "mortal") {
-    bonus = BLESSED_BONUS_PER[blessedLvl] * 4;
-    bonusLabel = `4x Ref. Abençoada +${blessedLvl} (${BLESSED_BONUS_PER[blessedLvl]}% × 4)`;
+  } else if ( itemType === "mortal" ) {
+    bonus = BLESSED_BONUS_PER[ blessedLvl ] * 4;
+    bonusLabel = `4x Ref. Abençoada +${blessedLvl} (${BLESSED_BONUS_PER[ blessedLvl ]}% × 4)`;
   }
 
-  const final = Math.min(100, parseFloat((base + bonus).toFixed(4)));
+  const final = Math.min( 100, parseFloat( ( base + bonus ).toFixed( 4 ) ) );
 
-  function handleTypeChange(t: ItemType) {
-    setItemType(t);
-    setStepIdx(0);
-    setSoulLvl(0);
-    setBlessedLvl(0);
+  function handleTypeChange( t: ItemType ) {
+    setItemType( t );
+    setStepIdx( 0 );
+    setSoulLvl( 0 );
+    setBlessedLvl( 0 );
+  }
+
+  function handleToggleInventario( v: boolean ) {
+    setShowInventario( v );
+    saveShowInventario( v );
   }
 
   return (
@@ -734,7 +952,7 @@ export function Craft() {
         <ItensModal
           itemType={itemType}
           accent={accent}
-          onClose={() => setShowItensModal(false)}
+          onClose={() => setShowItensModal( false )}
         />
       )}
 
@@ -750,36 +968,39 @@ export function Craft() {
 
       {/* Seletor de tipo */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        {TYPE_ORDER.map((t) => (
+        {TYPE_ORDER.map( ( t ) => (
           <button
             key={t}
-            onClick={() => handleTypeChange(t)}
+            onClick={() => handleTypeChange( t )}
             className="py-2.5 px-3 rounded-lg text-sm font-medium border transition-all duration-150"
             style={
               itemType === t
                 ? {
-                    background: `${TYPE_ACCENT[t]}22`,
-                    borderColor: TYPE_ACCENT[t],
-                    color: TYPE_ACCENT[t],
-                  }
+                  background: `${TYPE_ACCENT[ t ]}22`,
+                  borderColor: TYPE_ACCENT[ t ],
+                  color: TYPE_ACCENT[ t ],
+                }
                 : {
-                    background: "transparent",
-                    borderColor: "rgba(255,255,255,0.1)",
-                    color: "rgba(255,255,255,0.45)",
-                  }
+                  background: "transparent",
+                  borderColor: "rgba(255,255,255,0.1)",
+                  color: "rgba(255,255,255,0.45)",
+                }
             }
           >
-            {TYPE_LABEL[t]}
+            {TYPE_LABEL[ t ]}
           </button>
-        ))}
+        ) )}
       </div>
+
+      {/* Alertas de disponibilidade — usa o mesmo get do inventário */}
+      <AlertasBanner get={get} />
 
       {/* Layout: inventário à esquerda + calculadora à direita */}
       <div className="flex flex-col lg:flex-row gap-4 items-start justify-center">
         {/* ── Inventário (esquerda) ── */}
         {showInventario && (
           <div className="w-full lg:w-64 shrink-0">
-            <InventarioPanel itemType={itemType} />
+            <InventarioPanel itemType={itemType} get={get} inc={inc} />
           </div>
         )}
 
@@ -792,12 +1013,12 @@ export function Craft() {
           <div className="flex items-center justify-between">
             <Toggle
               checked={showInventario}
-              onChange={setShowInventario}
+              onChange={handleToggleInventario}
               accent={accent}
               label="Inventário"
             />
             <button
-              onClick={() => setShowItensModal(true)}
+              onClick={() => setShowItensModal( true )}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-medium transition-all hover:opacity-80"
               style={{
                 borderColor: `${accent}50`,
@@ -830,28 +1051,28 @@ export function Craft() {
               Etapa de refinação
             </p>
             <div className="flex flex-wrap gap-1.5">
-              {config.steps.map((s, i) => (
+              {config.steps.map( ( s, i ) => (
                 <button
                   key={i}
-                  onClick={() => setStepIdx(i)}
+                  onClick={() => setStepIdx( i )}
                   className="px-2.5 py-1 rounded-lg text-xs font-mono transition-all duration-150 border"
                   style={
                     safeStepIdx === i
                       ? {
-                          background: accent,
-                          borderColor: accent,
-                          color: "#fff",
-                        }
+                        background: accent,
+                        borderColor: accent,
+                        color: "#fff",
+                      }
                       : {
-                          background: "transparent",
-                          borderColor: "rgba(255,255,255,0.12)",
-                          color: "rgba(255,255,255,0.5)",
-                        }
+                        background: "transparent",
+                        borderColor: "rgba(255,255,255,0.12)",
+                        color: "rgba(255,255,255,0.5)",
+                      }
                   }
                 >
                   {s.label}
                 </button>
-              ))}
+              ) )}
             </div>
           </div>
 
@@ -862,28 +1083,28 @@ export function Craft() {
                 {config.soulLabel} nível
               </p>
               <div className="grid grid-cols-5 gap-1.5">
-                {Array.from({ length: 10 }, (_, i) => (
+                {Array.from( { length: 10 }, ( _, i ) => (
                   <button
                     key={i}
-                    onClick={() => setSoulLvl(i)}
+                    onClick={() => setSoulLvl( i )}
                     className="h-8 rounded-lg text-xs font-mono transition-all duration-150 border"
                     style={
                       soulLvl === i
                         ? {
-                            background: accent,
-                            borderColor: accent,
-                            color: "#fff",
-                          }
+                          background: accent,
+                          borderColor: accent,
+                          color: "#fff",
+                        }
                         : {
-                            background: "transparent",
-                            borderColor: "rgba(255,255,255,0.12)",
-                            color: "rgba(255,255,255,0.5)",
-                          }
+                          background: "transparent",
+                          borderColor: "rgba(255,255,255,0.12)",
+                          color: "rgba(255,255,255,0.5)",
+                        }
                     }
                   >
                     +{i}
                   </button>
-                ))}
+                ) )}
               </div>
             </div>
           )}
@@ -895,32 +1116,32 @@ export function Craft() {
                 Refinação Abençoada nível
               </p>
               <div className="grid grid-cols-5 gap-1.5">
-                {Array.from({ length: 10 }, (_, i) => (
+                {Array.from( { length: 10 }, ( _, i ) => (
                   <button
                     key={i}
-                    onClick={() => setBlessedLvl(i)}
+                    onClick={() => setBlessedLvl( i )}
                     className="h-8 rounded-lg text-xs font-mono transition-all duration-150 border"
                     style={
                       blessedLvl === i
                         ? {
-                            background: accent,
-                            borderColor: accent,
-                            color: "#fff",
-                          }
+                          background: accent,
+                          borderColor: accent,
+                          color: "#fff",
+                        }
                         : {
-                            background: "transparent",
-                            borderColor: "rgba(255,255,255,0.12)",
-                            color: "rgba(255,255,255,0.5)",
-                          }
+                          background: "transparent",
+                          borderColor: "rgba(255,255,255,0.12)",
+                          color: "rgba(255,255,255,0.5)",
+                        }
                     }
                   >
                     +{i}
                   </button>
-                ))}
+                ) )}
               </div>
               <p className="text-xs text-muted-foreground mt-1.5">
-                4 pedras · +{blessedLvl} = {BLESSED_BONUS_PER[blessedLvl]}% ·
-                bônus total = {BLESSED_BONUS_PER[blessedLvl] * 4}%
+                4 pedras · +{blessedLvl} = {BLESSED_BONUS_PER[ blessedLvl ]}% ·
+                bônus total = {BLESSED_BONUS_PER[ blessedLvl ] * 4}%
               </p>
             </div>
           )}
@@ -934,7 +1155,7 @@ export function Craft() {
               className="text-xs font-medium uppercase tracking-wider mb-2"
               style={{ color: accent }}
             >
-              Resultado — {TYPE_LABEL[itemType]}
+              Resultado — {TYPE_LABEL[ itemType ]}
             </p>
             <div className="space-y-1 text-xs text-muted-foreground">
               <p>
