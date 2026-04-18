@@ -1,5 +1,58 @@
 [
   {
+    "timestamp": "2026-04-18T17:28:13.695Z",
+    "arenaLabel": "13:00",
+    "type": "champion",
+    "winners": [
+      "JogoRuim-",
+      "-GoDeViL",
+      "xGandalf",
+      "Pr�Hist�rico",
+      "-BeFree-",
+      "yTr0n",
+      "-onnn",
+      "Ericonha",
+      "Gideao",
+      "Tilteca"
+    ],
+    "mostKills": {
+      "name": "JogoRuim-",
+      "kills": 24
+    },
+    "leastDeaths": {
+      "name": "-GoDeViL",
+      "deaths": 0
+    }
+  },
+  {
+    "timestamp": "2026-04-18T17:28:13.695Z",
+    "arenaLabel": "13:00",
+    "type": "aspirant",
+    "winners": [
+      "DrWyd",
+      "S0uryuu",
+      "-MeninoBom-",
+      "II--Zero--II",
+      "XxXDestroXxX",
+      "MrPopo",
+      "L1ND1NH4",
+      "PomboAlpha",
+      "CoisaLindaBB",
+      "Lanah",
+      "Jujubah",
+      "D�sky",
+      "Inkz"
+    ],
+    "mostKills": {
+      "name": "DrWyd",
+      "kills": 36
+    },
+    "leastDeaths": {
+      "name": "S0uryuu",
+      "deaths": 0
+    }
+  },
+  {
     "timestamp": "2026-04-18T03:27:08.259Z",
     "arenaLabel": "23:00",
     "type": "champion",
