@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 
+
 // ── TIPOS ─────────────────────────────────────────────────────────────────
 
 type ItemType = "mortal" | "celestial" | "reddragon" | "bahamut";
@@ -689,6 +690,7 @@ function InventarioPanel( {
 // ── ALERTAS DE DISPONIBILIDADE ────────────────────────────────────────────
 
 function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
+  const [ open, setOpen ] = useState( true );
   const summary = useMemo(
     () =>
       TYPE_ORDER.map( ( type ) => {
@@ -706,70 +708,77 @@ function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
 
   return (
     <div>
-      <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-2">
-        Disponibilidade
-      </p>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        {summary.map( ( { type, creation, refine, hasAny } ) => {
-          const accent = TYPE_ACCENT[ type ];
-          return (
-            <div
-              key={type}
-              className="rounded-lg border p-2.5 space-y-1.5 transition-all duration-300"
-              style={{
-                borderColor: hasAny
-                  ? `${accent}50`
-                  : "rgba(255,255,255,0.06)",
-                background: hasAny ? `${accent}10` : "transparent",
-              }}
-            >
-              <p
-                className="text-[10px] font-semibold uppercase tracking-wider"
+      <button
+        onClick={() => setOpen( !open )}
+        className="flex items-center gap-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-2 hover:text-foreground transition-colors"
+      >
+        <span>Disponibilidade</span>
+        <span className="text-xs">
+          {open ? "▼" : "▶"}
+        </span>
+      </button>
+      {open && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {summary.map( ( { type, creation, refine, hasAny } ) => {
+            const accent = TYPE_ACCENT[ type ];
+            return (
+              <div
+                key={type}
+                className="rounded-lg border p-2.5 space-y-1.5 transition-all duration-300"
                 style={{
-                  color: hasAny ? accent : "rgba(255,255,255,0.25)",
+                  borderColor: hasAny
+                    ? `${accent}50`
+                    : "rgba(255,255,255,0.06)",
+                  background: hasAny ? `${accent}10` : "transparent",
                 }}
               >
-                {TYPE_LABEL[ type ]}
-              </p>
+                <p
+                  className="text-[10px] font-semibold uppercase tracking-wider"
+                  style={{
+                    color: hasAny ? accent : "rgba(255,255,255,0.25)",
+                  }}
+                >
+                  {TYPE_LABEL[ type ]}
+                </p>
 
-              {creation !== null && (
-                <div className="flex items-center justify-between gap-1">
-                  <span className="text-[10px] text-muted-foreground">
-                    Criação
-                  </span>
-                  <span
-                    className="text-[11px] font-bold tabular-nums px-1.5 py-0.5 rounded"
-                    style={{
-                      color: creation > 0 ? "#fff" : "rgba(255,255,255,0.2)",
-                      background:
-                        creation > 0 ? `${accent}44` : "transparent",
-                    }}
-                  >
-                    {creation}x
-                  </span>
-                </div>
-              )}
+                {creation !== null && (
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="text-[10px] text-muted-foreground">
+                      Criação
+                    </span>
+                    <span
+                      className="text-[11px] font-bold tabular-nums px-1.5 py-0.5 rounded"
+                      style={{
+                        color: creation > 0 ? "#fff" : "rgba(255,255,255,0.2)",
+                        background:
+                          creation > 0 ? `${accent}44` : "transparent",
+                      }}
+                    >
+                      {creation}x
+                    </span>
+                  </div>
+                )}
 
-              {refine !== null && (
-                <div className="flex items-center justify-between gap-1">
-                  <span className="text-[10px] text-muted-foreground">
-                    Refinação
-                  </span>
-                  <span
-                    className="text-[11px] font-bold tabular-nums px-1.5 py-0.5 rounded"
-                    style={{
-                      color: refine > 0 ? "#fff" : "rgba(255,255,255,0.2)",
-                      background: refine > 0 ? `${accent}44` : "transparent",
-                    }}
-                  >
-                    {refine}x
-                  </span>
-                </div>
-              )}
-            </div>
-          );
-        } )}
-      </div>
+                {refine !== null && (
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="text-[10px] text-muted-foreground">
+                      Refinação
+                    </span>
+                    <span
+                      className="text-[11px] font-bold tabular-nums px-1.5 py-0.5 rounded"
+                      style={{
+                        color: refine > 0 ? "#fff" : "rgba(255,255,255,0.2)",
+                        background: refine > 0 ? `${accent}44` : "transparent",
+                      }}
+                    >
+                      {refine}x
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          } )}
+        </div> )}
     </div>
   );
 }
