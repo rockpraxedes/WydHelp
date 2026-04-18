@@ -1,5 +1,84 @@
 [
   {
+    "timestamp": "2026-04-18T03:27:08.259Z",
+    "arenaLabel": "23:00",
+    "type": "champion",
+    "winners": [
+      "JogoRuim-",
+      "-GoDeViL",
+      "xGandalf",
+      "Duel",
+      "SheelVPower",
+      "Qtpie",
+      "6-nnnnnn",
+      "Karinud",
+      "Releva",
+      "-oliveedu-",
+      "meury---",
+      "chocola12",
+      "Paloff",
+      "oPola",
+      "Raften-",
+      "DeathQuick",
+      "Residen�Evil",
+      "Despina",
+      "CROSSBOY",
+      "Brasil-SC",
+      "Aorb",
+      "-onnn",
+      "Tenshinham",
+      "KyungSoon",
+      "PoneyCrazzy"
+    ],
+    "mostKills": {
+      "name": "JogoRuim-",
+      "kills": 35
+    },
+    "leastDeaths": {
+      "name": "-GoDeViL",
+      "deaths": 0
+    }
+  },
+  {
+    "timestamp": "2026-04-18T03:27:08.259Z",
+    "arenaLabel": "23:00",
+    "type": "aspirant",
+    "winners": [
+      "ArenaKids",
+      "�padre",
+      "S0uryuu",
+      "RENEGATE",
+      "Kizar-HT",
+      "-PRETORIUSS-",
+      "-deePy",
+      "SrSinistros",
+      "aiaigostoso",
+      "Aizz",
+      "IzzyWilde",
+      "joaozk7",
+      "TioTk",
+      "MrPopo",
+      "EDworld777",
+      "L3thyn",
+      "AnaarK-",
+      "Lanah",
+      "Jujubah",
+      "lScarFace",
+      "Danz3xx",
+      "Melik",
+      "-ShurpZ-",
+      "HT-BotaFull"
+    ],
+    "mostKills": {
+      "name": "lScarFace",
+      "kills": 19
+    },
+    "leastDeaths": {
+      "name": "ArenaKids",
+      "deaths": 0
+    }
+  },
+  {
     "timestamp": "2026-04-17T22:49:37.207Z",
     "arenaLabel": "19:00",
     "type": "aspirant",
