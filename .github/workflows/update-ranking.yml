@@ -29,14 +29,9 @@ jobs:
 
       - name: Fetch ranking and update history
         run: |
-          # Baixa dados frescos da API
           curl -sf "https://rn3xfhamppsetddkod6vwc24lu0lhcek.lambda-url.us-east-1.on.aws/royal-arena" \
             -o public/ranking-new.json
-
-          # Roda o script de atualização passando o arquivo recém baixado
           node scripts/update-ranking.js public/ranking-new.json
-
-          # Remove arquivo temporário
           rm -f public/ranking-new.json
 
       - name: Commit updated files
@@ -46,7 +41,7 @@ jobs:
           git add public/ranking.json public/ranking-snapshot.json public/arena-history.json
           git diff --staged --quiet && echo "Nada mudou, pulando commit." || (
             git commit -m "chore: update ranking data"
-            git pull --rebase origin main
+            git pull --rebase --autostash origin main
             git push
           )
 
