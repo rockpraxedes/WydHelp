@@ -1,5 +1,59 @@
 [
   {
+    "timestamp": "2026-04-18T22:56:58.796Z",
+    "arenaLabel": "19:00",
+    "type": "champion",
+    "winners": [
+      "JogoRuim-",
+      "SheelVPower",
+      "-Parkmann-",
+      "Stuk4",
+      "-oliveedu-",
+      "JoaumLiaum",
+      "-oNezera",
+      "ThuThuMaL",
+      "Cnut",
+      "Skruull",
+      "���L��o��"
+    ],
+    "mostKills": {
+      "name": "JogoRuim-",
+      "kills": 31
+    },
+    "leastDeaths": {
+      "name": "-oNezera",
+      "deaths": 0
+    }
+  },
+  {
+    "timestamp": "2026-04-18T22:56:58.796Z",
+    "arenaLabel": "19:00",
+    "type": "aspirant",
+    "winners": [
+      "�padre",
+      "-MeninoBom-",
+      "Kizar-HT",
+      "Vassy",
+      "-NexxoR-",
+      "rfaell",
+      "-Tucano-",
+      "L3thyn",
+      "Cama",
+      "Danz3xx",
+      "--2OMATAR--",
+      "HT-BotaFull",
+      "BateTorto"
+    ],
+    "mostKills": {
+      "name": "rfaell",
+      "kills": 12
+    },
+    "leastDeaths": {
+      "name": "L3thyn",
+      "deaths": 0
+    }
+  },
+  {
     "timestamp": "2026-04-18T17:28:13.695Z",
     "arenaLabel": "13:00",
     "type": "champion",
