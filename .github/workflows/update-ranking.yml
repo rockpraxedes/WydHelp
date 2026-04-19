@@ -2,7 +2,10 @@ name: Update Ranking
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    # Roda a cada 20 min das 12:00 às 01:00 BRT (UTC-3)
+    # 12:00–23:59 BRT = 15:00–02:59 UTC
+    - cron: "*/20 15-23 * * *"   # 12:00–20:59 BRT
+    - cron: "*/20 0-4 * * *"     # 21:00–01:00 BRT
   workflow_dispatch:
 
 permissions:
@@ -27,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Fetch ranking and update history
+      - name: Fetch ranking and update snapshots
         run: |
           curl -sf "https://rn3xfhamppsetddkod6vwc24lu0lhcek.lambda-url.us-east-1.on.aws/royal-arena" \
             -o public/ranking-new.json
@@ -38,7 +41,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add public/ranking.json public/ranking-snapshot.json public/arena-history.json
+          git add public/ranking.json public/ranking-snapshots.json
           git diff --staged --quiet && echo "Nada mudou, pulando commit." || (
             git commit -m "chore: update ranking data"
             git pull --rebase --autostash origin main

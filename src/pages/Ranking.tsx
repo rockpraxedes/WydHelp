@@ -11,7 +11,8 @@ const API_URL = process.env.NODE_ENV === 'development'
   ? '/api/royal-arena'
   : '/ranking.json'
 
-const HISTORY_URL = '/arena-history.json'
+// Replaces arena-history.json – full ranking snapshots saved by update-ranking.js
+const SNAPSHOTS_URL = '/ranking-snapshots.json'
 
 const CLASS_MAP: Record<string, string> = {
   '0': 'TK',
@@ -79,7 +80,9 @@ const RANKING_REWARDS: Record<TabType, { range: string; reward: string }[]> = {
   ],
 }
 
-interface Player {
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface RawPlayer {
   charName: string
   class: number
   subClass: number
@@ -87,15 +90,31 @@ interface Player {
   kills: number
   deaths: number
   points: number
+}
+
+interface Player extends RawPlayer {
   bonusKill: number
   total: number
   displayRank: number
 }
 
+/**
+ * A full ranking snapshot saved by update-ranking.js every time a new arena
+ * is detected (i.e. any player gained ≥1 win since the previous snapshot).
+ */
+interface RankingSnapshot {
+  timestamp: string          // ISO-8601 UTC
+  slotLabel: string          // "19:00" in BRT – used as arena display label
+  date: string               // "2026-04-19" in BRT
+  champion: RawPlayer[]
+  aspirant: RawPlayer[]
+}
+
+/** Computed from two consecutive snapshots – what the ArenaHistoryCard displays. */
 interface ArenaEntry {
   timestamp: string
   arenaLabel: string
-  type: 'champion' | 'aspirant'
+  type: TabType
   winners: string[]
   mostKills: { name: string | string[]; kills: number }
   leastDeaths: { name: string | string[]; deaths: number }
@@ -105,6 +124,103 @@ type SortKey = 'rank' | 'charName' | 'class' | 'points' | 'wins' | 'kills' | 'de
 type SortDir = 'asc' | 'desc'
 
 interface SortState { key: SortKey; dir: SortDir }
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function buildPlayerMap( list: RawPlayer[] ): Record<string, RawPlayer> {
+  const m: Record<string, RawPlayer> = {}
+  for ( const p of list ) m[ p.charName ] = p
+  return m
+}
+
+/**
+ * Given two consecutive ranking snapshots, compute the ArenaEntry for a
+ * specific type (champion | aspirant).
+ *
+ * A player is counted as a winner when their `wins` count increased vs the
+ * previous snapshot.  kills / deaths diff tell us their performance in that
+ * specific arena.
+ */
+function computeArenaEntry(
+  curr: RankingSnapshot,
+  prev: RankingSnapshot,
+  type: TabType
+): ArenaEntry {
+  const currList = curr[ type ] ?? []
+  const prevMap = buildPlayerMap( prev[ type ] ?? [] )
+
+  interface Diff {
+    charName: string
+    winsDiff: number
+    killsDiff: number
+    deathsDiff: number
+  }
+
+  const diffs: Diff[] = currList
+    .map( p => {
+      const old = prevMap[ p.charName ]
+      return {
+        charName: p.charName,
+        winsDiff: p.wins - ( old?.wins ?? 0 ),
+        killsDiff: p.kills - ( old?.kills ?? 0 ),
+        deathsDiff: p.deaths - ( old?.deaths ?? 0 ),
+      }
+    } )
+    .filter( d => d.winsDiff > 0 ) // only players who actually won this arena
+
+  // Sort winners by most wins, then most kills as tiebreaker
+  const winners = [ ...diffs ]
+    .sort( ( a, b ) => b.winsDiff - a.winsDiff || b.killsDiff - a.killsDiff )
+    .map( d => d.charName )
+
+  // Most kills in this arena
+  const topKiller = diffs.reduce<Diff | null>(
+    ( best, d ) => ( !best || d.killsDiff > best.killsDiff ? d : best ),
+    null
+  )
+
+  // Least deaths among winners (minimum deaths in this arena)
+  const leastDeadPlayer = diffs.reduce<Diff | null>(
+    ( best, d ) => ( !best || d.deathsDiff < best.deathsDiff ? d : best ),
+    null
+  )
+
+  return {
+    timestamp: curr.timestamp,
+    arenaLabel: curr.slotLabel,
+    type,
+    winners,
+    mostKills: {
+      name: topKiller?.charName ?? '-',
+      kills: topKiller?.killsDiff ?? 0,
+    },
+    leastDeaths: {
+      name: leastDeadPlayer?.charName ?? '-',
+      deaths: leastDeadPlayer?.deathsDiff ?? 0,
+    },
+  }
+}
+
+/**
+ * Converts an ordered array of RankingSnapshots (oldest → newest) into
+ * ArenaEntry objects by diffing each pair of consecutive snapshots.
+ * Returns entries newest-first so the latest arena is at index 0.
+ */
+function snapshotsToArenaEntries(
+  snapshots: RankingSnapshot[],
+  type: TabType
+): ArenaEntry[] {
+  if ( snapshots.length < 2 ) return []
+
+  const entries: ArenaEntry[] = []
+  // Walk from newest back so results end up newest-first
+  for ( let i = snapshots.length - 1; i >= 1; i-- ) {
+    entries.push( computeArenaEntry( snapshots[ i ], snapshots[ i - 1 ], type ) )
+  }
+  return entries
+}
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 function SortIcon( { col, sort }: { col: SortKey; sort: SortState } ) {
   if ( sort.key !== col ) return <ArrowUpDownIcon className="w-3 h-3 opacity-40" />
@@ -331,9 +447,11 @@ function RewardsModal( { tab, onClose }: { tab: TabType; onClose: () => void } )
   )
 }
 
+// ─── Main page component ──────────────────────────────────────────────────────
+
 export function Ranking() {
-  const [ data, setData ] = useState<{ champion: Player[]; aspirant: Player[] } | null>( null )
-  const [ history, setHistory ] = useState<ArenaEntry[]>( [] )
+  const [ data, setData ] = useState<{ champion: RawPlayer[]; aspirant: RawPlayer[] } | null>( null )
+  const [ snapshots, setSnapshots ] = useState<RankingSnapshot[]>( [] )
   const [ loading, setLoading ] = useState( true )
   const [ error, setError ] = useState<string | null>( null )
   const [ tab, setTab ] = useState<TabType>( 'champion' )
@@ -344,21 +462,24 @@ export function Ranking() {
 
   useEffect( () => {
     Promise.all( [
-      fetch( API_URL ).then( r => r.ok ? r.json() : null ),
-      fetch( HISTORY_URL ).then( r => r.ok ? r.json() : [] )
+      fetch( API_URL ).then( r => r.ok ? r.json() : null ).catch( () => null ),
+      fetch( SNAPSHOTS_URL ).then( r => r.ok ? r.json() : [] ).catch( () => [] ),
     ] )
-      .then( ( [ rankingData, historyData ] ) => {
+      .then( ( [ rankingData, snapshotData ] ) => {
         if ( rankingData ) setData( rankingData )
         else setError( 'Não foi possível carregar o ranking.' )
-        setHistory( Array.isArray( historyData ) ? historyData : [] )
+        setSnapshots( Array.isArray( snapshotData ) ? snapshotData : [] )
       } )
-      .catch( () => setError( 'Erro de conexão com o servidor.' ) )
       .finally( () => setLoading( false ) )
   }, [] )
 
+  /**
+   * Derive ArenaEntry list from snapshots for the current tab.
+   * Snapshots are stored oldest→newest; snapshotsToArenaEntries returns newest→oldest.
+   */
   const filteredHistory = useMemo( () => {
-    return history.filter( entry => entry.type === tab )
-  }, [ history, tab ] )
+    return snapshotsToArenaEntries( snapshots, tab )
+  }, [ snapshots, tab ] )
 
   const rows = useMemo( () => {
     if ( !data ) return []
