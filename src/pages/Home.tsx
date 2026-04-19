@@ -22,8 +22,8 @@ type Tab = "missoes" | "runas" | "ranking" | "craft";
 type MissaoSubTab = "diarias" | "horarios";
 
 export function Home() {
-  const [tab, setTab] = useState<Tab>("missoes");
-  const [missaoSubTab, setMissaoSubTab] = useState<MissaoSubTab>("diarias");
+  const [ tab, setTab ] = useState<Tab>( "missoes" );
+  const [ missaoSubTab, setMissaoSubTab ] = useState<MissaoSubTab>( "diarias" );
 
   const { toasts, addToast, removeToast } = useToast();
 
@@ -38,7 +38,7 @@ export function Home() {
     importAny,
   } = useProfiles();
 
-  const activeProfile = profiles.find((p) => p.id === profileId);
+  const activeProfile = profiles.find( ( p ) => p.id === profileId );
 
   const NAV_TABS = [
     { id: "missoes" as Tab, label: "Missões", Icon: SwordIcon },
@@ -89,24 +89,9 @@ export function Home() {
         {/* Imagem com overflow hidden isolado */}
         <div className="absolute inset-0 overflow-hidden">
           <img
-            src="/images/header3.png"
+            src="/images/header3-2.png"
             alt="WYD Global"
-            className="w-full h-full object-cover object-center scale-105"
-            style={{ objectPosition: "center 40%" }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%)",
-            }}
+            className="w-full h-full object-contain object-center scale-180"
           />
         </div>
 
@@ -129,29 +114,16 @@ export function Home() {
           </div>
         )}
 
-        {/* Título */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-4 px-4">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="h-px w-8 bg-violet-400 opacity-70" />
-            <span className="text-[10px] tracking-[0.3em] text-violet-300 uppercase font-medium">
-              Guia de Missões
-            </span>
-            <div className="h-px w-8 bg-violet-400 opacity-70" />
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-wide text-white drop-shadow-lg">
-            WYD<span className="text-violet-400">Help</span>
-          </h1>
-        </div>
       </header>
 
       {/* ── CONTEÚDO ── */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-6 space-y-6">
         {/* Nav principal */}
         <nav className="flex items-center gap-1 border-b">
-          {NAV_TABS.map(({ id, label, Icon }) => (
+          {NAV_TABS.map( ( { id, label, Icon } ) => (
             <button
               key={id}
-              onClick={() => setTab(id)}
+              onClick={() => setTab( id )}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 text-sm transition-colors border-b-2 -mb-px",
                 tab === id
@@ -162,7 +134,7 @@ export function Home() {
               <Icon className="w-3.5 h-3.5" />
               {label}
             </button>
-          ))}
+          ) )}
 
           {/* Desktop: mantém no canto direito do nav */}
           <div className="ml-auto pb-1 hidden sm:block">
@@ -189,10 +161,10 @@ export function Home() {
                   label: string;
                   Icon: typeof SwordIcon;
                 }[]
-              ).map(({ id, label, Icon }) => (
+              ).map( ( { id, label, Icon } ) => (
                 <button
                   key={id}
-                  onClick={() => setMissaoSubTab(id)}
+                  onClick={() => setMissaoSubTab( id )}
                   className={cn(
                     "flex-1 flex items-center justify-center gap-2 py-2 text-sm rounded-md transition-colors",
                     missaoSubTab === id
@@ -203,7 +175,7 @@ export function Home() {
                   <Icon className="w-3.5 h-3.5" />
                   {label}
                 </button>
-              ))}
+              ) )}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -223,7 +195,7 @@ export function Home() {
                       onSelect={setActive}
                       onAdd={addProfile}
                       onRename={renameProfile}
-                      onDelete={(id) => deleteProfile(id, profileId)}
+                      onDelete={( id ) => deleteProfile( id, profileId )}
                       onExport={exportProfile}
                       onImportAny={importAny}
                     />
