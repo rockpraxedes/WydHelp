@@ -9,8 +9,8 @@
 //
 // Keeps at most MAX_DAYS days of snapshots.
 
-const fs = require( 'fs' );
-const path = require( 'path' );
+import fs from 'fs';
+import path from 'path';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -83,7 +83,7 @@ if ( !newRankingPath ) {
   process.exit( 1 );
 }
 
-const dir = path.dirname( newRankingPath );
+const dir = path.resolve( path.dirname( newRankingPath ) );
 const rankingPath = path.join( dir, 'ranking.json' );
 const snapshotsPath = path.join( dir, 'ranking-snapshots.json' );
 
