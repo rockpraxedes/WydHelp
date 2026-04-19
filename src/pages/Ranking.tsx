@@ -31,6 +31,54 @@ const CLASS_BADGE_VARIANT: Record<string, string> = {
   BM: 'bg-emerald-900/30 text-emerald-300 border-emerald-700',
 }
 
+const BADGE_REWARDS: { level: number; reward: string }[] = [
+  { level: 1, reward: '[05] Poção Mental' },
+  { level: 2, reward: '[20] Joia da sagacidade' },
+  { level: 3, reward: '[20] Joia da Absorção' },
+  { level: 4, reward: '[01] Poção divina 7 dias' },
+  { level: 5, reward: '[01] Frango Assado' },
+  { level: 6, reward: '[10] Baú de EXP' },
+  { level: 7, reward: '[01] Barra de Prata (100kk)' },
+  { level: 8, reward: '[10] Fragmento de Alma' },
+  { level: 9, reward: '[30] Cristal de Amunra' },
+  { level: 10, reward: '[04] Poeira de Lac 100' },
+  { level: 11, reward: '[04] Entrada Zona Infernal' },
+  { level: 12, reward: '[30] Cristal de Bahamut' },
+  { level: 13, reward: '[01] Proteção Divina' },
+  { level: 14, reward: '[10] Soul Fragment' },
+  { level: 15, reward: '[03] Barra de Prata (100kk)' },
+  { level: 16, reward: "[01] Bahamut's Blood" },
+  { level: 17, reward: '[01] Valkyrie Emblem +0' },
+  { level: 18, reward: '[02] Ovo azul' },
+  { level: 19, reward: '[20] Bahamut Tear (Happiness)' },
+  { level: 20, reward: '[01] Cursed hat (Black)' },
+  { level: 21, reward: '[120] Âmago de Dragão +7' },
+  { level: 22, reward: '[05] Bahamut tear (rage)' },
+  { level: 23, reward: '[30] RedDragon Scale' },
+  { level: 24, reward: '[01] Cursed hat (Black)' },
+]
+
+type TabType = 'champion' | 'aspirant'
+
+const RANKING_REWARDS: Record<TabType, { range: string; reward: string }[]> = {
+  aspirant: [
+    { range: '1º', reward: '[15] Aspirant Treasure · [100] Royal Arena Coupon' },
+    { range: '2º', reward: '[10] Aspirant Treasure · [100] Royal Arena Coupon' },
+    { range: '3º', reward: '[10] Aspirant Treasure · [75] Royal Arena Coupon' },
+    { range: '4º ~ 10º', reward: '[05] Aspirant Treasure · [50] Royal Arena Coupon' },
+    { range: '11º ~ 26º', reward: '[03] Aspirant Treasure · [35] Royal Arena Coupon' },
+    { range: '27º ~ 52º', reward: '[01] Aspirant Treasure · [25] Royal Arena Coupon' },
+  ],
+  champion: [
+    { range: '1º', reward: '[15] Champion Treasure · [100] Royal Arena Coupon · [01] Conjunto Champion ([01] Odin Lendário + [01] Skin White Fenrir)' },
+    { range: '2º', reward: '[10] Champion Treasure · [100] Royal Arena Coupon · [01] Skin Black Fenrir' },
+    { range: '3º', reward: '[10] Champion Treasure · [75] Royal Arena Coupon' },
+    { range: '4º ~ 10º', reward: '[05] Champion Treasure · [50] Royal Arena Coupon' },
+    { range: '11º ~ 26º', reward: '[03] Champion Treasure · [35] Royal Arena Coupon' },
+    { range: '27º ~ 52º', reward: '[01] Champion Treasure · [25] Royal Arena Coupon' },
+  ],
+}
+
 interface Player {
   charName: string
   class: number
@@ -55,7 +103,6 @@ interface ArenaEntry {
 
 type SortKey = 'rank' | 'charName' | 'class' | 'points' | 'wins' | 'kills' | 'deaths' | 'bonusKill' | 'total'
 type SortDir = 'asc' | 'desc'
-type TabType = 'champion' | 'aspirant'
 
 interface SortState { key: SortKey; dir: SortDir }
 
@@ -163,6 +210,121 @@ function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: bo
   )
 }
 
+function RewardsModal( { tab, onClose }: { tab: TabType; onClose: () => void } ) {
+  useEffect( () => {
+    const handler = ( e: KeyboardEvent ) => { if ( e.key === 'Escape' ) onClose() }
+    document.addEventListener( 'keydown', handler )
+    return () => document.removeEventListener( 'keydown', handler )
+  }, [ onClose ] )
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0d0d14] shadow-2xl shadow-violet-500/10"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0d0d14]">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-violet-400">
+              {tab === 'champion' ? 'Champions Hall' : 'Aspirants Field'}
+            </p>
+            <h2 className="text-lg font-black text-white leading-tight">Premiação</h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-lg border border-white/10 bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all text-sm font-bold"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="p-6 space-y-8">
+          {/* Recompensas de Ranking */}
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">
+              Ranking Royal Arena
+            </p>
+            <div className="rounded-xl border border-white/5 overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/5 bg-white/[0.02]">
+                    <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-muted-foreground w-32">Ranking</th>
+                    <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-muted-foreground">Recompensa</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {RANKING_REWARDS[ tab ].map( ( row, i ) => (
+                    <tr
+                      key={i}
+                      className={cn(
+                        'transition-colors',
+                        i === 0 ? 'bg-amber-500/5 hover:bg-amber-500/10' :
+                          i === 1 ? 'bg-slate-400/5 hover:bg-slate-400/10' :
+                            i === 2 ? 'bg-orange-800/5 hover:bg-orange-800/10' :
+                              'hover:bg-white/[0.03]'
+                      )}
+                    >
+                      <td className="px-4 py-3">
+                        <span className={cn(
+                          'text-xs font-black',
+                          i === 0 ? 'text-amber-400' :
+                            i === 1 ? 'text-slate-300' :
+                              i === 2 ? 'text-orange-600' :
+                                'text-muted-foreground'
+                        )}>
+                          {row.range}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-slate-300 leading-relaxed">{row.reward}</td>
+                    </tr>
+                  ) )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Badge Rewards */}
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">
+              Recompensas por Badge
+            </p>
+            <p className="text-[11px] text-muted-foreground/60 mb-3">
+              Cada nível de badge requer pelo menos{' '}
+              <span className="text-violet-400 font-bold">[03] XP</span> acumulados.
+            </p>
+            <div className="rounded-xl border border-white/5 overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/5 bg-white/[0.02]">
+                    <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-muted-foreground w-28">Badge</th>
+                    <th className="px-4 py-3 text-left text-[10px] font-black uppercase tracking-widest text-muted-foreground">Recompensa</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {BADGE_REWARDS.map( ( row ) => (
+                    <tr key={row.level} className="hover:bg-white/[0.03] transition-colors">
+                      <td className="px-4 py-2.5">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-black bg-violet-900/30 text-violet-300 border border-violet-700/50 px-2 py-0.5 rounded-full">
+                          Lvl {row.level}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2.5 text-xs text-slate-300">{row.reward}</td>
+                    </tr>
+                  ) )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function Ranking() {
   const [ data, setData ] = useState<{ champion: Player[]; aspirant: Player[] } | null>( null )
   const [ history, setHistory ] = useState<ArenaEntry[]>( [] )
@@ -172,6 +334,7 @@ export function Ranking() {
   const [ search, setSearch ] = useState( '' )
   const [ sort, setSort ] = useState<SortState>( { key: 'total', dir: 'desc' } )
   const [ showHistory, setShowHistory ] = useState( false )
+  const [ showRewards, setShowRewards ] = useState( false )
 
   useEffect( () => {
     Promise.all( [
@@ -217,10 +380,8 @@ export function Ranking() {
       displayRank: i + 1
     } ) )
 
-    // Lógica de busca multi-termo
     if ( !search.trim() ) return listWithRank;
 
-    // Criamos um array de termos usando os separadores: , / && & |
     const searchTerms = search
       .split( /,|\/|&&|&|\|/ )
       .map( t => t.trim().toLowerCase() )
@@ -228,7 +389,6 @@ export function Ranking() {
 
     return listWithRank.filter( p => {
       const name = p.charName.toLowerCase();
-      // Retorna true se o nome incluir QUALQUER um dos termos digitados
       return searchTerms.some( term => name.includes( term ) );
     } );
 
@@ -268,23 +428,33 @@ export function Ranking() {
             />
           </div>
 
-          <nav className="flex items-center gap-6 border-b border-white/5">
-            {TABS.map( ( { id, label, Icon } ) => (
-              <button
-                key={id}
-                onClick={() => { setTab( id ); setShowHistory( false ); }}
-                className={cn(
-                  'flex items-center gap-2 px-1 py-3 text-sm transition-all border-b-2 -mb-px font-bold tracking-tight',
-                  tab === id
-                    ? 'border-violet-500 text-violet-500'
-                    : 'border-transparent text-muted-foreground hover:text-foreground'
-                )}
-              >
-                <Icon className="w-4 h-4" />
-                {label}
-              </button>
-            ) )}
-          </nav>
+          <div className="flex items-center gap-4 border-b border-white/5">
+            <nav className="flex items-center gap-6">
+              {TABS.map( ( { id, label, Icon } ) => (
+                <button
+                  key={id}
+                  onClick={() => { setTab( id ); setShowHistory( false ); }}
+                  className={cn(
+                    'flex items-center gap-2 px-1 py-3 text-sm transition-all border-b-2 -mb-px font-bold tracking-tight',
+                    tab === id
+                      ? 'border-violet-500 text-violet-500'
+                      : 'border-transparent text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  {label}
+                </button>
+              ) )}
+            </nav>
+
+            <button
+              onClick={() => setShowRewards( true )}
+              className="ml-auto flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-amber-400 hover:text-amber-300 border border-amber-500/30 hover:border-amber-400/50 bg-amber-500/5 hover:bg-amber-500/10 px-2.5 py-1.5 rounded-lg transition-all"
+            >
+              <TrophyIcon className="w-3 h-3" />
+              Premiação
+            </button>
+          </div>
         </div>
 
         <div className="w-full lg:flex-1 max-w-2xl">
@@ -369,6 +539,8 @@ export function Ranking() {
           </div>
         )}
       </div>
+
+      {showRewards && <RewardsModal tab={tab} onClose={() => setShowRewards( false )} />}
     </div>
   )
 }
