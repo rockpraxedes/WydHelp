@@ -122,6 +122,7 @@ interface ArenaEntry {
 
 type SortKey = 'rank' | 'charName' | 'class' | 'points' | 'wins' | 'kills' | 'deaths' | 'bonusKill' | 'total'
 type SortDir = 'asc' | 'desc'
+type SortableKey = Exclude<SortKey, 'rank'>
 
 interface SortState { key: SortKey; dir: SortDir }
 
@@ -497,8 +498,19 @@ export function Ranking() {
         return ( a.wins - b.wins ) * mul
       }
       if ( sort.key === 'charName' ) return a.charName.localeCompare( b.charName ) * mul
-      const valA = ( a[ sort.key as keyof Player ] as number ) ?? 0
-      const valB = ( b[ sort.key as keyof Player ] as number ) ?? 0
+      if ( sort.key === 'rank' ) {
+        return 0 // rank ainda não existe aqui, então ignora
+      }
+
+      if ( sort.key === 'charName' ) {
+        return a.charName.localeCompare( b.charName ) * mul
+      }
+
+      const key = sort.key as SortableKey
+
+      const valA = ( a[ key ] as number ) ?? 0
+      const valB = ( b[ key ] as number ) ?? 0
+
       return ( valA - valB ) * mul
     } )
 
