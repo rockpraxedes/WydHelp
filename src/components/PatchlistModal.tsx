@@ -302,15 +302,15 @@ export function PatchlistModal() {
 
                         <ul className="space-y-3 pl-1">
                           {section.items.map( ( item, ii ) => (
-                            <li key={ii} className="space-y-1.5">
+                            <li key={ii} className="space-y-1.5 break-words whitespace-pre-line">
                               <div className="flex items-start gap-2 text-sm font-medium text-foreground">
-                                <ChevronRightIcon className="w-3.5 h-3.5 mt-0.5 text-violet-400 shrink-0" />
+                                <ChevronRightIcon className="w-3.5 h-3.5 mt-0.5 text-violet-400 shrink-0 break-words whitespace-pre-line" />
                                 <span>{item.text}</span>
                               </div>
                               {item.sub.length > 0 && (
                                 <ul className="ml-6 space-y-1">
                                   {item.sub.map( ( sub, sii ) => (
-                                    <li key={sii} className="flex items-start gap-1.5 text-xs text-muted-foreground">
+                                    <li key={sii} className="flex items-start gap-1.5 text-xs text-muted-foreground break-words whitespace-pre-line">
                                       <CornerDownRightIcon className="w-3 h-3 mt-0.5 shrink-0 opacity-50" />
                                       <span>{sub}</span>
                                     </li>
