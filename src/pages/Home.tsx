@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Craft } from "@/pages/Craft";
 import { ServerStatusWidget } from "@/components/ServerStatusWidget";
+import { PatchlistModal } from "@/components/PatchlistModal";
 
 type Tab = "missoes" | "runas" | "ranking" | "craft";
 type MissaoSubTab = "diarias" | "horarios";
@@ -136,8 +137,8 @@ export function Home() {
             </button>
           ) )}
 
-          {/* Desktop: mantém no canto direito do nav */}
-          <div className="ml-auto pb-1 hidden sm:block">
+          <div className="ml-auto pb-1 hidden sm:flex items-center gap-2 whitespace-nowrap">
+            <PatchlistModal />
             <ServerStatusWidget />
           </div>
         </nav>
@@ -146,6 +147,7 @@ export function Home() {
         <div className="sm:hidden">
           <ServerStatusWidget />
         </div>
+
 
         {/* ── ABA MISSÕES ── */}
         {tab === "missoes" && (
@@ -229,6 +231,6 @@ export function Home() {
       </footer>
 
       <ToastContainer toasts={toasts} onRemove={removeToast} />
-    </div>
+    </div >
   );
 }
