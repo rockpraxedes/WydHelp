@@ -1253,7 +1253,7 @@
     },
     {
       "charName": "-DomQuixote-",
-      "class": 0,
+      "class": 3,
       "subClass": 2,
       "wins": 0,
       "kills": 0,
@@ -2047,7 +2047,7 @@
     },
     {
       "charName": "OrNeLaS",
-      "class": 2,
+      "class": 1,
       "subClass": 1,
       "wins": 11,
       "kills": 137,
@@ -2299,8 +2299,8 @@
     },
     {
       "charName": "OrionPax",
-      "class": 3,
-      "subClass": 3,
+      "class": 0,
+      "subClass": 0,
       "wins": 7,
       "kills": 289,
       "deaths": 92,
@@ -2938,7 +2938,7 @@
     },
     {
       "charName": "F3N1X",
-      "class": 0,
+      "class": 3,
       "subClass": 0,
       "wins": 1,
       "kills": 3,
@@ -3163,8 +3163,8 @@
     },
     {
       "charName": "Sattivus",
-      "class": 3,
-      "subClass": 3,
+      "class": 1,
+      "subClass": 1,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
@@ -3172,7 +3172,7 @@
     },
     {
       "charName": "F3N1X-",
-      "class": 3,
+      "class": 0,
       "subClass": 0,
       "wins": 0,
       "kills": 0,
@@ -3541,8 +3541,8 @@
     },
     {
       "charName": "OrionVPower",
-      "class": 0,
-      "subClass": 0,
+      "class": 3,
+      "subClass": 3,
       "wins": 0,
       "kills": 26,
       "deaths": 12,
