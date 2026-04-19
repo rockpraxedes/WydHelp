@@ -493,19 +493,24 @@ export function Ranking() {
 
     const sortedList = [ ...listWithCalculations ].sort( ( a, b ) => {
       const mul = sort.dir === 'desc' ? -1 : 1
+
+      // total / points
       if ( sort.key === 'total' || sort.key === 'points' ) {
         if ( a.total !== b.total ) return ( a.total - b.total ) * mul
         return ( a.wins - b.wins ) * mul
       }
-      if ( sort.key === 'charName' ) return a.charName.localeCompare( b.charName ) * mul
-      if ( sort.key === 'rank' ) {
-        return 0 // rank ainda não existe aqui, então ignora
-      }
 
+      // nome
       if ( sort.key === 'charName' ) {
         return a.charName.localeCompare( b.charName ) * mul
       }
 
+      // rank (ignorado aqui)
+      if ( sort.key === 'rank' ) {
+        return 0
+      }
+
+      // resto (numéricos)
       const key = sort.key as SortableKey
 
       const valA = ( a[ key ] as number ) ?? 0
