@@ -144,14 +144,20 @@ function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: bo
 
   return (
     <div className={cn(
-      "rounded-xl border transition-all overflow-hidden",
+      "relative rounded-xl border transition-all overflow-visible",
       compact
         ? "bg-gradient-to-r from-violet-900/20 to-black/40 border-violet-500/30 p-4 shadow-lg shadow-violet-500/5"
         : "bg-black/40 border-white/5 p-4"
     )}>
       <div className="flex flex-col sm:flex-row gap-4 items-start">
         <div className="shrink-0 text-center sm:text-left sm:border-r sm:border-white/10 sm:pr-4">
-          <p className="text-[12px] font-black text-white leading-none">VENCEDORES</p>
+          <div className="flex items-center gap-2 mb-0.5">
+            <p className="text-[12px] font-black text-white leading-none">VENCEDORES</p>
+            <div className="absolute -top-2 left-2 flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 rounded px-1.5 py-0.5">
+              <span className="w-1 h-1 rounded-full bg-amber-400 animate-pulse shrink-0" />
+              <span className="text-[8px] font-black uppercase tracking-widest text-amber-400 leading-none">Fase de Testes</span>
+            </div>
+          </div>
           <p className="text-[10px] text-violet-400 font-bold uppercase tracking-widest leading-none mb-1">Arena das</p>
           <p className="text-2xl font-black text-white leading-none">{entry.arenaLabel}</p>
         </div>
