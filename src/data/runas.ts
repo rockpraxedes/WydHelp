@@ -146,4 +146,8 @@ export const PISTAS: Pista[] = [
 
 export function pistasParaRuna( runaId: string ): Pista[] {
   return PISTAS.filter( p => p.runas.includes( runaId ) )
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c910dac6053a67c7956aaf41267cc6a9481e36eb
