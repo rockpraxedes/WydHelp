@@ -480,6 +480,7 @@ export function Ranking() {
    */
   const filteredHistory = useMemo( () => {
     return snapshotsToArenaEntries( snapshots, tab )
+      .filter( entry => entry.winners.length > 0 )
   }, [ snapshots, tab ] )
 
   const rows = useMemo( () => {
