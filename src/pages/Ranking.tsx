@@ -114,6 +114,7 @@ interface RankingSnapshot {
 interface ArenaEntry {
   timestamp: string
   arenaLabel: string
+  date: string               // "2026-04-19" in BRT – displayed as dd/mm/yyyy
   type: TabType
   winners: string[]
   mostKills: { name: string | string[]; kills: number }
@@ -189,6 +190,7 @@ function computeArenaEntry(
   return {
     timestamp: curr.timestamp,
     arenaLabel: curr.slotLabel,
+    date: curr.date,
     type,
     winners,
     mostKills: {
@@ -219,6 +221,11 @@ function snapshotsToArenaEntries(
     entries.push( computeArenaEntry( snapshots[ i ], snapshots[ i - 1 ], type ) )
   }
   return entries
+}
+
+/** Formats "2026-04-19" → "19/04/2026" */
+function formatDate( date: string ): string {
+  return date.split( '-' ).reverse().join( '/' )
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -277,6 +284,7 @@ function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: bo
           </div>
           <p className="text-[10px] text-violet-400 font-bold uppercase tracking-widest leading-none mb-1">Arena das</p>
           <p className="text-2xl font-black text-white leading-none">{entry.arenaLabel}</p>
+          <p className="text-[10px] text-slate-500 font-bold tabular-nums mt-1">{formatDate( entry.date )}</p>
         </div>
 
         <div className="flex flex-1 gap-2 w-full">
