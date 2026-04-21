@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import { TrophyIcon, UserIcon, ArrowUpDownIcon, ArrowDownIcon, ArrowUpIcon, SwordIcon, ShieldIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
+import { TrophyIcon, UserIcon, ArrowUpDownIcon, ArrowDownIcon, ArrowUpIcon, SwordIcon, ShieldIcon, ChevronDownIcon, ChevronUpIcon, ScrollTextIcon, XIcon, ClockIcon } from 'lucide-react'
 
 const SHOW_ARENA = true;
 
@@ -117,8 +117,8 @@ interface ArenaEntry {
   date: string               // "2026-04-19" in BRT – displayed as dd/mm/yyyy
   type: TabType
   winners: string[]
-  mostKills: { name: string | string[]; kills: number }
-  leastDeaths: { name: string | string[]; deaths: number }
+  mostKills: { name: string[]; kills: number }
+  leastDeaths: { name: string[]; deaths: number }
 }
 
 type SortKey = 'rank' | 'charName' | 'class' | 'points' | 'wins' | 'kills' | 'deaths' | 'bonusKill' | 'total'
@@ -175,17 +175,13 @@ function computeArenaEntry(
     .sort( ( a, b ) => b.winsDiff - a.winsDiff || b.killsDiff - a.killsDiff )
     .map( d => d.charName )
 
-  // Most kills in this arena
-  const topKiller = diffs.reduce<Diff | null>(
-    ( best, d ) => ( !best || d.killsDiff > best.killsDiff ? d : best ),
-    null
-  )
+  // Most kills in this arena – collect ALL tied players
+  const maxKills = diffs.reduce( ( max, d ) => Math.max( max, d.killsDiff ), 0 )
+  const topKillers = diffs.filter( d => d.killsDiff === maxKills )
 
-  // Least deaths among winners (minimum deaths in this arena)
-  const leastDeadPlayer = diffs.reduce<Diff | null>(
-    ( best, d ) => ( !best || d.deathsDiff < best.deathsDiff ? d : best ),
-    null
-  )
+  // Least deaths among winners – collect ALL tied players
+  const minDeaths = diffs.reduce( ( min, d ) => Math.min( min, d.deathsDiff ), Infinity )
+  const leastDeadPlayers = diffs.filter( d => d.deathsDiff === minDeaths )
 
   return {
     timestamp: curr.timestamp,
@@ -194,12 +190,12 @@ function computeArenaEntry(
     type,
     winners,
     mostKills: {
-      name: topKiller?.charName ?? '-',
-      kills: topKiller?.killsDiff ?? 0,
+      name: topKillers.map( d => d.charName ),
+      kills: maxKills,
     },
     leastDeaths: {
-      name: leastDeadPlayer?.charName ?? '-',
-      deaths: leastDeadPlayer?.deathsDiff ?? 0,
+      name: leastDeadPlayers.map( d => d.charName ),
+      deaths: minDeaths === Infinity ? 0 : minDeaths,
     },
   }
 }
@@ -242,9 +238,8 @@ function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: bo
   const [ showAllKills, setShowAllKills ] = useState( false );
   const [ showAllDeaths, setShowAllDeaths ] = useState( false );
 
-  const renderHighlightNames = ( names: string | string[], isExpanded: boolean, setExpanded: ( v: boolean ) => void ) => {
-    const nameArray = Array.isArray( names ) ? names : [ names ];
-    const hasMultiple = nameArray.length > 1;
+  const renderHighlightNames = ( names: string[], isExpanded: boolean, setExpanded: ( v: boolean ) => void ) => {
+    const hasMultiple = names.length > 1;
 
     return (
       <div className="min-w-0 flex-1">
@@ -252,14 +247,14 @@ function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: bo
           "text-xs font-bold text-white leading-tight",
           !isExpanded && "truncate"
         )}>
-          {isExpanded ? nameArray.join( ', ' ) : nameArray[ 0 ]}
+          {isExpanded ? names.join( ', ' ) : names[ 0 ]}
         </p>
         {hasMultiple && (
           <button
             onClick={() => setExpanded( !isExpanded )}
             className="text-[8px] text-violet-400 hover:text-violet-300 font-black uppercase mt-1 block"
           >
-            {isExpanded ? 'Recolher' : `+${nameArray.length - 1} outros`}
+            {isExpanded ? 'Recolher' : `+${names.length - 1} outros`}
           </button>
         )}
       </div>
@@ -335,6 +330,113 @@ function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: bo
               </span>
             ) )}
           </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ArenaHistoryModal( { entries, tab, onClose }: { entries: ArenaEntry[]; tab: TabType; onClose: () => void } ) {
+  useEffect( () => {
+    const handler = ( e: KeyboardEvent ) => { if ( e.key === 'Escape' ) onClose() }
+    document.addEventListener( 'keydown', handler )
+    return () => document.removeEventListener( 'keydown', handler )
+  }, [ onClose ] )
+
+  // Entries já chegam newest-first (snapshotsToArenaEntries retorna assim)
+  const ordered = entries
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-white/10 bg-[#0d0d14] shadow-2xl shadow-violet-500/10"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0d0d14] rounded-t-2xl shrink-0">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-violet-400">
+              {tab === 'champion' ? 'Champions Hall' : 'Aspirants Field'}
+            </p>
+            <h2 className="text-lg font-black text-white leading-tight flex items-center gap-2">
+              <ScrollTextIcon className="w-4 h-4 text-violet-400" />
+              Histórico de Arenas
+            </h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-lg border border-white/10 bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all"
+          >
+            <XIcon className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* List */}
+        <div className="overflow-y-auto flex-1 p-4 space-y-2">
+          {ordered.length === 0 && (
+            <p className="py-12 text-center text-sm text-muted-foreground">Nenhum histórico disponível.</p>
+          )}
+          {ordered.map( ( entry, i ) => (
+            <div
+              key={i}
+              className="rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors p-3"
+            >
+              {/* Row header: date + time + winner count */}
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="flex items-center gap-2">
+                  <ClockIcon className="w-3 h-3 text-violet-400 shrink-0" />
+                  <span className="text-[11px] font-black text-white">
+                    {entry.arenaLabel}
+                  </span>
+                  <span className="text-[10px] text-slate-500 tabular-nums font-bold">
+                    {formatDate( entry.date )}
+                  </span>
+                </div>
+                <span className="text-[9px] font-black uppercase tracking-widest text-violet-400 bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 rounded-full">
+                  {entry.winners.length} vencedor{entry.winners.length !== 1 ? 'es' : ''}
+                </span>
+              </div>
+
+              {/* Stats row */}
+              <div className="flex gap-2 mb-2.5">
+                <div className="flex items-center gap-1.5 bg-rose-500/5 border border-rose-500/10 rounded-lg px-2 py-1 flex-1 min-w-0">
+                  <SwordIcon className="w-2.5 h-2.5 text-rose-500 shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-[8px] text-rose-500/60 font-bold uppercase leading-none">Top Kills</p>
+                    <p className="text-[10px] font-bold text-white truncate leading-tight mt-0.5">
+                      {entry.mostKills.name.join( ', ' ) || '-'}
+                      <span className="text-rose-400 ml-1">({entry.mostKills.kills})</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 bg-emerald-500/5 border border-emerald-500/10 rounded-lg px-2 py-1 flex-1 min-w-0">
+                  <ShieldIcon className="w-2.5 h-2.5 text-emerald-500 shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-[8px] text-emerald-500/60 font-bold uppercase leading-none">Menos Mortes</p>
+                    <p className="text-[10px] font-bold text-white truncate leading-tight mt-0.5">
+                      {entry.leastDeaths.name.join( ', ' ) || '-'}
+                      <span className="text-emerald-400 ml-1">({entry.leastDeaths.deaths})</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Winners */}
+              <div className="flex flex-wrap gap-1">
+                {entry.winners.map( ( name, j ) => (
+                  <span
+                    key={j}
+                    className="text-[9px] text-violet-300 bg-violet-500/10 border border-violet-500/20 px-1.5 py-0.5 rounded font-medium whitespace-nowrap"
+                  >
+                    {name}
+                  </span>
+                ) )}
+              </div>
+            </div>
+          ) )}
         </div>
       </div>
     </div>
@@ -466,7 +568,7 @@ export function Ranking() {
   const [ tab, setTab ] = useState<TabType>( 'champion' )
   const [ search, setSearch ] = useState( '' )
   const [ sort, setSort ] = useState<SortState>( { key: 'total', dir: 'desc' } )
-  const [ showHistory, setShowHistory ] = useState( false )
+  const [ showHistoryModal, setShowHistoryModal ] = useState( false )
   const [ showRewards, setShowRewards ] = useState( false )
 
   useEffect( () => {
@@ -586,7 +688,7 @@ export function Ranking() {
               {TABS.map( ( { id, label, Icon } ) => (
                 <button
                   key={id}
-                  onClick={() => { setTab( id ); setShowHistory( false ); }}
+                  onClick={() => { setTab( id ); setShowHistoryModal( false ); }}
                   className={cn(
                     'flex items-center gap-2 px-1 py-3 text-sm transition-all border-b-2 -mb-px font-bold tracking-tight',
                     tab === id
@@ -616,24 +718,16 @@ export function Ranking() {
               <ArenaHistoryCard entry={latestArena} compact={true} />
               {olderHistory.length > 0 && (
                 <button
-                  onClick={() => setShowHistory( v => !v )}
+                  onClick={() => setShowHistoryModal( true )}
                   className="absolute -bottom-6 right-0 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-violet-400 transition-colors bg-black/40 px-2 py-0.5 rounded border border-white/5"
                 >
-                  {showHistory ? `[ Ocultar Arenas ${tab} ]` : `[ +${olderHistory.length} Arenas ${tab} ]`}
+                  [ +{olderHistory.length} Arenas {tab} ]
                 </button>
               )}
             </div>
           )}
         </div>
       </div>
-
-      {SHOW_ARENA && showHistory && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-4 duration-300">
-          {olderHistory.map( ( entry, i ) => (
-            <ArenaHistoryCard key={i} entry={entry} />
-          ) )}
-        </div>
-      )}
 
       <div className="rounded-xl border border-white/10 bg-black/20 overflow-hidden shadow-2xl">
         {loading && <p className="py-20 text-center text-sm text-muted-foreground animate-pulse">Sincronizando ranking...</p>}
@@ -693,6 +787,13 @@ export function Ranking() {
         )}
       </div>
 
+      {showHistoryModal && (
+        <ArenaHistoryModal
+          entries={filteredHistory}
+          tab={tab}
+          onClose={() => setShowHistoryModal( false )}
+        />
+      )}
       {showRewards && <RewardsModal tab={tab} onClose={() => setShowRewards( false )} />}
     </div>
   )
