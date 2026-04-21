@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import { TrophyIcon, UserIcon, ArrowUpDownIcon, ArrowDownIcon, ArrowUpIcon, SwordIcon, ShieldIcon, ChevronDownIcon, ChevronUpIcon, ScrollTextIcon, XIcon, ClockIcon } from 'lucide-react'
+import { TrophyIcon, UserIcon, ArrowUpDownIcon, ArrowDownIcon, ArrowUpIcon, SwordIcon, ShieldIcon, ChevronDownIcon, ChevronUpIcon, ScrollTextIcon, XIcon, ClockIcon, BarChart2Icon } from 'lucide-react'
 
 const SHOW_ARENA = true;
 
@@ -11,8 +11,9 @@ const API_URL = process.env.NODE_ENV === 'development'
   ? '/api/royal-arena'
   : '/ranking.json'
 
-// Replaces arena-history.json – full ranking snapshots saved by update-ranking.js
 const SNAPSHOTS_URL = '/ranking-snapshots.json'
+
+const GERAL_API_URL = 'https://rn3xfhamppsetddkod6vwc24lu0lhcek.lambda-url.us-east-1.on.aws/component-rank'
 
 const CLASS_MAP: Record<string, string> = {
   '0': 'TK',
@@ -30,6 +31,16 @@ const CLASS_BADGE_VARIANT: Record<string, string> = {
   HT: 'bg-amber-900/30 text-amber-300 border-amber-700',
   FM: 'bg-violet-900/30 text-violet-300 border-violet-700',
   BM: 'bg-emerald-900/30 text-emerald-300 border-emerald-700',
+}
+
+const KINGDOM_STYLE: Record<string, { label: string; className: string }> = {
+  blue: { label: 'Azul', className: 'bg-blue-900/30 text-blue-300 border-blue-700/50' },
+  red: { label: 'Vermelho', className: 'bg-rose-900/30 text-rose-300 border-rose-700/50' },
+  none: { label: 'Neutro', className: 'bg-slate-800/50 text-slate-400 border-slate-700/50' },
+}
+
+function getKingdom( k: string ) {
+  return KINGDOM_STYLE[ k ] ?? KINGDOM_STYLE[ 'none' ]
 }
 
 const BADGE_REWARDS: { level: number; reward: string }[] = [
@@ -59,9 +70,9 @@ const BADGE_REWARDS: { level: number; reward: string }[] = [
   { level: 24, reward: '[01] Cursed hat (Black)' },
 ]
 
-type TabType = 'champion' | 'aspirant'
+type TabType = 'geral' | 'champion' | 'aspirant'
 
-const RANKING_REWARDS: Record<TabType, { range: string; reward: string }[]> = {
+const RANKING_REWARDS: Record<Exclude<TabType, 'geral'>, { range: string; reward: string }[]> = {
   aspirant: [
     { range: '1º', reward: '[15] Aspirant Treasure · [100] Royal Arena Coupon' },
     { range: '2º', reward: '[10] Aspirant Treasure · [100] Royal Arena Coupon' },
@@ -98,34 +109,47 @@ interface Player extends RawPlayer {
   displayRank: number
 }
 
-/**
- * A full ranking snapshot saved by update-ranking.js every time a new arena
- * is detected (i.e. any player gained ≥1 win since the previous snapshot).
- */
+interface GeralPlayer {
+  name: string
+  level: number
+  levelSub: number
+  'Soma Level': number
+  kingdom: string
+  guild: number
+  guildMark: string
+  subClass: number
+  points: number
+}
+
+interface GeralRow extends GeralPlayer {
+  displayRank: number
+}
+
 interface RankingSnapshot {
-  timestamp: string          // ISO-8601 UTC
-  slotLabel: string          // "19:00" in BRT – used as arena display label
-  date: string               // "2026-04-19" in BRT
+  timestamp: string
+  slotLabel: string
+  date: string
   champion: RawPlayer[]
   aspirant: RawPlayer[]
 }
 
-/** Computed from two consecutive snapshots – what the ArenaHistoryCard displays. */
 interface ArenaEntry {
   timestamp: string
   arenaLabel: string
-  date: string               // "2026-04-19" in BRT – displayed as dd/mm/yyyy
-  type: TabType
+  date: string
+  type: Exclude<TabType, 'geral'>
   winners: string[]
   mostKills: { name: string[]; kills: number }
   leastDeaths: { name: string[]; deaths: number }
 }
 
 type SortKey = 'rank' | 'charName' | 'class' | 'points' | 'wins' | 'kills' | 'deaths' | 'bonusKill' | 'total'
+type GeralSortKey = 'rank' | 'name' | 'level' | 'levelSub' | 'somaLevel' | 'kingdom'
 type SortDir = 'asc' | 'desc'
 type SortableKey = Exclude<SortKey, 'rank'>
 
 interface SortState { key: SortKey; dir: SortDir }
+interface GeralSortState { key: GeralSortKey; dir: SortDir }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -135,18 +159,10 @@ function buildPlayerMap( list: RawPlayer[] ): Record<string, RawPlayer> {
   return m
 }
 
-/**
- * Given two consecutive ranking snapshots, compute the ArenaEntry for a
- * specific type (champion | aspirant).
- *
- * A player is counted as a winner when their `wins` count increased vs the
- * previous snapshot.  kills / deaths diff tell us their performance in that
- * specific arena.
- */
 function computeArenaEntry(
   curr: RankingSnapshot,
   prev: RankingSnapshot,
-  type: TabType
+  type: Exclude<TabType, 'geral'>
 ): ArenaEntry {
   const currList = curr[ type ] ?? []
   const prevMap = buildPlayerMap( prev[ type ] ?? [] )
@@ -168,18 +184,15 @@ function computeArenaEntry(
         deathsDiff: p.deaths - ( old?.deaths ?? 0 ),
       }
     } )
-    .filter( d => d.winsDiff > 0 ) // only players who actually won this arena
+    .filter( d => d.winsDiff > 0 )
 
-  // Sort winners by most wins, then most kills as tiebreaker
   const winners = [ ...diffs ]
     .sort( ( a, b ) => b.winsDiff - a.winsDiff || b.killsDiff - a.killsDiff )
     .map( d => d.charName )
 
-  // Most kills in this arena – collect ALL tied players
   const maxKills = diffs.reduce( ( max, d ) => Math.max( max, d.killsDiff ), 0 )
   const topKillers = diffs.filter( d => d.killsDiff === maxKills )
 
-  // Least deaths among winners – collect ALL tied players
   const minDeaths = diffs.reduce( ( min, d ) => Math.min( min, d.deathsDiff ), Infinity )
   const leastDeadPlayers = diffs.filter( d => d.deathsDiff === minDeaths )
 
@@ -200,26 +213,18 @@ function computeArenaEntry(
   }
 }
 
-/**
- * Converts an ordered array of RankingSnapshots (oldest → newest) into
- * ArenaEntry objects by diffing each pair of consecutive snapshots.
- * Returns entries newest-first so the latest arena is at index 0.
- */
 function snapshotsToArenaEntries(
   snapshots: RankingSnapshot[],
-  type: TabType
+  type: Exclude<TabType, 'geral'>
 ): ArenaEntry[] {
   if ( snapshots.length < 2 ) return []
-
   const entries: ArenaEntry[] = []
-  // Walk from newest back so results end up newest-first
   for ( let i = snapshots.length - 1; i >= 1; i-- ) {
     entries.push( computeArenaEntry( snapshots[ i ], snapshots[ i - 1 ], type ) )
   }
   return entries
 }
 
-/** Formats "2026-04-19" → "19/04/2026" */
 function formatDate( date: string ): string {
   return date.split( '-' ).reverse().join( '/' )
 }
@@ -233,6 +238,13 @@ function SortIcon( { col, sort }: { col: SortKey; sort: SortState } ) {
     : <ArrowUpIcon className="w-3 h-3 text-violet-500" />
 }
 
+function GeralSortIcon( { col, sort }: { col: GeralSortKey; sort: GeralSortState } ) {
+  if ( sort.key !== col ) return <ArrowUpDownIcon className="w-3 h-3 opacity-40" />
+  return sort.dir === 'desc'
+    ? <ArrowDownIcon className="w-3 h-3 text-violet-500" />
+    : <ArrowUpIcon className="w-3 h-3 text-violet-500" />
+}
+
 function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: boolean } ) {
   const [ isExpanded, setIsExpanded ] = useState( false );
   const [ showAllKills, setShowAllKills ] = useState( false );
@@ -240,20 +252,13 @@ function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: bo
 
   const renderHighlightNames = ( names: string[], isExpanded: boolean, setExpanded: ( v: boolean ) => void ) => {
     const hasMultiple = names.length > 1;
-
     return (
       <div className="min-w-0 flex-1">
-        <p className={cn(
-          "text-xs font-bold text-white leading-tight",
-          !isExpanded && "truncate"
-        )}>
+        <p className={cn( "text-xs font-bold text-white leading-tight", !isExpanded && "truncate" )}>
           {isExpanded ? names.join( ', ' ) : names[ 0 ]}
         </p>
         {hasMultiple && (
-          <button
-            onClick={() => setExpanded( !isExpanded )}
-            className="text-[8px] text-violet-400 hover:text-violet-300 font-black uppercase mt-1 block"
-          >
+          <button onClick={() => setExpanded( !isExpanded )} className="text-[8px] text-violet-400 hover:text-violet-300 font-black uppercase mt-1 block">
             {isExpanded ? 'Recolher' : `+${names.length - 1} outros`}
           </button>
         )}
@@ -306,26 +311,14 @@ function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: bo
             <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">
               Vencedores ({entry.winners.length})
             </p>
-            <button
-              onClick={() => setIsExpanded( !isExpanded )}
-              className="flex items-center gap-1 text-[9px] font-bold text-violet-400 hover:text-violet-300 transition-colors uppercase tracking-tighter"
-            >
+            <button onClick={() => setIsExpanded( !isExpanded )} className="flex items-center gap-1 text-[9px] font-bold text-violet-400 hover:text-violet-300 transition-colors uppercase tracking-tighter">
               {isExpanded ? 'Recolher' : 'Ver todos'}
               {isExpanded ? <ChevronUpIcon className="w-2.5 h-2.5" /> : <ChevronDownIcon className="w-2.5 h-2.5" />}
             </button>
           </div>
-
-          <div
-            className={cn(
-              "flex flex-wrap gap-1 transition-all duration-300",
-              !isExpanded ? "max-h-[40px] overflow-hidden" : "max-h-none"
-            )}
-          >
+          <div className={cn( "flex flex-wrap gap-1 transition-all duration-300", !isExpanded ? "max-h-[40px] overflow-hidden" : "max-h-none" )}>
             {entry.winners.map( ( name, i ) => (
-              <span
-                key={i}
-                className="text-[10px] text-violet-300 bg-violet-500/10 border border-violet-500/20 px-1.5 py-0.5 rounded font-medium whitespace-nowrap"
-              >
+              <span key={i} className="text-[10px] text-violet-300 bg-violet-500/10 border border-violet-500/20 px-1.5 py-0.5 rounded font-medium whitespace-nowrap">
                 {name}
               </span>
             ) )}
@@ -336,26 +329,16 @@ function ArenaHistoryCard( { entry, compact }: { entry: ArenaEntry; compact?: bo
   )
 }
 
-function ArenaHistoryModal( { entries, tab, onClose }: { entries: ArenaEntry[]; tab: TabType; onClose: () => void } ) {
+function ArenaHistoryModal( { entries, tab, onClose }: { entries: ArenaEntry[]; tab: Exclude<TabType, 'geral'>; onClose: () => void } ) {
   useEffect( () => {
     const handler = ( e: KeyboardEvent ) => { if ( e.key === 'Escape' ) onClose() }
     document.addEventListener( 'keydown', handler )
     return () => document.removeEventListener( 'keydown', handler )
   }, [ onClose ] )
 
-  // Entries já chegam newest-first (snapshotsToArenaEntries retorna assim)
-  const ordered = entries
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-white/10 bg-[#0d0d14] shadow-2xl shadow-violet-500/10"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Header */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+      <div className="relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-white/10 bg-[#0d0d14] shadow-2xl shadow-violet-500/10" onClick={e => e.stopPropagation()}>
         <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0d0d14] rounded-t-2xl shrink-0">
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-violet-400">
@@ -366,41 +349,26 @@ function ArenaHistoryModal( { entries, tab, onClose }: { entries: ArenaEntry[]; 
               Histórico de Arenas
             </h2>
           </div>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg border border-white/10 bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all"
-          >
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg border border-white/10 bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all">
             <XIcon className="w-4 h-4" />
           </button>
         </div>
-
-        {/* List */}
         <div className="overflow-y-auto flex-1 p-4 space-y-2">
-          {ordered.length === 0 && (
+          {entries.length === 0 && (
             <p className="py-12 text-center text-sm text-muted-foreground">Nenhum histórico disponível.</p>
           )}
-          {ordered.map( ( entry, i ) => (
-            <div
-              key={i}
-              className="rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors p-3"
-            >
-              {/* Row header: date + time + winner count */}
+          {entries.map( ( entry, i ) => (
+            <div key={i} className="rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors p-3">
               <div className="flex items-center justify-between mb-2.5">
                 <div className="flex items-center gap-2">
                   <ClockIcon className="w-3 h-3 text-violet-400 shrink-0" />
-                  <span className="text-[11px] font-black text-white">
-                    {entry.arenaLabel}
-                  </span>
-                  <span className="text-[10px] text-slate-500 tabular-nums font-bold">
-                    {formatDate( entry.date )}
-                  </span>
+                  <span className="text-[11px] font-black text-white">{entry.arenaLabel}</span>
+                  <span className="text-[10px] text-slate-500 tabular-nums font-bold">{formatDate( entry.date )}</span>
                 </div>
                 <span className="text-[9px] font-black uppercase tracking-widest text-violet-400 bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 rounded-full">
                   {entry.winners.length} vencedor{entry.winners.length !== 1 ? 'es' : ''}
                 </span>
               </div>
-
-              {/* Stats row */}
               <div className="flex gap-2 mb-2.5">
                 <div className="flex items-center gap-1.5 bg-rose-500/5 border border-rose-500/10 rounded-lg px-2 py-1 flex-1 min-w-0">
                   <SwordIcon className="w-2.5 h-2.5 text-rose-500 shrink-0" />
@@ -423,14 +391,9 @@ function ArenaHistoryModal( { entries, tab, onClose }: { entries: ArenaEntry[]; 
                   </div>
                 </div>
               </div>
-
-              {/* Winners */}
               <div className="flex flex-wrap gap-1">
                 {entry.winners.map( ( name, j ) => (
-                  <span
-                    key={j}
-                    className="text-[9px] text-violet-300 bg-violet-500/10 border border-violet-500/20 px-1.5 py-0.5 rounded font-medium whitespace-nowrap"
-                  >
+                  <span key={j} className="text-[9px] text-violet-300 bg-violet-500/10 border border-violet-500/20 px-1.5 py-0.5 rounded font-medium whitespace-nowrap">
                     {name}
                   </span>
                 ) )}
@@ -443,7 +406,7 @@ function ArenaHistoryModal( { entries, tab, onClose }: { entries: ArenaEntry[]; 
   )
 }
 
-function RewardsModal( { tab, onClose }: { tab: TabType; onClose: () => void } ) {
+function RewardsModal( { tab, onClose }: { tab: Exclude<TabType, 'geral'>; onClose: () => void } ) {
   useEffect( () => {
     const handler = ( e: KeyboardEvent ) => { if ( e.key === 'Escape' ) onClose() }
     document.addEventListener( 'keydown', handler )
@@ -451,15 +414,8 @@ function RewardsModal( { tab, onClose }: { tab: TabType; onClose: () => void } )
   }, [ onClose ] )
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div
-        className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0d0d14] shadow-2xl shadow-violet-500/10"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Header */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
+      <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0d0d14] shadow-2xl shadow-violet-500/10" onClick={e => e.stopPropagation()}>
         <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0d0d14]">
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-violet-400">
@@ -467,20 +423,13 @@ function RewardsModal( { tab, onClose }: { tab: TabType; onClose: () => void } )
             </p>
             <h2 className="text-lg font-black text-white leading-tight">Premiação</h2>
           </div>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg border border-white/10 bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all text-sm font-bold"
-          >
+          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-lg border border-white/10 bg-white/5 text-muted-foreground hover:text-white hover:bg-white/10 transition-all text-sm font-bold">
             ✕
           </button>
         </div>
-
         <div className="p-6 space-y-8">
-          {/* Recompensas de Ranking */}
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">
-              Ranking Royal Arena
-            </p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Ranking Royal Arena</p>
             <div className="rounded-xl border border-white/5 overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
@@ -491,24 +440,9 @@ function RewardsModal( { tab, onClose }: { tab: TabType; onClose: () => void } )
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {RANKING_REWARDS[ tab ].map( ( row, i ) => (
-                    <tr
-                      key={i}
-                      className={cn(
-                        'transition-colors',
-                        i === 0 ? 'bg-amber-500/5 hover:bg-amber-500/10' :
-                          i === 1 ? 'bg-slate-400/5 hover:bg-slate-400/10' :
-                            i === 2 ? 'bg-orange-800/5 hover:bg-orange-800/10' :
-                              'hover:bg-white/[0.03]'
-                      )}
-                    >
+                    <tr key={i} className={cn( 'transition-colors', i === 0 ? 'bg-amber-500/5 hover:bg-amber-500/10' : i === 1 ? 'bg-slate-400/5 hover:bg-slate-400/10' : i === 2 ? 'bg-orange-800/5 hover:bg-orange-800/10' : 'hover:bg-white/[0.03]' )}>
                       <td className="px-4 py-3">
-                        <span className={cn(
-                          'text-xs font-black',
-                          i === 0 ? 'text-amber-400' :
-                            i === 1 ? 'text-slate-300' :
-                              i === 2 ? 'text-orange-600' :
-                                'text-muted-foreground'
-                        )}>
+                        <span className={cn( 'text-xs font-black', i === 0 ? 'text-amber-400' : i === 1 ? 'text-slate-300' : i === 2 ? 'text-orange-600' : 'text-muted-foreground' )}>
                           {row.range}
                         </span>
                       </td>
@@ -519,12 +453,8 @@ function RewardsModal( { tab, onClose }: { tab: TabType; onClose: () => void } )
               </table>
             </div>
           </div>
-
-          {/* Badge Rewards */}
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">
-              Recompensas por Badge
-            </p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-3">Recompensas por Badge</p>
             <p className="text-[11px] text-muted-foreground/60 mb-3">
               Cada nível de badge requer pelo menos{' '}
               <span className="text-violet-400 font-bold">[03] XP</span> acumulados.
@@ -562,15 +492,19 @@ function RewardsModal( { tab, onClose }: { tab: TabType; onClose: () => void } )
 
 export function Ranking() {
   const [ data, setData ] = useState<{ champion: RawPlayer[]; aspirant: RawPlayer[] } | null>( null )
+  const [ geralData, setGeralData ] = useState<GeralPlayer[]>( [] )
   const [ snapshots, setSnapshots ] = useState<RankingSnapshot[]>( [] )
   const [ loading, setLoading ] = useState( true )
+  const [ geralLoading, setGeralLoading ] = useState( true )
   const [ error, setError ] = useState<string | null>( null )
-  const [ tab, setTab ] = useState<TabType>( 'champion' )
+  const [ tab, setTab ] = useState<TabType>( 'geral' )
   const [ search, setSearch ] = useState( '' )
   const [ sort, setSort ] = useState<SortState>( { key: 'total', dir: 'desc' } )
+  const [ geralSort, setGeralSort ] = useState<GeralSortState>( { key: 'somaLevel', dir: 'desc' } )
   const [ showHistoryModal, setShowHistoryModal ] = useState( false )
   const [ showRewards, setShowRewards ] = useState( false )
 
+  // Fetch arena ranking (champion / aspirant)
   useEffect( () => {
     Promise.all( [
       fetch( API_URL ).then( r => r.ok ? r.json() : null ).catch( () => null ),
@@ -584,19 +518,30 @@ export function Ranking() {
       .finally( () => setLoading( false ) )
   }, [] )
 
-  /**
-   * Derive ArenaEntry list from snapshots for the current tab.
-   * Snapshots are stored oldest→newest; snapshotsToArenaEntries returns newest→oldest.
-   */
+  // Fetch ranking geral (level)
+  useEffect( () => {
+    fetch( GERAL_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify( {} ),
+    } )
+      .then( r => r.ok ? r.json() : [] )
+      .then( ( d: GeralPlayer[] ) => setGeralData( Array.isArray( d ) ? d : [] ) )
+      .catch( () => setGeralData( [] ) )
+      .finally( () => setGeralLoading( false ) )
+  }, [] )
+
   const filteredHistory = useMemo( () => {
+    if ( tab === 'geral' ) return []
     return snapshotsToArenaEntries( snapshots, tab )
       .filter( entry => entry.winners.length > 0 )
   }, [ snapshots, tab ] )
 
+  // Arena rows (champion / aspirant)
   const rows = useMemo( () => {
-    if ( !data ) return []
+    if ( !data || tab === 'geral' ) return []
 
-    const listWithCalculations = ( data[ tab ] ?? [] ).map( ( p ) => {
+    const listWithCalculations = ( data[ tab as 'champion' | 'aspirant' ] ?? [] ).map( ( p ) => {
       const bonusKill = Math.floor( ( p.kills ?? 0 ) * 0.10 )
       const total = ( p.points ?? 0 ) + bonusKill
       return { ...p, bonusKill, total }
@@ -604,57 +549,66 @@ export function Ranking() {
 
     const sortedList = [ ...listWithCalculations ].sort( ( a, b ) => {
       const mul = sort.dir === 'desc' ? -1 : 1
-
-      // total / points
       if ( sort.key === 'total' || sort.key === 'points' ) {
         if ( a.total !== b.total ) return ( a.total - b.total ) * mul
         return ( a.wins - b.wins ) * mul
       }
-
-      // nome
-      if ( sort.key === 'charName' ) {
-        return a.charName.localeCompare( b.charName ) * mul
-      }
-
-      // rank (ignorado aqui)
-      if ( sort.key === 'rank' ) {
-        return 0
-      }
-
-      // resto (numéricos)
+      if ( sort.key === 'charName' ) return a.charName.localeCompare( b.charName ) * mul
+      if ( sort.key === 'rank' ) return 0
       const key = sort.key as SortableKey
-
-      const valA = ( a[ key ] as number ) ?? 0
-      const valB = ( b[ key ] as number ) ?? 0
-
-      return ( valA - valB ) * mul
+      return ( ( ( a[ key ] as number ) ?? 0 ) - ( ( b[ key ] as number ) ?? 0 ) ) * mul
     } )
 
-    const listWithRank = sortedList.map( ( p, i ) => ( {
-      ...p,
-      displayRank: i + 1
-    } ) )
+    const listWithRank = sortedList.map( ( p, i ) => ( { ...p, displayRank: i + 1 } ) )
 
-    if ( !search.trim() ) return listWithRank;
+    if ( !search.trim() ) return listWithRank
 
     const searchTerms = search
       .split( /,|\/|&&|&|\|/ )
       .map( t => t.trim().toLowerCase() )
-      .filter( t => t.length > 0 );
+      .filter( t => t.length > 0 )
 
     return listWithRank.filter( p => {
-      const name = p.charName.toLowerCase();
-      return searchTerms.some( term => name.includes( term ) );
-    } );
-
+      const name = p.charName.toLowerCase()
+      return searchTerms.some( term => name.includes( term ) )
+    } )
   }, [ data, tab, search, sort ] )
 
-  const TABS = [
-    { id: 'champion' as TabType, label: 'Champion', Icon: TrophyIcon },
-    { id: 'aspirant' as TabType, label: 'Aspirant', Icon: UserIcon },
+  // Geral rows
+  const geralRows = useMemo( (): GeralRow[] => {
+    const sorted = [ ...geralData ].sort( ( a, b ) => {
+      const mul = geralSort.dir === 'desc' ? -1 : 1
+      switch ( geralSort.key ) {
+        case 'name': return a.name.localeCompare( b.name ) * mul
+        case 'level': return ( a.level - b.level ) * mul
+        case 'levelSub': return ( a.levelSub - b.levelSub ) * mul
+        case 'kingdom': return a.kingdom.localeCompare( b.kingdom ) * mul
+        case 'somaLevel':
+        default: return ( a[ 'Soma Level' ] - b[ 'Soma Level' ] ) * mul
+      }
+    } )
+
+    const withRank = sorted.map( ( p, i ) => ( { ...p, displayRank: i + 1 } ) )
+
+    if ( !search.trim() ) return withRank
+
+    const searchTerms = search
+      .split( /,|\/|&&|&|\|/ )
+      .map( t => t.trim().toLowerCase() )
+      .filter( t => t.length > 0 )
+
+    return withRank.filter( p =>
+      searchTerms.some( term => p.name.toLowerCase().includes( term ) )
+    )
+  }, [ geralData, geralSort, search ] )
+
+  const TABS: { id: TabType; label: string; Icon: React.ElementType }[] = [
+    { id: 'geral', label: 'Geral', Icon: BarChart2Icon },
+    { id: 'champion', label: 'Champion', Icon: TrophyIcon },
+    { id: 'aspirant', label: 'Aspirant', Icon: UserIcon },
   ]
 
-  const COLS: { key: SortKey; label: string }[] = [
+  const ARENA_COLS: { key: SortKey; label: string }[] = [
     { key: 'rank', label: 'RANK' },
     { key: 'charName', label: 'PERSONAGEM' },
     { key: 'class', label: 'CLASSE' },
@@ -666,24 +620,53 @@ export function Ranking() {
     { key: 'total', label: 'TOTAL' },
   ]
 
+  const GERAL_COLS: { key: GeralSortKey; label: string }[] = [
+    { key: 'rank', label: 'RANK' },
+    { key: 'name', label: 'PERSONAGEM' },
+    { key: 'level', label: 'LVL' },
+    { key: 'levelSub', label: 'LVL SUB' },
+    { key: 'somaLevel', label: 'TOTAL' },
+    { key: 'kingdom', label: 'REINO' },
+  ]
+
   const latestArena = filteredHistory.length > 0 ? filteredHistory[ 0 ] : null
   const olderHistory = filteredHistory.length > 1 ? filteredHistory.slice( 1 ) : []
 
+  const isArenaTab = tab === 'champion' || tab === 'aspirant'
+
   return (
     <div className="space-y-8">
+      {/* ── Top bar: search + premiação + tabs ── */}
       <div className="flex flex-col lg:flex-row gap-6 items-start justify-between">
-        <div className="w-full lg:max-w-sm space-y-6">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Ex: Char1 , Char2 / Char3"
-              value={search}
-              onChange={e => setSearch( e.target.value )}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none focus:border-violet-500 transition-all text-white placeholder:text-muted-foreground/50 shadow-inner"
-            />
+
+        {/* Left: search + tabs */}
+        <div className="w-full lg:max-w-sm space-y-4">
+          {/* Search + Premiação */}
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Ex: Char1 , Char2 / Char3"
+                value={search}
+                onChange={e => setSearch( e.target.value )}
+                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none focus:border-violet-500 transition-all text-white placeholder:text-muted-foreground/50 shadow-inner"
+              />
+            </div>
+
+            {/* Premiação – visível apenas nas abas de arena */}
+            {isArenaTab && (
+              <button
+                onClick={() => setShowRewards( true )}
+                className="shrink-0 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-amber-400 hover:text-amber-300 border border-amber-500/30 hover:border-amber-400/50 bg-amber-500/5 hover:bg-amber-500/10 px-2.5 py-2 rounded-lg transition-all"
+              >
+                <TrophyIcon className="w-3 h-3" />
+                Premiação
+              </button>
+            )}
           </div>
 
-          <div className="flex items-center gap-4 border-b border-white/5">
+          {/* Tabs: Geral | Champion | Aspirant */}
+          <div className="flex items-center gap-0 border-b border-white/5">
             <nav className="flex items-center gap-6">
               {TABS.map( ( { id, label, Icon } ) => (
                 <button
@@ -701,19 +684,12 @@ export function Ranking() {
                 </button>
               ) )}
             </nav>
-
-            <button
-              onClick={() => setShowRewards( true )}
-              className="ml-auto flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-amber-400 hover:text-amber-300 border border-amber-500/30 hover:border-amber-400/50 bg-amber-500/5 hover:bg-amber-500/10 px-2.5 py-1.5 rounded-lg transition-all"
-            >
-              <TrophyIcon className="w-3 h-3" />
-              Premiação
-            </button>
           </div>
         </div>
 
+        {/* Right: arena history card */}
         <div className="w-full lg:flex-1 max-w-2xl">
-          {SHOW_ARENA && latestArena && (
+          {SHOW_ARENA && isArenaTab && latestArena && (
             <div className="relative group">
               <ArenaHistoryCard entry={latestArena} compact={true} />
               {olderHistory.length > 0 && (
@@ -729,72 +705,148 @@ export function Ranking() {
         </div>
       </div>
 
+      {/* ── Table ── */}
       <div className="rounded-xl border border-white/10 bg-black/20 overflow-hidden shadow-2xl">
-        {loading && <p className="py-20 text-center text-sm text-muted-foreground animate-pulse">Sincronizando ranking...</p>}
-        {error && <p className="py-20 text-center text-sm text-destructive font-medium">{error}</p>}
 
-        {!loading && !error && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-white/5 bg-white/[0.02]">
-                  {COLS.map( col => (
-                    <th
-                      key={col.key}
-                      onClick={() => setSort( p => ( { key: col.key, dir: p.key === col.key && p.dir === 'desc' ? 'asc' : 'desc' } ) )}
-                      className="px-4 py-4 text-left text-[10px] font-black uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-white transition-colors"
-                    >
-                      <span className="flex items-center gap-1.5">
-                        {col.label}
-                        <SortIcon col={col.key} sort={sort} />
-                      </span>
-                    </th>
-                  ) )}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {rows.length === 0 && (
-                  <tr><td colSpan={9} className="py-20 text-center text-sm text-muted-foreground">Nenhum guerreiro encontrado.</td></tr>
-                )}
-                {rows.map( ( player ) => {
-                  const cls = getClassName( player.class );
-                  const subCls = getClassName( player.subClass );
-
-                  return (
-                    <tr key={player.charName} className="group hover:bg-slate-800/50 transition-colors">
-                      <td className="px-4 py-4 font-bold text-slate-400">#{player.displayRank}</td>
-                      <td className="px-4 py-4 font-bold text-slate-200">{player.charName}</td>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center gap-1.5">
-                          <Badge variant="outline" className={cn( 'text-[9px] px-1.5 py-0 h-5 font-black', CLASS_BADGE_VARIANT[ cls ] )}>{cls}</Badge>
-                          <Badge variant="outline" className={cn( 'text-[9px] px-1.5 py-0 h-5 font-black', CLASS_BADGE_VARIANT[ subCls ] )}>{subCls}</Badge>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 tabular-nums text-muted-foreground group-hover:text-slate-300">{player.wins}</td>
-                      <td className="px-4 py-4 tabular-nums text-muted-foreground group-hover:text-slate-300">{player.kills}</td>
-                      <td className="px-4 py-4 tabular-nums text-muted-foreground group-hover:text-slate-300">{player.deaths}</td>
-                      <td className="px-4 py-4 tabular-nums text-slate-300">{player.points}</td>
-                      <td className="px-4 py-4 tabular-nums text-slate-300">{player.bonusKill}</td>
-                      <td className={cn( 'px-4 py-4 font-black tabular-nums', player.total > 0 ? 'text-violet-400' : 'text-slate-400' )}>
-                        {player.total > 0 ? `+${player.total}` : player.total}
-                      </td>
+        {/* ── GERAL TAB ── */}
+        {tab === 'geral' && (
+          <>
+            {geralLoading && <p className="py-20 text-center text-sm text-muted-foreground animate-pulse">Carregando ranking geral...</p>}
+            {!geralLoading && (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/5 bg-white/[0.02]">
+                      {GERAL_COLS.map( col => (
+                        <th
+                          key={col.key}
+                          onClick={() => setGeralSort( p => ( { key: col.key, dir: p.key === col.key && p.dir === 'desc' ? 'asc' : 'desc' } ) )}
+                          className="px-4 py-4 text-left text-[10px] font-black uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-white transition-colors"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            {col.label}
+                            <GeralSortIcon col={col.key} sort={geralSort} />
+                          </span>
+                        </th>
+                      ) )}
                     </tr>
-                  );
-                } )}
-              </tbody>
-            </table>
-          </div>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {geralRows.length === 0 && (
+                      <tr><td colSpan={6} className="py-20 text-center text-sm text-muted-foreground">Nenhum personagem encontrado.</td></tr>
+                    )}
+                    {geralRows.map( ( player ) => {
+                      const kingdom = getKingdom( player.kingdom )
+                      const isTop3 = player.displayRank <= 3
+                      return (
+                        <tr key={`${player.name}-${player.displayRank}`} className="group hover:bg-slate-800/50 transition-colors">
+                          <td className="px-4 py-3.5">
+                            <span className={cn(
+                              'font-black tabular-nums',
+                              player.displayRank === 1 ? 'text-amber-400' :
+                                player.displayRank === 2 ? 'text-slate-300' :
+                                  player.displayRank === 3 ? 'text-orange-500' :
+                                    'text-slate-500'
+                            )}>
+                              #{player.displayRank}
+                            </span>
+                          </td>
+                          <td className={cn( 'px-4 py-3.5 font-bold', isTop3 ? 'text-white' : 'text-slate-200' )}>
+                            {player.name}
+                          </td>
+                          <td className="px-4 py-3.5 tabular-nums text-slate-300 font-medium">{player.level}</td>
+                          <td className="px-4 py-3.5 tabular-nums text-slate-400 font-medium">{player.levelSub}</td>
+                          <td className={cn( 'px-4 py-3.5 font-black tabular-nums', isTop3 ? 'text-violet-400' : 'text-slate-300' )}>
+                            {player[ 'Soma Level' ]}
+                          </td>
+                          <td className="px-4 py-3.5">
+                            <span className={cn( 'inline-flex items-center text-[10px] font-bold border px-2 py-0.5 rounded-full', kingdom.className )}>
+                              {kingdom.label}
+                            </span>
+                          </td>
+                        </tr>
+                      )
+                    } )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ── CHAMPION / ASPIRANT TABS ── */}
+        {isArenaTab && (
+          <>
+            {loading && <p className="py-20 text-center text-sm text-muted-foreground animate-pulse">Sincronizando ranking...</p>}
+            {error && <p className="py-20 text-center text-sm text-destructive font-medium">{error}</p>}
+            {!loading && !error && (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/5 bg-white/[0.02]">
+                      {ARENA_COLS.map( col => (
+                        <th
+                          key={col.key}
+                          onClick={() => setSort( p => ( { key: col.key, dir: p.key === col.key && p.dir === 'desc' ? 'asc' : 'desc' } ) )}
+                          className="px-4 py-4 text-left text-[10px] font-black uppercase tracking-widest text-muted-foreground cursor-pointer select-none hover:text-white transition-colors"
+                        >
+                          <span className="flex items-center gap-1.5">
+                            {col.label}
+                            <SortIcon col={col.key} sort={sort} />
+                          </span>
+                        </th>
+                      ) )}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {rows.length === 0 && (
+                      <tr><td colSpan={9} className="py-20 text-center text-sm text-muted-foreground">Nenhum guerreiro encontrado.</td></tr>
+                    )}
+                    {rows.map( ( player ) => {
+                      const cls = getClassName( player.class )
+                      const subCls = getClassName( player.subClass )
+                      return (
+                        <tr key={player.charName} className="group hover:bg-slate-800/50 transition-colors">
+                          <td className="px-4 py-4 font-bold text-slate-400">#{player.displayRank}</td>
+                          <td className="px-4 py-4 font-bold text-slate-200">{player.charName}</td>
+                          <td className="px-4 py-4">
+                            <div className="flex items-center gap-1.5">
+                              <Badge variant="outline" className={cn( 'text-[9px] px-1.5 py-0 h-5 font-black', CLASS_BADGE_VARIANT[ cls ] )}>{cls}</Badge>
+                              <Badge variant="outline" className={cn( 'text-[9px] px-1.5 py-0 h-5 font-black', CLASS_BADGE_VARIANT[ subCls ] )}>{subCls}</Badge>
+                            </div>
+                          </td>
+                          <td className="px-4 py-4 tabular-nums text-muted-foreground group-hover:text-slate-300">{player.wins}</td>
+                          <td className="px-4 py-4 tabular-nums text-muted-foreground group-hover:text-slate-300">{player.kills}</td>
+                          <td className="px-4 py-4 tabular-nums text-muted-foreground group-hover:text-slate-300">{player.deaths}</td>
+                          <td className="px-4 py-4 tabular-nums text-slate-300">{player.points}</td>
+                          <td className="px-4 py-4 tabular-nums text-slate-300">{player.bonusKill}</td>
+                          <td className={cn( 'px-4 py-4 font-black tabular-nums', player.total > 0 ? 'text-violet-400' : 'text-slate-400' )}>
+                            {player.total > 0 ? `+${player.total}` : player.total}
+                          </td>
+                        </tr>
+                      )
+                    } )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
         )}
       </div>
 
-      {showHistoryModal && (
+      {showHistoryModal && isArenaTab && (
         <ArenaHistoryModal
           entries={filteredHistory}
-          tab={tab}
+          tab={tab as Exclude<TabType, 'geral'>}
           onClose={() => setShowHistoryModal( false )}
         />
       )}
-      {showRewards && <RewardsModal tab={tab} onClose={() => setShowRewards( false )} />}
+      {showRewards && isArenaTab && (
+        <RewardsModal
+          tab={tab as Exclude<TabType, 'geral'>}
+          onClose={() => setShowRewards( false )}
+        />
+      )}
     </div>
   )
 }
