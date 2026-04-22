@@ -290,8 +290,8 @@
     },
     {
       "charName": "chocola12",
-      "class": 0,
-      "subClass": 0,
+      "class": 2,
+      "subClass": 3,
       "wins": 10,
       "kills": 64,
       "deaths": 124,
@@ -1514,8 +1514,8 @@
     },
     {
       "charName": "llMXll",
-      "class": 2,
-      "subClass": 3,
+      "class": 0,
+      "subClass": 0,
       "wins": 1,
       "kills": 26,
       "deaths": 27,
@@ -1560,7 +1560,7 @@
     {
       "charName": "Tai-Jutsu",
       "class": 0,
-      "subClass": 0,
+      "subClass": 2,
       "wins": 0,
       "kills": 4,
       "deaths": 9,
@@ -2380,7 +2380,7 @@
     },
     {
       "charName": "BISNAGUINH4",
-      "class": 3,
+      "class": 2,
       "subClass": 3,
       "wins": 4,
       "kills": 1,
@@ -2570,7 +2570,7 @@
     {
       "charName": "Erickvvvv",
       "class": 3,
-      "subClass": 3,
+      "subClass": 2,
       "wins": 5,
       "kills": 5,
       "deaths": 60,
@@ -2587,8 +2587,8 @@
     },
     {
       "charName": "chocola12",
-      "class": 0,
-      "subClass": 0,
+      "class": 2,
+      "subClass": 3,
       "wins": 2,
       "kills": 1,
       "deaths": 3,
@@ -3244,7 +3244,7 @@
     },
     {
       "charName": "-Salgadinho-",
-      "class": 3,
+      "class": 2,
       "subClass": 0,
       "wins": 0,
       "kills": 3,
@@ -3847,7 +3847,7 @@
     },
     {
       "charName": "Dusky",
-      "class": 0,
+      "class": 1,
       "subClass": 0,
       "wins": 0,
       "kills": 2,
