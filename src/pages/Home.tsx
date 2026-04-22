@@ -225,8 +225,8 @@ export function Home() {
       {/* ── RODAPÉ ── */}
       <footer className="border-t py-4 mt-8">
         <p className="text-center text-xs text-muted-foreground">
-          © Desenvolvido por
-          <span className="text-violet-500 font-medium">Sérgio Praxedes</span>
+          © Desenvolvido por 
+          <span className="text-violet-500 font-medium">Sérgio Praxedes (Cama)</span>
         </p>
       </footer>
 
