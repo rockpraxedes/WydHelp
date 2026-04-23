@@ -503,7 +503,7 @@ function SimpleRow({
       <button
         onClick={() => inc(stockKey, -1)}
         disabled={val === 0}
-        className="w-6 h-6 rounded border border-accent text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 disabled:opacity-30 transition-all"
+        className="w-6 h-6 rounded border border-accent text-xs font-bold text-muted-foreground hover:text-foreground hover:border-foreground disabled:opacity-30 transition-all"
       >
         −
       </button>
@@ -515,7 +515,7 @@ function SimpleRow({
       </span>
       <button
         onClick={() => inc(stockKey, 1)}
-        className="w-6 h-6 rounded border border-accent text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 transition-all"
+        className="w-6 h-6 rounded border border-accent text-xs font-bold text-muted-foreground hover:text-foreground hover:border-foreground transition-all"
       >
         +
       </button>
@@ -739,8 +739,7 @@ function InventarioPanel({
                 <span
                   className="text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded"
                   style={{
-                    color:
-                      summary.creation > 0 ? "#fff" : "rgba(255,255,255,0.2)",
+                    color: summary.creation > 0 ? "#fff" : `${accent}24`,
                     background:
                       summary.creation > 0 ? `${accent}44` : `${accent}24`,
                   }}
@@ -758,10 +757,9 @@ function InventarioPanel({
                 <span
                   className="text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded"
                   style={{
-                    color:
-                      summary.refine > 0 ? "#fff" : "rgba(255,255,255,0.2)",
+                    color: summary.refine > 0 ? "#fff" : `${accent}24`,
                     background:
-                      summary.refine > 0 ? `${accent}44` : "transparent",
+                      summary.refine > 0 ? `${accent}44` : `${accent}24`,
                   }}
                 >
                   {summary.refine}x
@@ -1128,9 +1126,9 @@ export function Craft() {
                             color: "#fff",
                           }
                         : {
-                            background: "transparent",
+                            background: `${accent}44`,
                             borderColor: "rgba(255,255,255,0.12)",
-                            color: "rgba(255,255,255,0.5)",
+                            color: accent,
                           }
                     }
                   >
