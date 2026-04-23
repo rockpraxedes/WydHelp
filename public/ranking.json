@@ -344,8 +344,8 @@
     },
     {
       "charName": "Nyox",
-      "class": 3,
-      "subClass": 2,
+      "class": 0,
+      "subClass": 0,
       "wins": 5,
       "kills": 55,
       "deaths": 31,
@@ -776,7 +776,7 @@
     },
     {
       "charName": "ColdFear",
-      "class": 3,
+      "class": 2,
       "subClass": 3,
       "wins": 1,
       "kills": 1,
@@ -1352,7 +1352,7 @@
     },
     {
       "charName": "TREMBORAGE",
-      "class": 1,
+      "class": 0,
       "subClass": 0,
       "wins": 1,
       "kills": 7,
@@ -1415,8 +1415,8 @@
     },
     {
       "charName": "Nyox",
-      "class": 3,
-      "subClass": 2,
+      "class": 0,
+      "subClass": 0,
       "wins": 1,
       "kills": 5,
       "deaths": 3,
@@ -1452,7 +1452,7 @@
     {
       "charName": "Dracken",
       "class": 0,
-      "subClass": 0,
+      "subClass": 2,
       "wins": 0,
       "kills": 4,
       "deaths": 3,
@@ -3019,8 +3019,8 @@
     },
     {
       "charName": "MaaaX",
-      "class": 3,
-      "subClass": 3,
+      "class": 0,
+      "subClass": 0,
       "wins": 3,
       "kills": 89,
       "deaths": 60,
@@ -3298,7 +3298,7 @@
     },
     {
       "charName": "Melik",
-      "class": 3,
+      "class": 2,
       "subClass": 0,
       "wins": 2,
       "kills": 10,
@@ -3649,7 +3649,7 @@
     },
     {
       "charName": "ColdFear",
-      "class": 3,
+      "class": 2,
       "subClass": 3,
       "wins": 0,
       "kills": 1,
