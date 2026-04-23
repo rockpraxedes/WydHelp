@@ -640,20 +640,29 @@ function InventarioPanel({
 }) {
   const accent = TYPE_ACCENT[itemType];
   const items = useMemo(() => flatItems(itemType), [itemType]);
+  const [openDisp, setOpenDisp] = useState(true);
+
+  const summary = useMemo(() => {
+    const reqs = REQUIREMENTS[itemType];
+    const creation = reqs.creation ? calcAvailable(reqs.creation, get) : null;
+    const refine = reqs.refine ? calcAvailable(reqs.refine, get) : null;
+    const hasAny = (creation ?? 0) > 0 || (refine ?? 0) > 0;
+    return { creation, refine, hasAny };
+  }, [get, itemType]);
 
   return (
     <div
-      className="rounded-xl border p-3 w-64 shrink-0"
+      className="rounded-xl border p-3 w-64 shrink-0 space-y-3"
       style={{ borderColor: `${accent}30`, background: `${accent}08` }}
     >
-      <div className="flex items-center gap-1 mb-3">
+      {/* Cabeçalho Inventário */}
+      <div className="flex items-center gap-1">
         <p
           className="text-[12px] font-medium uppercase tracking-wider"
           style={{ color: accent }}
         >
           Inventário
         </p>
-
         <div className="relative group">
           <span
             className="text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center cursor-pointer border"
@@ -661,13 +670,14 @@ function InventarioPanel({
           >
             ?
           </span>
-
           <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 w-48 p-2 rounded text-[11px] text-white bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
             O inventário serve para computar quantos itens de cada o jogador
             tem, e se com aquilo é possível fazer criação ou refinação.
           </div>
         </div>
       </div>
+
+      {/* Itens */}
       <div>
         {items.map((item, idx) => {
           if (item.type === "pl")
@@ -696,104 +706,76 @@ function InventarioPanel({
           );
         })}
       </div>
+
+      {/* Divisor */}
+      <div className="border-t" style={{ borderColor: `${accent}20` }} />
+
+      {/* Disponibilidade */}
+      <div>
+        <button
+          onClick={() => setOpenDisp(!openDisp)}
+          className="flex items-center gap-1 text-[12px] font-medium uppercase tracking-wider mb-2 hover:text-foreground transition-colors w-full"
+          style={{ color: accent }}
+        >
+          <span className="flex-1 text-left">Disponibilidade</span>
+          <span className="text-xs">{openDisp ? "▼" : "▶"}</span>
+        </button>
+
+        {openDisp && (
+          <div
+            className="rounded-lg border px-2.5 py-2 space-y-1 transition-all duration-300"
+            style={{
+              borderColor: summary.hasAny
+                ? `${accent}50`
+                : "rgba(255,255,255,0.06)",
+              background: summary.hasAny ? `${accent}10` : "transparent",
+            }}
+          >
+            {summary.creation !== null && (
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[11px] text-muted-foreground">
+                  Criação
+                </span>
+                <span
+                  className="text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded"
+                  style={{
+                    color:
+                      summary.creation > 0 ? "#fff" : "rgba(255,255,255,0.2)",
+                    background:
+                      summary.creation > 0 ? `${accent}44` : "transparent",
+                  }}
+                >
+                  {summary.creation}x
+                </span>
+              </div>
+            )}
+
+            {summary.refine !== null && (
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[11px] text-muted-foreground">
+                  Refinação
+                </span>
+                <span
+                  className="text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded"
+                  style={{
+                    color:
+                      summary.refine > 0 ? "#fff" : "rgba(255,255,255,0.2)",
+                    background:
+                      summary.refine > 0 ? `${accent}44` : "transparent",
+                  }}
+                >
+                  {summary.refine}x
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
 // ── ALERTAS DE DISPONIBILIDADE ────────────────────────────────────────────
-
-function AlertasBanner({ get }: { get: (k: string) => number }) {
-  const [open, setOpen] = useState(true);
-  const summary = useMemo(
-    () =>
-      TYPE_ORDER.map((type) => {
-        const reqs = REQUIREMENTS[type];
-        const creation = reqs.creation
-          ? calcAvailable(reqs.creation, get)
-          : null;
-        const refine = reqs.refine ? calcAvailable(reqs.refine, get) : null;
-        const hasAny = (creation ?? 0) > 0 || (refine ?? 0) > 0;
-        return { type, creation, refine, hasAny };
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [get],
-  );
-
-  return (
-    <div>
-      <button
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 text-[12px] font-medium uppercase tracking-wider text-muted-foreground mb-2 hover:text-foreground transition-colors"
-      >
-        <span>Disponibilidade</span>
-        <span className="text-xs">{open ? "▼" : "▶"}</span>
-      </button>
-      {open && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {summary.map(({ type, creation, refine, hasAny }) => {
-            const accent = TYPE_ACCENT[type];
-            return (
-              <div
-                key={type}
-                className="rounded-lg border p-2.5 space-y-1.5 transition-all duration-300"
-                style={{
-                  borderColor: hasAny
-                    ? `${accent}50`
-                    : "rgba(255,255,255,0.06)",
-                  background: hasAny ? `${accent}10` : "transparent",
-                }}
-              >
-                <p
-                  className="text-[12px] font-semibold uppercase tracking-wider"
-                  style={{
-                    color: hasAny ? accent : "rgba(255,255,255,0.25)",
-                  }}
-                >
-                  {TYPE_LABEL[type]}
-                </p>
-
-                {creation !== null && (
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-[12px] text-muted-foreground">
-                      Criação
-                    </span>
-                    <span
-                      className="text-[11px] font-bold tabular-nums px-1.5 py-0.5 rounded"
-                      style={{
-                        color: creation > 0 ? "#fff" : "rgba(255,255,255,0.2)",
-                        background:
-                          creation > 0 ? `${accent}44` : "transparent",
-                      }}
-                    >
-                      {creation}x
-                    </span>
-                  </div>
-                )}
-
-                {refine !== null && (
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="text-[12px] text-muted-foreground">
-                      Refinação
-                    </span>
-                    <span
-                      className="text-[11px] font-bold tabular-nums px-1.5 py-0.5 rounded"
-                      style={{
-                        color: refine > 0 ? "#fff" : "rgba(255,255,255,0.2)",
-                        background: refine > 0 ? `${accent}44` : "transparent",
-                      }}
-                    >
-                      {refine}x
-                    </span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
 
 // ── MODAL DE ITENS NECESSÁRIOS ────────────────────────────────────────────
 
@@ -1011,9 +993,6 @@ export function Craft() {
           </button>
         ))}
       </div>
-
-      {/* Alertas de disponibilidade — usa o mesmo get do inventário */}
-      <AlertasBanner get={get} />
 
       {/* Layout: inventário à esquerda + calculadora à direita */}
       <div className="flex flex-col lg:flex-row gap-4 items-start justify-center">
