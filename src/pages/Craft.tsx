@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useState } from "react";
 
-
 // ── TIPOS ─────────────────────────────────────────────────────────────────
 
 type ItemType = "mortal" | "celestial" | "reddragon" | "bahamut";
@@ -26,7 +25,7 @@ interface Section {
 interface Requirement {
   id: string;
   qty: number;
-  leveled?: boolean;       // soma todos os níveis do item
+  leveled?: boolean; // soma todos os níveis do item
   alternatives?: string[]; // ids alternativos cujo estoque soma junto (OR)
 }
 
@@ -92,7 +91,7 @@ const DATA: Record<
   },
 };
 
-const BLESSED_BONUS_PER = [ 2, 3, 4, 5, 6, 7, 8, 10, 12, 15 ];
+const BLESSED_BONUS_PER = [2, 3, 4, 5, 6, 7, 8, 10, 12, 15];
 
 // ── DADOS INVENTÁRIO ──────────────────────────────────────────────────────
 
@@ -115,10 +114,7 @@ const SECTIONS: Record<ItemType, Section[]> = {
     {
       title: "Criação",
       items: [
-        { type: "simple", id: "pedra_sol", label: "Secreta do Sol" },
-        { type: "simple", id: "pedra_vento", label: "Secreta do Vento" },
-        { type: "simple", id: "pedra_agua", label: "Secreta da Água" },
-        { type: "simple", id: "pedra_terra", label: "Secreta da Terra" },
+        { type: "simple", id: "secretas", label: "Kit Pedras Secretas" },
         { type: "simple", id: "pedra_lunar", label: "Pedra Lunar" },
         { type: "simple", id: "pedra_escuridao", label: "Pedra da Escuridão" },
       ],
@@ -139,10 +135,7 @@ const SECTIONS: Record<ItemType, Section[]> = {
       items: [
         { type: "simple", id: "mark_bahamut", label: "Mark of Bahamut" },
         { type: "simple", id: "rd_scale", label: "Red Dragon Scale" },
-        { type: "simple", id: "pedra_sol", label: "Secreta do Sol" },
-        { type: "simple", id: "pedra_vento", label: "Secreta do Vento" },
-        { type: "simple", id: "pedra_agua", label: "Secreta da Água" },
-        { type: "simple", id: "pedra_terra", label: "Secreta da Terra" },
+        { type: "simple", id: "secretas", label: "Kit Pedras Secretas" },
         {
           type: "leveled",
           id: "dragon_soul",
@@ -221,19 +214,32 @@ const ITEMS_NECESSARIOS: Record<ItemType, Section[]> = {
       items: [
         { type: "simple", id: "item_selado_9", label: "Item Selado +9" },
         { type: "simple", id: "item_arch_15", label: "Item Arch +15" },
-        { type: "simple", id: "pedra_sol", label: "1x - Secreta do Sol" },
-        { type: "simple", id: "pedra_vento", label: "1x - Secreta do Vento" },
-        { type: "simple", id: "pedra_agua", label: "1x - Secreta da Água" },
-        { type: "simple", id: "pedra_terra", label: "1x - Secreta da Terra" },
-        { type: "simple", id: "pedra_lunar", label: "1x - Pedra Lunar ou Pedra Escuridão" },
+        { type: "simple", id: "secretas", label: "Kit Pedras Secretas" },
+        {
+          type: "simple",
+          id: "pedra_lunar",
+          label: "1x - Pedra Lunar ou Pedra Escuridão",
+        },
       ],
     },
     {
       title: "Refinação",
       items: [
-        { type: "simple", id: "essence_gods", label: "4x - Essence of Gods (+12/+13)" },
-        { type: "simple", id: "essence_gods_9", label: "4x - Essence of Gods +9 (+14/+15)" },
-        { type: "simple", id: "pedra_valkiria", label: "1x Pedra da Valkiria +0" },
+        {
+          type: "simple",
+          id: "essence_gods",
+          label: "4x - Essence of Gods (+12/+13)",
+        },
+        {
+          type: "simple",
+          id: "essence_gods_9",
+          label: "4x - Essence of Gods +9 (+14/+15)",
+        },
+        {
+          type: "simple",
+          id: "pedra_valkiria",
+          label: "1x Pedra da Valkiria +0",
+        },
         { type: "simple", id: "soul_fragment", label: "10x -Soul Fragment" },
         { type: "simple", id: "gold", label: "75kk ~ 200kk em Gold" },
       ],
@@ -246,10 +252,7 @@ const ITEMS_NECESSARIOS: Record<ItemType, Section[]> = {
         { type: "simple", id: "item_cel_15", label: "Item Celestial +15" },
         { type: "simple", id: "mark_bahamut", label: "1x - Mark of Bahamut" },
         { type: "simple", id: "rd_scale", label: "10x - Red Dragon Scale" },
-        { type: "simple", id: "pedra_sol", label: "1x - Secreta do Sol" },
-        { type: "simple", id: "pedra_vento", label: "1x - Secreta do Vento" },
-        { type: "simple", id: "pedra_agua", label: "1x - Secreta da Água" },
-        { type: "simple", id: "pedra_terra", label: "1x - Secreta da Terra" },
+        { type: "simple", id: "secretas", label: "Kit Pedras Secretas" },
         {
           type: "leveled",
           id: "dragon_soul",
@@ -326,16 +329,13 @@ const REQUIREMENTS: Record<
   },
   celestial: {
     creation: [
-      { id: "pedra_sol", qty: 1 },
-      { id: "pedra_vento", qty: 1 },
-      { id: "pedra_agua", qty: 1 },
-      { id: "pedra_terra", qty: 1 },
+      { id: "secretas", qty: 1 },
       // Pedra Lunar OU Pedra da Escuridão — soma os dois estoques
-      { id: "pedra_lunar", qty: 1, alternatives: [ "pedra_escuridao" ] },
+      { id: "pedra_lunar", qty: 1, alternatives: ["pedra_escuridao"] },
     ],
     refine: [
       // Essence of Gods (normal) OU +9 — qualquer um serve dependendo do step
-      { id: "essence_gods", qty: 4, alternatives: [ "essence_gods_9" ] },
+      { id: "essence_gods", qty: 4, alternatives: ["essence_gods_9"] },
       { id: "pedra_valkiria", qty: 1 },
       { id: "soul_fragment", qty: 10 },
     ],
@@ -344,10 +344,7 @@ const REQUIREMENTS: Record<
     creation: [
       { id: "mark_bahamut", qty: 1 },
       { id: "rd_scale", qty: 10 },
-      { id: "pedra_sol", qty: 1 },
-      { id: "pedra_vento", qty: 1 },
-      { id: "pedra_agua", qty: 1 },
-      { id: "pedra_terra", qty: 1 },
+      { id: "secretas", qty: 1 },
       { id: "dragon_soul", qty: 1, leveled: true },
     ],
     refine: [
@@ -390,7 +387,7 @@ const TYPE_LABEL: Record<ItemType, string> = {
   bahamut: "Bahamut",
 };
 
-const TYPE_ORDER: ItemType[] = [ "mortal", "celestial", "reddragon", "bahamut" ];
+const TYPE_ORDER: ItemType[] = ["mortal", "celestial", "reddragon", "bahamut"];
 
 // ── STORAGE ───────────────────────────────────────────────────────────────
 
@@ -401,59 +398,59 @@ type Estoque = Record<string, number>;
 
 function loadEstoque(): Estoque {
   try {
-    const raw = localStorage.getItem( STORAGE_KEY );
-    if ( raw ) return JSON.parse( raw );
-  } catch { }
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
   return {};
 }
 
-function saveEstoque( e: Estoque ) {
-  localStorage.setItem( STORAGE_KEY, JSON.stringify( e ) );
+function saveEstoque(e: Estoque) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(e));
 }
 
 function loadShowInventario(): boolean {
   try {
-    const raw = localStorage.getItem( TOGGLE_KEY );
-    if ( raw !== null ) return raw === "true";
-  } catch { }
+    const raw = localStorage.getItem(TOGGLE_KEY);
+    if (raw !== null) return raw === "true";
+  } catch {}
   return true;
 }
 
-function saveShowInventario( v: boolean ) {
+function saveShowInventario(v: boolean) {
   try {
-    localStorage.setItem( TOGGLE_KEY, String( v ) );
-  } catch { }
+    localStorage.setItem(TOGGLE_KEY, String(v));
+  } catch {}
 }
 
 function useInventario() {
-  const [ estoque, setEstoque ] = useState<Estoque>( loadEstoque );
-  const get = useCallback( ( key: string ) => estoque[ key ] ?? 0, [ estoque ] );
-  const inc = useCallback( ( key: string, delta: number ) => {
-    setEstoque( ( prev ) => {
-      const next = { ...prev, [ key ]: Math.max( 0, ( prev[ key ] ?? 0 ) + delta ) };
-      saveEstoque( next );
+  const [estoque, setEstoque] = useState<Estoque>(loadEstoque);
+  const get = useCallback((key: string) => estoque[key] ?? 0, [estoque]);
+  const inc = useCallback((key: string, delta: number) => {
+    setEstoque((prev) => {
+      const next = { ...prev, [key]: Math.max(0, (prev[key] ?? 0) + delta) };
+      saveEstoque(next);
       return next;
-    } );
-  }, [] );
+    });
+  }, []);
   return { get, inc };
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────
 
-function flatItems( itemType: ItemType ): ItemKind[] {
+function flatItems(itemType: ItemType): ItemKind[] {
   const seen = new Set<string>();
   const result: ItemKind[] = [];
-  for ( const section of SECTIONS[ itemType ] ) {
-    for ( const item of section.items ) {
+  for (const section of SECTIONS[itemType]) {
+    for (const item of section.items) {
       const key =
         item.type === "pl"
           ? "pl"
           : item.type === "leveled"
             ? `leveled_${item.id}`
             : item.id;
-      if ( !seen.has( key ) ) {
-        seen.add( key );
-        result.push( item );
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push(item);
       }
     }
   }
@@ -463,30 +460,30 @@ function flatItems( itemType: ItemType ): ItemKind[] {
 /** Retorna quantas vezes a operação pode ser executada com o estoque atual. */
 function calcAvailable(
   reqs: Requirement[],
-  get: ( k: string ) => number
+  get: (k: string) => number,
 ): number {
   let result = Infinity;
-  for ( const req of reqs ) {
+  for (const req of reqs) {
     let stock = req.leveled
-      ? Array.from( { length: 10 }, ( _, i ) => get( `${req.id}_${i}` ) ).reduce(
-        ( a, b ) => a + b,
-        0
-      )
-      : get( req.id );
+      ? Array.from({ length: 10 }, (_, i) => get(`${req.id}_${i}`)).reduce(
+          (a, b) => a + b,
+          0,
+        )
+      : get(req.id);
 
-    if ( req.alternatives ) {
-      stock += req.alternatives.reduce( ( sum, altId ) => sum + get( altId ), 0 );
+    if (req.alternatives) {
+      stock += req.alternatives.reduce((sum, altId) => sum + get(altId), 0);
     }
 
-    result = Math.min( result, Math.floor( stock / req.qty ) );
-    if ( result === 0 ) return 0; // curto-circuito
+    result = Math.min(result, Math.floor(stock / req.qty));
+    if (result === 0) return 0; // curto-circuito
   }
   return result === Infinity ? 0 : result;
 }
 
 // ── INVENTÁRIO — SUB-COMPONENTES ──────────────────────────────────────────
 
-function SimpleRow( {
+function SimpleRow({
   label,
   stockKey,
   accent,
@@ -496,15 +493,15 @@ function SimpleRow( {
   label: string;
   stockKey: string;
   accent: string;
-  get: ( k: string ) => number;
-  inc: ( k: string, d: number ) => void;
-} ) {
-  const val = get( stockKey );
+  get: (k: string) => number;
+  inc: (k: string, d: number) => void;
+}) {
+  const val = get(stockKey);
   return (
     <div className="flex items-center gap-2 py-1.5 border-b border-white/5 last:border-0">
       <span className="flex-1 text-xs text-muted-foreground">{label}</span>
       <button
-        onClick={() => inc( stockKey, -1 )}
+        onClick={() => inc(stockKey, -1)}
         disabled={val === 0}
         className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 disabled:opacity-30 transition-all"
       >
@@ -517,7 +514,7 @@ function SimpleRow( {
         {val}
       </span>
       <button
-        onClick={() => inc( stockKey, 1 )}
+        onClick={() => inc(stockKey, 1)}
         className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 transition-all"
       >
         +
@@ -526,21 +523,21 @@ function SimpleRow( {
   );
 }
 
-function PLRow( {
+function PLRow({
   accent,
   get,
   inc,
 }: {
   accent: string;
-  get: ( k: string ) => number;
-  inc: ( k: string, d: number ) => void;
-} ) {
-  const val = get( "pl" );
+  get: (k: string) => number;
+  inc: (k: string, d: number) => void;
+}) {
+  const val = get("pl");
   return (
     <div className="flex items-center gap-2 py-1.5 border-b border-white/5 last:border-0">
       <span className="flex-1 text-xs text-muted-foreground">PL</span>
       <button
-        onClick={() => inc( "pl", -10 )}
+        onClick={() => inc("pl", -10)}
         disabled={val === 0}
         className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 disabled:opacity-30 transition-all"
       >
@@ -553,7 +550,7 @@ function PLRow( {
         {val.toLocaleString()}
       </span>
       <button
-        onClick={() => inc( "pl", 10 )}
+        onClick={() => inc("pl", 10)}
         className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 transition-all"
       >
         +
@@ -562,7 +559,7 @@ function PLRow( {
   );
 }
 
-function LeveledBlock( {
+function LeveledBlock({
   baseId,
   label,
   levels,
@@ -574,18 +571,18 @@ function LeveledBlock( {
   label: string;
   levels: number;
   accent: string;
-  get: ( k: string ) => number;
-  inc: ( k: string, d: number ) => void;
-} ) {
+  get: (k: string) => number;
+  inc: (k: string, d: number) => void;
+}) {
   return (
     <div className="py-1.5 border-b border-white/5 last:border-0">
       <p className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground mb-1.5">
         {label}
       </p>
       <div className="grid grid-cols-5 gap-1">
-        {Array.from( { length: levels }, ( _, i ) => {
+        {Array.from({ length: levels }, (_, i) => {
           const key = `${baseId}_${i}`;
-          const val = get( key );
+          const val = get(key);
           const hasVal = val > 0;
           return (
             <div key={i} className="flex flex-col items-center gap-0.5">
@@ -594,27 +591,27 @@ function LeveledBlock( {
               </span>
               <div className="relative">
                 <button
-                  onClick={() => inc( key, 1 )}
+                  onClick={() => inc(key, 1)}
                   className="w-9 h-9 rounded-lg border text-xs font-semibold transition-all duration-150"
                   style={
                     hasVal
                       ? {
-                        background: `${accent}22`,
-                        borderColor: accent,
-                        color: accent,
-                      }
+                          background: `${accent}22`,
+                          borderColor: accent,
+                          color: accent,
+                        }
                       : {
-                        background: "transparent",
-                        borderColor: "rgba(255,255,255,0.10)",
-                        color: "rgba(255,255,255,0.3)",
-                      }
+                          background: "transparent",
+                          borderColor: "rgba(255,255,255,0.10)",
+                          color: "rgba(255,255,255,0.3)",
+                        }
                   }
                 >
                   {val}
                 </button>
                 {hasVal && (
                   <button
-                    onClick={() => inc( key, -1 )}
+                    onClick={() => inc(key, -1)}
                     className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-black/60 border border-white/20 text-[9px] text-white/60 hover:text-white hover:border-white/50 flex items-center justify-center transition-all"
                   >
                     −
@@ -623,7 +620,7 @@ function LeveledBlock( {
               </div>
             </div>
           );
-        } )}
+        })}
       </div>
     </div>
   );
@@ -632,17 +629,17 @@ function LeveledBlock( {
 // ── INVENTÁRIO — PAINEL ───────────────────────────────────────────────────
 // get/inc agora vêm de fora (lifted para Craft)
 
-function InventarioPanel( {
+function InventarioPanel({
   itemType,
   get,
   inc,
 }: {
   itemType: ItemType;
-  get: ( k: string ) => number;
-  inc: ( k: string, d: number ) => void;
-} ) {
-  const accent = TYPE_ACCENT[ itemType ];
-  const items = useMemo( () => flatItems( itemType ), [ itemType ] );
+  get: (k: string) => number;
+  inc: (k: string, d: number) => void;
+}) {
+  const accent = TYPE_ACCENT[itemType];
+  const items = useMemo(() => flatItems(itemType), [itemType]);
 
   return (
     <div
@@ -656,10 +653,10 @@ function InventarioPanel( {
         Inventário
       </p>
       <div>
-        {items.map( ( item, idx ) => {
-          if ( item.type === "pl" )
+        {items.map((item, idx) => {
+          if (item.type === "pl")
             return <PLRow key="pl" accent={accent} get={get} inc={inc} />;
-          if ( item.type === "leveled" )
+          if (item.type === "leveled")
             return (
               <LeveledBlock
                 key={`${item.id}_${idx}`}
@@ -681,7 +678,7 @@ function InventarioPanel( {
               inc={inc}
             />
           );
-        } )}
+        })}
       </div>
     </div>
   );
@@ -689,38 +686,36 @@ function InventarioPanel( {
 
 // ── ALERTAS DE DISPONIBILIDADE ────────────────────────────────────────────
 
-function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
-  const [ open, setOpen ] = useState( true );
+function AlertasBanner({ get }: { get: (k: string) => number }) {
+  const [open, setOpen] = useState(true);
   const summary = useMemo(
     () =>
-      TYPE_ORDER.map( ( type ) => {
-        const reqs = REQUIREMENTS[ type ];
+      TYPE_ORDER.map((type) => {
+        const reqs = REQUIREMENTS[type];
         const creation = reqs.creation
-          ? calcAvailable( reqs.creation, get )
+          ? calcAvailable(reqs.creation, get)
           : null;
-        const refine = reqs.refine ? calcAvailable( reqs.refine, get ) : null;
-        const hasAny = ( creation ?? 0 ) > 0 || ( refine ?? 0 ) > 0;
+        const refine = reqs.refine ? calcAvailable(reqs.refine, get) : null;
+        const hasAny = (creation ?? 0) > 0 || (refine ?? 0) > 0;
         return { type, creation, refine, hasAny };
-      } ),
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ get ]
+    [get],
   );
 
   return (
     <div>
       <button
-        onClick={() => setOpen( !open )}
+        onClick={() => setOpen(!open)}
         className="flex items-center gap-1 text-[12px] font-medium uppercase tracking-wider text-muted-foreground mb-2 hover:text-foreground transition-colors"
       >
         <span>Disponibilidade</span>
-        <span className="text-xs">
-          {open ? "▼" : "▶"}
-        </span>
+        <span className="text-xs">{open ? "▼" : "▶"}</span>
       </button>
       {open && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {summary.map( ( { type, creation, refine, hasAny } ) => {
-            const accent = TYPE_ACCENT[ type ];
+          {summary.map(({ type, creation, refine, hasAny }) => {
+            const accent = TYPE_ACCENT[type];
             return (
               <div
                 key={type}
@@ -738,7 +733,7 @@ function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
                     color: hasAny ? accent : "rgba(255,255,255,0.25)",
                   }}
                 >
-                  {TYPE_LABEL[ type ]}
+                  {TYPE_LABEL[type]}
                 </p>
 
                 {creation !== null && (
@@ -777,15 +772,16 @@ function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
                 )}
               </div>
             );
-          } )}
-        </div> )}
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
 // ── MODAL DE ITENS NECESSÁRIOS ────────────────────────────────────────────
 
-function ItensModal( {
+function ItensModal({
   itemType,
   accent,
   onClose,
@@ -793,8 +789,8 @@ function ItensModal( {
   itemType: ItemType;
   accent: string;
   onClose: () => void;
-} ) {
-  const sections = ITEMS_NECESSARIOS[ itemType ];
+}) {
+  const sections = ITEMS_NECESSARIOS[itemType];
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -804,11 +800,11 @@ function ItensModal( {
       <div
         className="w-full max-w-md rounded-2xl border p-5 space-y-4 max-h-[80vh] overflow-y-auto"
         style={{ borderColor: `${accent}40`, background: "#0f1117" }}
-        onClick={( e ) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold" style={{ color: accent }}>
-            Itens Necessários — {TYPE_LABEL[ itemType ]}
+            Itens Necessários — {TYPE_LABEL[itemType]}
           </p>
           <button
             onClick={onClose}
@@ -817,7 +813,7 @@ function ItensModal( {
             ✕
           </button>
         </div>
-        {sections.map( ( section ) => (
+        {sections.map((section) => (
           <div key={section.title}>
             <p
               className="text-[12px] font-medium uppercase tracking-wider mb-2 pb-1 border-b"
@@ -826,14 +822,14 @@ function ItensModal( {
               {section.title}
             </p>
             <ul className="space-y-1">
-              {section.items.map( ( item, idx ) => {
+              {section.items.map((item, idx) => {
                 const dot = (
                   <span
                     className="w-1.5 h-1.5 rounded-full shrink-0"
                     style={{ background: accent }}
                   />
                 );
-                if ( item.type === "pl" )
+                if (item.type === "pl")
                   return (
                     <li
                       key="pl"
@@ -842,7 +838,7 @@ function ItensModal( {
                       {dot} 20x - Poeiras de Lac
                     </li>
                   );
-                if ( item.type === "leveled" )
+                if (item.type === "leveled")
                   return (
                     <li
                       key={`${item.id}_${idx}`}
@@ -862,10 +858,10 @@ function ItensModal( {
                     {dot} {item.label}
                   </li>
                 );
-              } )}
+              })}
             </ul>
           </div>
-        ) )}
+        ))}
       </div>
     </div>
   );
@@ -873,20 +869,20 @@ function ItensModal( {
 
 // ── SWITCH ────────────────────────────────────────────────────────────────
 
-function Toggle( {
+function Toggle({
   checked,
   onChange,
   accent,
   label,
 }: {
   checked: boolean;
-  onChange: ( v: boolean ) => void;
+  onChange: (v: boolean) => void;
   accent: string;
   label: string;
-} ) {
+}) {
   return (
     <button
-      onClick={() => onChange( !checked )}
+      onClick={() => onChange(!checked)}
       className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors select-none"
     >
       <span>{label}</span>
@@ -912,47 +908,46 @@ function Toggle( {
 // ── PÁGINA PRINCIPAL ──────────────────────────────────────────────────────
 
 export function Craft() {
-  const [ itemType, setItemType ] = useState<ItemType>( "mortal" );
-  const [ stepIdx, setStepIdx ] = useState( 0 );
-  const [ soulLvl, setSoulLvl ] = useState( 0 );
-  const [ blessedLvl, setBlessedLvl ] = useState( 0 );
-  const [ showInventario, setShowInventario ] = useState<boolean>(
-    loadShowInventario
-  );
-  const [ showItensModal, setShowItensModal ] = useState( false );
+  const [itemType, setItemType] = useState<ItemType>("mortal");
+  const [stepIdx, setStepIdx] = useState(0);
+  const [soulLvl, setSoulLvl] = useState(0);
+  const [blessedLvl, setBlessedLvl] = useState(0);
+  const [showInventario, setShowInventario] =
+    useState<boolean>(loadShowInventario);
+  const [showItensModal, setShowItensModal] = useState(false);
 
   // useInventario agora fica aqui — compartilhado entre InventarioPanel e AlertasBanner
   const { get, inc } = useInventario();
 
-  const config = DATA[ itemType ];
-  const safeStepIdx = Math.min( stepIdx, config.steps.length - 1 );
-  const step = config.steps[ safeStepIdx ];
-  const accent = TYPE_ACCENT[ itemType ];
+  const config = DATA[itemType];
+  const safeStepIdx = Math.min(stepIdx, config.steps.length - 1);
+  const step = config.steps[safeStepIdx];
+  const accent = TYPE_ACCENT[itemType];
 
   const base = step.base;
   let bonus = 0;
   let bonusLabel = "";
 
-  if ( config.hasSoul && step.soulBonus ) {
-    bonus = parseFloat( ( step.soulBonus * soulLvl ).toFixed( 4 ) );
+  if (config.hasSoul && step.soulBonus) {
+    bonus = parseFloat((step.soulBonus * soulLvl).toFixed(4));
     bonusLabel = `Bônus ${config.soulLabel} +${soulLvl}`;
-  } else if ( itemType === "mortal" ) {
-    bonus = BLESSED_BONUS_PER[ blessedLvl ] * 4;
-    bonusLabel = `4x Ref. Abençoada +${blessedLvl} (${BLESSED_BONUS_PER[ blessedLvl ]}% × 4)`;
+  } else if (itemType === "mortal") {
+    bonus = BLESSED_BONUS_PER[blessedLvl] * 4;
+    bonusLabel = `4x Ref. Abençoada +${blessedLvl} (${BLESSED_BONUS_PER[blessedLvl]}% × 4)`;
   }
 
-  const final = Math.min( 100, parseFloat( ( base + bonus ).toFixed( 4 ) ) );
+  const final = Math.min(100, parseFloat((base + bonus).toFixed(4)));
 
-  function handleTypeChange( t: ItemType ) {
-    setItemType( t );
-    setStepIdx( 0 );
-    setSoulLvl( 0 );
-    setBlessedLvl( 0 );
+  function handleTypeChange(t: ItemType) {
+    setItemType(t);
+    setStepIdx(0);
+    setSoulLvl(0);
+    setBlessedLvl(0);
   }
 
-  function handleToggleInventario( v: boolean ) {
-    setShowInventario( v );
-    saveShowInventario( v );
+  function handleToggleInventario(v: boolean) {
+    setShowInventario(v);
+    saveShowInventario(v);
   }
 
   return (
@@ -961,7 +956,7 @@ export function Craft() {
         <ItensModal
           itemType={itemType}
           accent={accent}
-          onClose={() => setShowItensModal( false )}
+          onClose={() => setShowItensModal(false)}
         />
       )}
 
@@ -977,28 +972,28 @@ export function Craft() {
 
       {/* Seletor de tipo */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        {TYPE_ORDER.map( ( t ) => (
+        {TYPE_ORDER.map((t) => (
           <button
             key={t}
-            onClick={() => handleTypeChange( t )}
+            onClick={() => handleTypeChange(t)}
             className="py-2.5 px-3 rounded-lg text-sm font-medium border transition-all duration-150"
             style={
               itemType === t
                 ? {
-                  background: `${TYPE_ACCENT[ t ]}22`,
-                  borderColor: TYPE_ACCENT[ t ],
-                  color: TYPE_ACCENT[ t ],
-                }
+                    background: `${TYPE_ACCENT[t]}22`,
+                    borderColor: TYPE_ACCENT[t],
+                    color: TYPE_ACCENT[t],
+                  }
                 : {
-                  background: "transparent",
-                  borderColor: "rgba(255,255,255,0.1)",
-                  color: "rgba(255,255,255,0.45)",
-                }
+                    background: "transparent",
+                    borderColor: "rgba(255,255,255,0.1)",
+                    color: "rgba(255,255,255,0.45)",
+                  }
             }
           >
-            {TYPE_LABEL[ t ]}
+            {TYPE_LABEL[t]}
           </button>
-        ) )}
+        ))}
       </div>
 
       {/* Alertas de disponibilidade — usa o mesmo get do inventário */}
@@ -1027,7 +1022,7 @@ export function Craft() {
               label="Inventário"
             />
             <button
-              onClick={() => setShowItensModal( true )}
+              onClick={() => setShowItensModal(true)}
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-medium transition-all hover:opacity-80"
               style={{
                 borderColor: `${accent}50`,
@@ -1060,28 +1055,28 @@ export function Craft() {
               Etapa de refinação
             </p>
             <div className="flex flex-wrap gap-1.5">
-              {config.steps.map( ( s, i ) => (
+              {config.steps.map((s, i) => (
                 <button
                   key={i}
-                  onClick={() => setStepIdx( i )}
+                  onClick={() => setStepIdx(i)}
                   className="px-2.5 py-1 rounded-lg text-xs font-mono transition-all duration-150 border"
                   style={
                     safeStepIdx === i
                       ? {
-                        background: accent,
-                        borderColor: accent,
-                        color: "#fff",
-                      }
+                          background: accent,
+                          borderColor: accent,
+                          color: "#fff",
+                        }
                       : {
-                        background: "transparent",
-                        borderColor: "rgba(255,255,255,0.12)",
-                        color: "rgba(255,255,255,0.5)",
-                      }
+                          background: "transparent",
+                          borderColor: "rgba(255,255,255,0.12)",
+                          color: "rgba(255,255,255,0.5)",
+                        }
                   }
                 >
                   {s.label}
                 </button>
-              ) )}
+              ))}
             </div>
           </div>
 
@@ -1092,28 +1087,28 @@ export function Craft() {
                 {config.soulLabel} nível
               </p>
               <div className="grid grid-cols-5 gap-1.5">
-                {Array.from( { length: 10 }, ( _, i ) => (
+                {Array.from({ length: 10 }, (_, i) => (
                   <button
                     key={i}
-                    onClick={() => setSoulLvl( i )}
+                    onClick={() => setSoulLvl(i)}
                     className="h-8 rounded-lg text-xs font-mono transition-all duration-150 border"
                     style={
                       soulLvl === i
                         ? {
-                          background: accent,
-                          borderColor: accent,
-                          color: "#fff",
-                        }
+                            background: accent,
+                            borderColor: accent,
+                            color: "#fff",
+                          }
                         : {
-                          background: "transparent",
-                          borderColor: "rgba(255,255,255,0.12)",
-                          color: "rgba(255,255,255,0.5)",
-                        }
+                            background: "transparent",
+                            borderColor: "rgba(255,255,255,0.12)",
+                            color: "rgba(255,255,255,0.5)",
+                          }
                     }
                   >
                     +{i}
                   </button>
-                ) )}
+                ))}
               </div>
             </div>
           )}
@@ -1125,32 +1120,32 @@ export function Craft() {
                 Refinação Abençoada nível
               </p>
               <div className="grid grid-cols-5 gap-1.5">
-                {Array.from( { length: 10 }, ( _, i ) => (
+                {Array.from({ length: 10 }, (_, i) => (
                   <button
                     key={i}
-                    onClick={() => setBlessedLvl( i )}
+                    onClick={() => setBlessedLvl(i)}
                     className="h-8 rounded-lg text-xs font-mono transition-all duration-150 border"
                     style={
                       blessedLvl === i
                         ? {
-                          background: accent,
-                          borderColor: accent,
-                          color: "#fff",
-                        }
+                            background: accent,
+                            borderColor: accent,
+                            color: "#fff",
+                          }
                         : {
-                          background: "transparent",
-                          borderColor: "rgba(255,255,255,0.12)",
-                          color: "rgba(255,255,255,0.5)",
-                        }
+                            background: "transparent",
+                            borderColor: "rgba(255,255,255,0.12)",
+                            color: "rgba(255,255,255,0.5)",
+                          }
                     }
                   >
                     +{i}
                   </button>
-                ) )}
+                ))}
               </div>
               <p className="text-xs text-muted-foreground mt-1.5">
-                4 pedras · +{blessedLvl} = {BLESSED_BONUS_PER[ blessedLvl ]}% ·
-                bônus total = {BLESSED_BONUS_PER[ blessedLvl ] * 4}%
+                4 pedras · +{blessedLvl} = {BLESSED_BONUS_PER[blessedLvl]}% ·
+                bônus total = {BLESSED_BONUS_PER[blessedLvl] * 4}%
               </p>
             </div>
           )}
@@ -1164,7 +1159,7 @@ export function Craft() {
               className="text-xs font-medium uppercase tracking-wider mb-2"
               style={{ color: accent }}
             >
-              Resultado — {TYPE_LABEL[ itemType ]}
+              Resultado — {TYPE_LABEL[itemType]}
             </p>
             <div className="space-y-1 text-xs text-muted-foreground">
               <p>
