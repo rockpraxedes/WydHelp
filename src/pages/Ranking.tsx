@@ -383,7 +383,7 @@ function ArenaHistoryCard({
       className={cn(
         "relative rounded-xl border transition-all overflow-visible",
         compact
-          ? "bg-gradient-to-r from-violet-900/20 to-black/40 border-violet-500/30 p-4 shadow-lg shadow-violet-500/5"
+          ? "bg-gradient-to-r from-violet-900/20 to-background/40 border-violet-500/30 p-4 shadow-lg shadow-violet-500/5"
           : "bg-black/40 border-white/5 p-4",
       )}
     >
@@ -928,7 +928,7 @@ export function Ranking() {
                 placeholder="Ex: Char1 , Char2 / Char3"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm outline-none focus:border-violet-500 transition-all text-white placeholder:text-muted-foreground/50 shadow-inner"
+                className="w-full rounded-lg border border-card-foreground bg-card px-4 py-2 text-sm outline-none focus:border-violet-500 transition-all text-white placeholder:text-muted-foreground/50 shadow-inner"
               />
             </div>
 
@@ -977,7 +977,7 @@ export function Ranking() {
               {olderHistory.length > 0 && (
                 <button
                   onClick={() => setShowHistoryModal(true)}
-                  className="absolute -bottom-6 right-0 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-violet-400 transition-colors bg-black/40 px-2 py-0.5 rounded border border-white/5"
+                  className="absolute -bottom-6 right-0 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-violet-400 transition-colors bg-background/40 px-2 py-0.5 rounded border border-card"
                 >
                   [ +{olderHistory.length} Arenas {tab} ]
                 </button>

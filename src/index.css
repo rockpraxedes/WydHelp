@@ -101,7 +101,6 @@
 
   --sidebar-border: oklch(0.82 0.01 286);
   --sidebar-ring: oklch(0.6 0.22 293 / 40%);
-  --p-color: black;
 }
 
 .dark {

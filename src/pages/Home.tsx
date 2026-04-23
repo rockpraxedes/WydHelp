@@ -60,7 +60,7 @@ export function Home() {
             href="https://wydglobal.raidhut.com/pt-br/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium text-white transition-all hover:scale-105 active:scale-95"
+            className="flex items-center gap-1.5 text-xs font-medium text-foreground transition-all hover:scale-105 active:scale-95"
             style={{
               background: "rgba(109,40,217,0.35)",
               border: "1px solid rgba(167,139,250,0.45)",
@@ -91,11 +91,11 @@ export function Home() {
         </div>
 
         {/* Imagem com overflow hidden isolado */}
-        <div className="absolute inset-0 overflow-hidden ">
+        <div className="absolute inset-0 overflow-hidden isolate ">
           <img
             src="/images/header3-2.png"
             alt="WYD Global"
-            className="w-full h-full object-contain object-center scale-180 drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]"
+            className="w-full h-full object-contain object-center scale-180 drop-shadow-[0_2px_20px_rgba(0,0,0,0.3)]"
           />
         </div>
 
@@ -103,7 +103,7 @@ export function Home() {
         {activeProfile && (
           <div className="absolute top-3 left-4 z-10">
             <div
-              className="flex items-center gap-2 text-xs text-white/80"
+              className="flex items-center gap-2 text-xs text-foreground"
               style={{
                 background: "rgba(0,0,0,0.3)",
                 backdropFilter: "blur(6px)",

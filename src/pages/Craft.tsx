@@ -498,24 +498,24 @@ function SimpleRow({
 }) {
   const val = get(stockKey);
   return (
-    <div className="flex items-center gap-2 py-1.5 border-b border-white/5 last:border-0">
+    <div className="flex items-center gap-2 py-1.5 border-b border-accent last:border-0">
       <span className="flex-1 text-xs text-muted-foreground">{label}</span>
       <button
         onClick={() => inc(stockKey, -1)}
         disabled={val === 0}
-        className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 disabled:opacity-30 transition-all"
+        className="w-6 h-6 rounded border border-accent text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 disabled:opacity-30 transition-all"
       >
         −
       </button>
       <span
         className="w-8 text-center text-xs font-semibold tabular-nums"
-        style={{ color: val > 0 ? accent : undefined }}
+        style={{ color: val > 0 ? accent : `${accent}52` }}
       >
         {val}
       </span>
       <button
         onClick={() => inc(stockKey, 1)}
-        className="w-6 h-6 rounded border border-white/10 text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 transition-all"
+        className="w-6 h-6 rounded border border-accent text-xs font-bold text-muted-foreground hover:text-foreground hover:border-white/30 transition-all"
       >
         +
       </button>
@@ -602,8 +602,8 @@ function LeveledBlock({
                         }
                       : {
                           background: "transparent",
-                          borderColor: "rgba(255,255,255,0.10)",
-                          color: "rgba(255,255,255,0.3)",
+                          borderColor: `${accent}50`,
+                          color: accent,
                         }
                   }
                 >
@@ -742,7 +742,7 @@ function InventarioPanel({
                     color:
                       summary.creation > 0 ? "#fff" : "rgba(255,255,255,0.2)",
                     background:
-                      summary.creation > 0 ? `${accent}44` : "transparent",
+                      summary.creation > 0 ? `${accent}44` : `${accent}24`,
                   }}
                 >
                   {summary.creation}x
@@ -983,9 +983,9 @@ export function Craft() {
                     color: TYPE_ACCENT[t],
                   }
                 : {
-                    background: "transparent",
-                    borderColor: "rgba(255,255,255,0.1)",
-                    color: "rgba(255,255,255,0.45)",
+                    background: "var(--muted-background)",
+                    borderColor: "var(--muted-foreground)",
+                    color: "var(--muted-foreground)",
                   }
             }
           >
@@ -1063,9 +1063,9 @@ export function Craft() {
                           color: "#fff",
                         }
                       : {
-                          background: "transparent",
+                          background: `${accent}44`,
                           borderColor: "rgba(255,255,255,0.12)",
-                          color: "rgba(255,255,255,0.5)",
+                          color: accent,
                         }
                   }
                 >
@@ -1095,9 +1095,9 @@ export function Craft() {
                             color: "#fff",
                           }
                         : {
-                            background: "transparent",
+                            background: `${accent}44`,
                             borderColor: "rgba(255,255,255,0.12)",
-                            color: "rgba(255,255,255,0.5)",
+                            color: accent,
                           }
                     }
                   >
