@@ -138,6 +138,18 @@ export function Home() {
           ) )}
 
           <div className="ml-auto pb-1 hidden sm:flex items-center gap-2 whitespace-nowrap">
+            <a
+              href="https://www.vakinha.com.br/vaquinha/hospedagem-top?utm_source=google-ads&utm_medium=cpc&utm_campaign=GA+-+%5BSearch%5D+%5BVakinhas%5D+Marca+%28Convers%C3%A3o%29+%28site%29&utm_campaign_id=22579434424"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1 text-xs font-semibold rounded-md bg-gradient-to-r from-green-800 to-green-900 hover:from-green-700 hover:to-green-800 text-white transition"
+            >
+              <span className="text-purple-400">💜</span>
+              Apoiar projeto
+            </a>
+          </div>
+
+          <div className="ml-auto pb-1 hidden sm:flex items-center gap-2 whitespace-nowrap">
             <PatchlistModal />
             <ServerStatusWidget />
           </div>
@@ -226,7 +238,7 @@ export function Home() {
       <footer className="border-t py-4 mt-8">
         <div className="flex items-center justify-center gap-3">
           <p className="text-xs text-muted-foreground">
-            © Desenvolvido por{" "}
+            © Desenvolvido por {" "}
             <span className="text-violet-500 font-medium">
               Sérgio Praxedes (Cama)
             </span>
