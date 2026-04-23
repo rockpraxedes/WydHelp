@@ -9,6 +9,7 @@ import { ProfileSelector } from "@/components/ProfileSelector";
 import { ToastContainer } from "@/components/ToastContainer";
 import { cn } from "@/lib/utils";
 import { StreamersModal } from "@/components/StreamersModal";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   SwordIcon,
   GemIcon,
@@ -110,11 +111,12 @@ export function Home() {
                 padding: "5px 12px",
                 border: "1px solid rgba(255,255,255,0.1)",
               }}
-            >
+            ><ThemeToggle />
               <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
               {activeProfile.name}
             </div>
           </div>
+
         )}
 
       </header>

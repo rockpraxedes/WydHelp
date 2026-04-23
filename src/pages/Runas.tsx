@@ -51,7 +51,7 @@ function RunaItem( { runaId, quantidade, tenho, onAdd, onRemove }: RunaItemProps
           onError={e => { ( e.target as HTMLImageElement ).style.opacity = '0.2' }}
         />
       </div>
-      <span className="text-[10px] text-muted-foreground text-center leading-tight w-12 truncate" title={runa.name}>
+      <span className="text-[12px] text-muted-foreground text-center leading-tight w-12 truncate" title={runa.name}>
         {runa.name}
       </span>
     </div>

@@ -579,7 +579,7 @@ function LeveledBlock( {
 } ) {
   return (
     <div className="py-1.5 border-b border-white/5 last:border-0">
-      <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-1.5">
+      <p className="text-[12px] font-medium uppercase tracking-wider text-muted-foreground mb-1.5">
         {label}
       </p>
       <div className="grid grid-cols-5 gap-1">
@@ -650,7 +650,7 @@ function InventarioPanel( {
       style={{ borderColor: `${accent}30`, background: `${accent}08` }}
     >
       <p
-        className="text-[10px] font-medium uppercase tracking-wider mb-3"
+        className="text-[12px] font-medium uppercase tracking-wider mb-3"
         style={{ color: accent }}
       >
         Inventário
@@ -710,7 +710,7 @@ function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
     <div>
       <button
         onClick={() => setOpen( !open )}
-        className="flex items-center gap-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground mb-2 hover:text-foreground transition-colors"
+        className="flex items-center gap-1 text-[12px] font-medium uppercase tracking-wider text-muted-foreground mb-2 hover:text-foreground transition-colors"
       >
         <span>Disponibilidade</span>
         <span className="text-xs">
@@ -733,7 +733,7 @@ function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
                 }}
               >
                 <p
-                  className="text-[10px] font-semibold uppercase tracking-wider"
+                  className="text-[12px] font-semibold uppercase tracking-wider"
                   style={{
                     color: hasAny ? accent : "rgba(255,255,255,0.25)",
                   }}
@@ -743,7 +743,7 @@ function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
 
                 {creation !== null && (
                   <div className="flex items-center justify-between gap-1">
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-[12px] text-muted-foreground">
                       Criação
                     </span>
                     <span
@@ -761,7 +761,7 @@ function AlertasBanner( { get }: { get: ( k: string ) => number } ) {
 
                 {refine !== null && (
                   <div className="flex items-center justify-between gap-1">
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-[12px] text-muted-foreground">
                       Refinação
                     </span>
                     <span
@@ -820,7 +820,7 @@ function ItensModal( {
         {sections.map( ( section ) => (
           <div key={section.title}>
             <p
-              className="text-[10px] font-medium uppercase tracking-wider mb-2 pb-1 border-b"
+              className="text-[12px] font-medium uppercase tracking-wider mb-2 pb-1 border-b"
               style={{ color: accent, borderColor: `${accent}30` }}
             >
               {section.title}
