@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/useToast";
 import { ProfileSelector } from "@/components/ProfileSelector";
 import { ToastContainer } from "@/components/ToastContainer";
 import { cn } from "@/lib/utils";
+import { StreamersModal } from "@/components/StreamersModal";
 import {
   SwordIcon,
   GemIcon,
@@ -53,7 +54,7 @@ export function Home() {
       {/* ── HEADER ── */}
       <header className="relative w-full" style={{ height: "200px" }}>
         {/* Botão site do jogo — canto superior direito */}
-        <div className="absolute top-3 right-4 z-50">
+        <div className="absolute top-3 right-4 z-50 flex flex-col items-end gap-3">
           <a
             href="https://wydglobal.raidhut.com/pt-br/"
             target="_blank"
@@ -85,6 +86,7 @@ export function Home() {
             </svg>
             Jogar WYD Global
           </a>
+          <StreamersModal />
         </div>
 
         {/* Imagem com overflow hidden isolado */}
