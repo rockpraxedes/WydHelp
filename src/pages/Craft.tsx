@@ -646,12 +646,28 @@ function InventarioPanel({
       className="rounded-xl border p-3 w-64 shrink-0"
       style={{ borderColor: `${accent}30`, background: `${accent}08` }}
     >
-      <p
-        className="text-[12px] font-medium uppercase tracking-wider mb-3"
-        style={{ color: accent }}
-      >
-        Inventário
-      </p>
+      <div className="flex items-center gap-1 mb-3">
+        <p
+          className="text-[12px] font-medium uppercase tracking-wider"
+          style={{ color: accent }}
+        >
+          Inventário
+        </p>
+
+        <div className="relative group">
+          <span
+            className="text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center cursor-pointer border"
+            style={{ color: accent, borderColor: accent }}
+          >
+            ?
+          </span>
+
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 w-48 p-2 rounded text-[11px] text-white bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+            O inventário serve para computar quantos itens de cada o jogador
+            tem, e se com aquilo é possível fazer criação ou refinação.
+          </div>
+        </div>
+      </div>
       <div>
         {items.map((item, idx) => {
           if (item.type === "pl")
