@@ -7,8 +7,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: 'Source Sans 3 Variable', sans-serif;
-  --font-sans: 'Inter Variable', sans-serif;
+  --font-heading: "Source Sans 3 Variable", sans-serif;
+  --font-sans: "Inter Variable", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -50,63 +50,62 @@
 }
 
 :root {
-  /* fundo cinza claro (não branco) */
-  --background: oklch(80.899% 0.00564 286.037);
-  --foreground: oklch(0.20 0.01 285);
-
+  --background: oklch(100% 0.00011 271.152);
+  --foreground: oklch(0.2 0.01 285);
   /* cards levemente destacados */
-  --card: oklch(88.282% 0.00281 285.813);
-  --card-foreground: oklch(0.20 0.01 285);
+  --card: oklch(94.912% 0.00011 271.152);
+  --card-foreground: oklch(0.2 0.01 285);
 
   --popover: oklch(0.99 0.002 286);
-  --popover-foreground: oklch(0.20 0.01 285);
+  --popover-foreground: oklch(0.2 0.01 285);
 
   /* roxo consistente com dark */
-  --primary: oklch(0.60 0.22 293);
-  --primary-foreground: oklch(0.20 0.01 285);
+  --primary: oklch(0.6 0.22 293);
+  --primary-foreground: oklch(0.2 0.01 285);
   /* NÃO branco */
 
   --secondary: oklch(0.93 0.004 286);
   --secondary-foreground: oklch(0.25 0.01 285);
 
   --muted: oklch(0.92 0.004 286);
-  --muted-foreground: oklch(0.40 0.02 285);
+  --muted-foreground: oklch(0.4 0.02 285);
 
   --accent: oklch(0.92 0.004 286);
   --accent-foreground: oklch(0.25 0.01 285);
 
-  --destructive: oklch(0.60 0.22 25);
+  --destructive: oklch(0.6 0.22 25);
 
   /* bordas visíveis */
   --border: oklch(0.82 0.01 286);
   --input: oklch(0.85 0.01 286);
-  --ring: oklch(0.60 0.22 293 / 40%);
+  --ring: oklch(0.6 0.22 293 / 40%);
 
   /* gráficos */
-  --chart-1: oklch(0.70 0.18 293);
-  --chart-2: oklch(0.60 0.15 293);
-  --chart-3: oklch(0.50 0.12 293);
-  --chart-4: oklch(0.40 0.08 293);
-  --chart-5: oklch(0.30 0.05 293);
+  --chart-1: oklch(0.7 0.18 293);
+  --chart-2: oklch(0.6 0.15 293);
+  --chart-3: oklch(0.5 0.12 293);
+  --chart-4: oklch(0.4 0.08 293);
+  --chart-5: oklch(0.3 0.05 293);
 
   --radius: 0.625rem;
 
   /* sidebar no mesmo padrão */
   --sidebar: oklch(0.95 0.003 286);
-  --sidebar-foreground: oklch(0.20 0.01 285);
+  --sidebar-foreground: oklch(0.2 0.01 285);
 
-  --sidebar-primary: oklch(0.60 0.22 293);
-  --sidebar-primary-foreground: oklch(0.20 0.01 285);
+  --sidebar-primary: oklch(0.6 0.22 293);
+  --sidebar-primary-foreground: oklch(0.2 0.01 285);
 
   --sidebar-accent: oklch(0.92 0.004 286);
   --sidebar-accent-foreground: oklch(0.25 0.01 285);
 
   --sidebar-border: oklch(0.82 0.01 286);
-  --sidebar-ring: oklch(0.60 0.22 293 / 40%);
+  --sidebar-ring: oklch(0.6 0.22 293 / 40%);
+  --p-color: black;
 }
 
 .dark {
-  --background: oklch(0.20 0 0);
+  --background: oklch(0.2 0 0);
   /* era 0.12, agora bem mais claro */
   --foreground: oklch(0.93 0 0);
 
@@ -126,7 +125,7 @@
   --muted: oklch(0.28 0 0);
   --muted-foreground: oklch(0.62 0 0);
 
-  --accent: oklch(0.30 0 0);
+  --accent: oklch(0.3 0 0);
   --accent-foreground: oklch(0.93 0 0);
 
   --destructive: oklch(0.65 0.2 22);
@@ -137,11 +136,11 @@
 
   --chart-1: oklch(0.65 0.22 293);
   --chart-2: oklch(0.52 0.18 293);
-  --chart-3: oklch(0.40 0.13 293);
-  --chart-4: oklch(0.30 0.08 293);
+  --chart-3: oklch(0.4 0.13 293);
+  --chart-4: oklch(0.3 0.08 293);
   --chart-5: oklch(0.22 0 0);
 
-  --sidebar: oklch(0.20 0 0);
+  --sidebar: oklch(0.2 0 0);
   --sidebar-foreground: oklch(0.93 0 0);
   --sidebar-primary: oklch(0.65 0.22 293);
   --sidebar-primary-foreground: oklch(0.98 0 0);
@@ -153,24 +152,19 @@
   --detalhes: oklch(0.65 0.22 293);
 }
 
-
-
-
-
 /* Scroll mais bonito */
 ::-webkit-scrollbar {
   width: 6px;
 }
 
 body {
-  cursor: url('/src/assets/cursor.png'), auto;
-
+  cursor: url("/src/assets/cursor.png"), auto;
 }
 
 button,
 a,
 * {
-  cursor: url('/src/assets/cursor.png'), auto !important;
+  cursor: url("/src/assets/cursor.png"), auto !important;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -190,8 +184,7 @@ a,
 
   html {
     @apply font-sans;
-    font-size: 103%
-      /* 18px base */
+    font-size: 103%;
+    /* 18px base */
   }
-
 }

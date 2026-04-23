@@ -988,7 +988,7 @@ export function Ranking() {
       </div>
 
       {/* ── Table ── */}
-      <div className="rounded-xl border border-white/10 bg-black/20 overflow-hidden shadow-2xl">
+      <div className="rounded-xl border border-white/10 bg-black/10 overflow-hidden shadow-2xl">
         {/* ── GERAL TAB ── */}
         {tab === "geral" && (
           <>
@@ -1062,12 +1062,14 @@ export function Ranking() {
                           <td
                             className={cn(
                               "px-4 py-3.5 font-bold",
-                              isTop3 ? "text-white" : "text-slate-200",
+                              isTop3
+                                ? "text-foreground"
+                                : "text-muted-foreground",
                             )}
                           >
                             {player.name}
                           </td>
-                          <td className="px-4 py-3.5 tabular-nums text-slate-300 font-medium">
+                          <td className="px-4 py-3.5 tabular-nums text-foreground">
                             {player.level}
                           </td>
                           <td className="px-4 py-3.5 tabular-nums text-slate-400 font-medium">
@@ -1076,7 +1078,7 @@ export function Ranking() {
                           <td
                             className={cn(
                               "px-4 py-3.5 font-black tabular-nums",
-                              isTop3 ? "text-violet-400" : "text-slate-300",
+                              isTop3 ? "text-violet-400" : "text-slate-400",
                             )}
                           >
                             {player["Soma Level"]}
