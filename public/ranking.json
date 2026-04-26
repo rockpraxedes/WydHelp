@@ -425,8 +425,8 @@
     },
     {
       "charName": "-onnn",
-      "class": 3,
-      "subClass": 3,
+      "class": 0,
+      "subClass": 0,
       "wins": 6,
       "kills": 27,
       "deaths": 96,
@@ -938,7 +938,7 @@
     },
     {
       "charName": "---GOLT---",
-      "class": 1,
+      "class": 0,
       "subClass": 0,
       "wins": 1,
       "kills": 0,
@@ -1496,8 +1496,8 @@
     },
     {
       "charName": "LapisDaSilva",
-      "class": 0,
-      "subClass": 0,
+      "class": 3,
+      "subClass": 3,
       "wins": 1,
       "kills": 6,
       "deaths": 9,
@@ -1803,7 +1803,7 @@
     {
       "charName": "Mikhael",
       "class": 0,
-      "subClass": 0,
+      "subClass": 2,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
@@ -3857,7 +3857,7 @@
     {
       "charName": "Loddi",
       "class": 0,
-      "subClass": 2,
+      "subClass": 0,
       "wins": 0,
       "kills": 2,
       "deaths": 12,
