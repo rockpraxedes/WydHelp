@@ -642,7 +642,7 @@
     {
       "charName": "ItsBruxo",
       "class": 3,
-      "subClass": 1,
+      "subClass": 3,
       "wins": 7,
       "kills": 84,
       "deaths": 116,
@@ -937,9 +937,9 @@
       "points": 7
     },
     {
-      "charName": "xHuntin",
-      "class": 3,
-      "subClass": 2,
+      "charName": "BeTinHoo",
+      "class": 0,
+      "subClass": 0,
       "wins": 2,
       "kills": 4,
       "deaths": 18,
@@ -1856,8 +1856,8 @@
     },
     {
       "charName": "HeadzinSZ",
-      "class": 2,
-      "subClass": 3,
+      "class": 3,
+      "subClass": 2,
       "wins": 0,
       "kills": 0,
       "deaths": 6,
