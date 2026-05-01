@@ -641,7 +641,7 @@
     },
     {
       "charName": "ItsBruxo",
-      "class": 3,
+      "class": 2,
       "subClass": 3,
       "wins": 7,
       "kills": 84,
@@ -658,7 +658,7 @@
       "points": 15
     },
     {
-      "charName": "-StiveTO-",
+      "charName": "Notredame",
       "class": 0,
       "subClass": 0,
       "wins": 5,
@@ -2784,7 +2784,7 @@
       "points": 11
     },
     {
-      "charName": "Deiwid182",
+      "charName": "?eiwid182",
       "class": 0,
       "subClass": 0,
       "wins": 9,
@@ -2812,7 +2812,7 @@
     },
     {
       "charName": "Carni?aTK",
-      "class": 2,
+      "class": 0,
       "subClass": 1,
       "wins": 3,
       "kills": 17,
@@ -3083,7 +3083,7 @@
     {
       "charName": "xCampzera",
       "class": 1,
-      "subClass": 1,
+      "subClass": 0,
       "wins": 1,
       "kills": 14,
       "deaths": 9,
