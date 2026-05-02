@@ -246,7 +246,7 @@
     {
       "charName": "Bringer",
       "class": 0,
-      "subClass": 0,
+      "subClass": 1,
       "wins": 16,
       "kills": 280,
       "deaths": 175,
@@ -298,8 +298,8 @@
       "points": 39
     },
     {
-      "charName": "-BeFree-",
-      "class": 2,
+      "charName": "LLLuftado",
+      "class": 0,
       "subClass": 0,
       "wins": 12,
       "kills": 29,
@@ -937,7 +937,7 @@
       "points": 7
     },
     {
-      "charName": "BeTinHoo",
+      "charName": "xBauz123",
       "class": 0,
       "subClass": 0,
       "wins": 2,
@@ -1146,7 +1146,7 @@
     {
       "charName": "Despina",
       "class": 1,
-      "subClass": 3,
+      "subClass": 0,
       "wins": 2,
       "kills": 0,
       "deaths": 37,
@@ -1162,7 +1162,7 @@
       "points": 4
     },
     {
-      "charName": "Ericonha",
+      "charName": "Coork",
       "class": 0,
       "subClass": 3,
       "wins": 1,
@@ -2001,8 +2001,8 @@
       "points": 144
     },
     {
-      "charName": "ArenaKids",
-      "class": 1,
+      "charName": "BauHespertin",
+      "class": 0,
       "subClass": 0,
       "wins": 27,
       "kills": 845,
@@ -2273,7 +2273,7 @@
     {
       "charName": "Lanah",
       "class": 2,
-      "subClass": 3,
+      "subClass": 1,
       "wins": 13,
       "kills": 11,
       "deaths": 150,
@@ -3713,7 +3713,7 @@
     {
       "charName": "xMeioKilo",
       "class": 3,
-      "subClass": 3,
+      "subClass": 2,
       "wins": 0,
       "kills": 4,
       "deaths": 6,
@@ -3981,7 +3981,7 @@
       "points": 0
     },
     {
-      "charName": "Ericonha",
+      "charName": "Coork",
       "class": 0,
       "subClass": 3,
       "wins": 0,
@@ -4010,7 +4010,7 @@
     {
       "charName": "Despina",
       "class": 1,
-      "subClass": 3,
+      "subClass": 0,
       "wins": 0,
       "kills": 0,
       "deaths": 1,
