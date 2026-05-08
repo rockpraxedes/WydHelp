@@ -226,7 +226,7 @@
       "points": 42
     },
     {
-      "charName": "LapisDaSilva",
+      "charName": "NoWaay",
       "class": 3,
       "subClass": 3,
       "wins": 16,
@@ -1351,9 +1351,9 @@
       "points": 0
     },
     {
-      "charName": "Arrogante",
-      "class": 1,
-      "subClass": 0,
+      "charName": "-INSANO-O",
+      "class": 0,
+      "subClass": 1,
       "wins": 0,
       "kills": 25,
       "deaths": 14,
@@ -1984,7 +1984,7 @@
   "aspirant": [
     {
       "charName": "DrWyd",
-      "class": 3,
+      "class": 2,
       "subClass": 3,
       "wins": 33,
       "kills": 1201,
@@ -3612,9 +3612,9 @@
       "points": 0
     },
     {
-      "charName": "VeridaS",
+      "charName": "EDEN-",
       "class": 0,
-      "subClass": 0,
+      "subClass": 2,
       "wins": 1,
       "kills": 8,
       "deaths": 27,
