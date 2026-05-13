@@ -235,9 +235,9 @@
       "points": 27
     },
     {
-      "charName": "Tai-Jutsu",
+      "charName": "Rona3oxx",
       "class": 0,
-      "subClass": 2,
+      "subClass": 3,
       "wins": 6,
       "kills": 55,
       "deaths": 48,
@@ -912,7 +912,7 @@
     {
       "charName": "FortexVPower",
       "class": 3,
-      "subClass": 2,
+      "subClass": 3,
       "wins": 4,
       "kills": 110,
       "deaths": 96,
@@ -1054,7 +1054,7 @@
       "points": 3
     },
     {
-      "charName": "Raduzin",
+      "charName": "xNeymar",
       "class": 1,
       "subClass": 0,
       "wins": 1,
@@ -1243,9 +1243,9 @@
       "points": 0
     },
     {
-      "charName": "RonaKx1",
-      "class": 3,
-      "subClass": 3,
+      "charName": "Tai-Jutsu",
+      "class": 0,
+      "subClass": 2,
       "wins": 0,
       "kills": 9,
       "deaths": 9,
@@ -1559,8 +1559,8 @@
     },
     {
       "charName": "--GeneraL-",
-      "class": 0,
-      "subClass": 0,
+      "class": 3,
+      "subClass": 2,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
@@ -1577,7 +1577,7 @@
     },
     {
       "charName": "-Brutiin-",
-      "class": 1,
+      "class": 0,
       "subClass": 1,
       "wins": 0,
       "kills": 0,
@@ -2344,8 +2344,8 @@
     },
     {
       "charName": "--2OMATAR--",
-      "class": 0,
-      "subClass": 3,
+      "class": 1,
+      "subClass": 0,
       "wins": 4,
       "kills": 16,
       "deaths": 70,
@@ -2542,7 +2542,7 @@
     },
     {
       "charName": "F3N1X",
-      "class": 2,
+      "class": 3,
       "subClass": 0,
       "wins": 1,
       "kills": 3,
