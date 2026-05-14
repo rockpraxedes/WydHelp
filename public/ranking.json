@@ -163,7 +163,7 @@
       "points": 30
     },
     {
-      "charName": "xCampzera",
+      "charName": "Faakrizera",
       "class": 1,
       "subClass": 0,
       "wins": 7,
@@ -399,7 +399,7 @@
     {
       "charName": "-Leseux",
       "class": 0,
-      "subClass": 1,
+      "subClass": 2,
       "wins": 6,
       "kills": 124,
       "deaths": 69,
@@ -1279,7 +1279,7 @@
       "points": 0
     },
     {
-      "charName": "BaconCrazy",
+      "charName": "BaconVPower",
       "class": 1,
       "subClass": 0,
       "wins": 0,
@@ -1432,7 +1432,7 @@
       "points": 0
     },
     {
-      "charName": "Mododoyy",
+      "charName": "Frigerizera",
       "class": 0,
       "subClass": 2,
       "wins": 0,
@@ -1640,7 +1640,7 @@
     },
     {
       "charName": "Twain",
-      "class": 3,
+      "class": 2,
       "subClass": 0,
       "wins": 0,
       "kills": 0,
@@ -1920,7 +1920,7 @@
       "points": 31
     },
     {
-      "charName": "Katakoia",
+      "charName": "SoiFon",
       "class": 1,
       "subClass": 2,
       "wins": 9,
@@ -2541,7 +2541,7 @@
       "points": 6
     },
     {
-      "charName": "LostParadise",
+      "charName": "AomineDaiki-",
       "class": 1,
       "subClass": 1,
       "wins": 3,
@@ -2685,7 +2685,7 @@
       "points": 4
     },
     {
-      "charName": "IndioDoAM",
+      "charName": "FakriDoAm",
       "class": 0,
       "subClass": 3,
       "wins": 1,
@@ -3127,7 +3127,7 @@
     },
     {
       "charName": "Twain",
-      "class": 3,
+      "class": 2,
       "subClass": 0,
       "wins": 0,
       "kills": 0,
