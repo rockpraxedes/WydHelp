@@ -7,7 +7,7 @@
       "wins": 16,
       "kills": 19,
       "deaths": 13,
-      "points": 83
+      "points": 82
     },
     {
       "charName": "-MeninoBom-",
@@ -16,16 +16,7 @@
       "wins": 17,
       "kills": 108,
       "deaths": 122,
-      "points": 78
-    },
-    {
-      "charName": "NoWaay",
-      "class": 3,
-      "subClass": 3,
-      "wins": 16,
-      "kills": 33,
-      "deaths": 128,
-      "points": 70
+      "points": 77
     },
     {
       "charName": "JogoRuim-",
@@ -34,6 +25,15 @@
       "wins": 15,
       "kills": 499,
       "deaths": 83,
+      "points": 69
+    },
+    {
+      "charName": "NoWaay",
+      "class": 3,
+      "subClass": 3,
+      "wins": 16,
+      "kills": 33,
+      "deaths": 128,
       "points": 69
     },
     {
@@ -61,7 +61,7 @@
       "wins": 13,
       "kills": 26,
       "deaths": 99,
-      "points": 58
+      "points": 57
     },
     {
       "charName": "Faakronheiro",
@@ -70,7 +70,7 @@
       "wins": 14,
       "kills": 516,
       "deaths": 87,
-      "points": 55
+      "points": 54
     },
     {
       "charName": "?Mild",
@@ -79,7 +79,7 @@
       "wins": 12,
       "kills": 0,
       "deaths": 75,
-      "points": 54
+      "points": 53
     },
     {
       "charName": "-Parkmann-",
@@ -88,7 +88,7 @@
       "wins": 13,
       "kills": 46,
       "deaths": 113,
-      "points": 53
+      "points": 52
     },
     {
       "charName": "-HellKnight-",
@@ -118,15 +118,6 @@
       "points": 44
     },
     {
-      "charName": "Jamelllao",
-      "class": 2,
-      "subClass": 3,
-      "wins": 9,
-      "kills": 77,
-      "deaths": 68,
-      "points": 43
-    },
-    {
       "charName": "Paloff",
       "class": 3,
       "subClass": 2,
@@ -136,22 +127,22 @@
       "points": 43
     },
     {
+      "charName": "Jamelllao",
+      "class": 2,
+      "subClass": 3,
+      "wins": 9,
+      "kills": 77,
+      "deaths": 68,
+      "points": 42
+    },
+    {
       "charName": "TuniCAO",
       "class": 3,
       "subClass": 2,
       "wins": 11,
       "kills": 70,
       "deaths": 100,
-      "points": 40
-    },
-    {
-      "charName": "-Zyrk-",
-      "class": 3,
-      "subClass": 3,
-      "wins": 10,
-      "kills": 222,
-      "deaths": 96,
-      "points": 38
+      "points": 39
     },
     {
       "charName": "Faakrizera",
@@ -163,6 +154,15 @@
       "points": 38
     },
     {
+      "charName": "-Zyrk-",
+      "class": 3,
+      "subClass": 3,
+      "wins": 10,
+      "kills": 222,
+      "deaths": 96,
+      "points": 37
+    },
+    {
       "charName": "RENEGATE",
       "class": 3,
       "subClass": 0,
@@ -170,24 +170,6 @@
       "kills": 82,
       "deaths": 55,
       "points": 37
-    },
-    {
-      "charName": "-AgroMan-",
-      "class": 0,
-      "subClass": 2,
-      "wins": 10,
-      "kills": 89,
-      "deaths": 98,
-      "points": 35
-    },
-    {
-      "charName": "Gideao",
-      "class": 3,
-      "subClass": 2,
-      "wins": 7,
-      "kills": 74,
-      "deaths": 40,
-      "points": 35
     },
     {
       "charName": "zVoid",
@@ -199,13 +181,31 @@
       "points": 34
     },
     {
+      "charName": "-AgroMan-",
+      "class": 0,
+      "subClass": 2,
+      "wins": 10,
+      "kills": 89,
+      "deaths": 98,
+      "points": 34
+    },
+    {
+      "charName": "Gideao",
+      "class": 3,
+      "subClass": 2,
+      "wins": 7,
+      "kills": 74,
+      "deaths": 40,
+      "points": 34
+    },
+    {
       "charName": "6-nnnnnn",
       "class": 1,
       "subClass": 0,
       "wins": 12,
       "kills": 115,
       "deaths": 143,
-      "points": 34
+      "points": 33
     },
     {
       "charName": "-PATO-MANCO-",
@@ -217,15 +217,6 @@
       "points": 32
     },
     {
-      "charName": "FortexVPower",
-      "class": 3,
-      "subClass": 3,
-      "wins": 10,
-      "kills": 172,
-      "deaths": 144,
-      "points": 30
-    },
-    {
       "charName": "oPola",
       "class": 2,
       "subClass": 1,
@@ -233,6 +224,15 @@
       "kills": 113,
       "deaths": 83,
       "points": 30
+    },
+    {
+      "charName": "FortexVPower",
+      "class": 3,
+      "subClass": 3,
+      "wins": 10,
+      "kills": 172,
+      "deaths": 144,
+      "points": 29
     },
     {
       "charName": "-WaveBeast-",
@@ -280,24 +280,6 @@
       "points": 26
     },
     {
-      "charName": "MINEIRINHO0",
-      "class": 1,
-      "subClass": 0,
-      "wins": 6,
-      "kills": 8,
-      "deaths": 51,
-      "points": 26
-    },
-    {
-      "charName": "-N-O-E-L-",
-      "class": 2,
-      "subClass": 3,
-      "wins": 8,
-      "kills": 150,
-      "deaths": 101,
-      "points": 25
-    },
-    {
       "charName": "oRetalhador",
       "class": 2,
       "subClass": 0,
@@ -307,13 +289,31 @@
       "points": 25
     },
     {
+      "charName": "MINEIRINHO0",
+      "class": 1,
+      "subClass": 0,
+      "wins": 6,
+      "kills": 8,
+      "deaths": 51,
+      "points": 25
+    },
+    {
+      "charName": "-N-O-E-L-",
+      "class": 2,
+      "subClass": 3,
+      "wins": 8,
+      "kills": 150,
+      "deaths": 101,
+      "points": 24
+    },
+    {
       "charName": "c4ladeX",
       "class": 2,
       "subClass": 3,
       "wins": 6,
       "kills": 61,
       "deaths": 54,
-      "points": 25
+      "points": 24
     },
     {
       "charName": "Kduzin",
@@ -322,7 +322,7 @@
       "wins": 9,
       "kills": 53,
       "deaths": 117,
-      "points": 25
+      "points": 24
     },
     {
       "charName": "Altimus",
@@ -331,15 +331,6 @@
       "wins": 9,
       "kills": 11,
       "deaths": 144,
-      "points": 25
-    },
-    {
-      "charName": "XxXDestroXxX",
-      "class": 2,
-      "subClass": 3,
-      "wins": 6,
-      "kills": 13,
-      "deaths": 60,
       "points": 24
     },
     {
@@ -350,15 +341,6 @@
       "kills": 8,
       "deaths": 126,
       "points": 24
-    },
-    {
-      "charName": "-Leseux",
-      "class": 0,
-      "subClass": 2,
-      "wins": 8,
-      "kills": 169,
-      "deaths": 89,
-      "points": 23
     },
     {
       "charName": "DARKZAOo",
@@ -379,13 +361,31 @@
       "points": 23
     },
     {
+      "charName": "XxXDestroXxX",
+      "class": 2,
+      "subClass": 3,
+      "wins": 6,
+      "kills": 13,
+      "deaths": 60,
+      "points": 23
+    },
+    {
+      "charName": "-Leseux",
+      "class": 0,
+      "subClass": 2,
+      "wins": 8,
+      "kills": 169,
+      "deaths": 89,
+      "points": 22
+    },
+    {
       "charName": "Kiirlyn",
       "class": 1,
       "subClass": 0,
       "wins": 9,
       "kills": 67,
       "deaths": 109,
-      "points": 23
+      "points": 22
     },
     {
       "charName": "R0Y4L",
@@ -394,7 +394,7 @@
       "wins": 9,
       "kills": 53,
       "deaths": 134,
-      "points": 23
+      "points": 22
     },
     {
       "charName": "SUS-Brasil",
@@ -406,15 +406,6 @@
       "points": 22
     },
     {
-      "charName": "REIdoSERTAO",
-      "class": 3,
-      "subClass": 3,
-      "wins": 8,
-      "kills": 84,
-      "deaths": 94,
-      "points": 21
-    },
-    {
       "charName": "-Artykuno-",
       "class": 1,
       "subClass": 0,
@@ -424,21 +415,21 @@
       "points": 21
     },
     {
-      "charName": "DogZZ",
-      "class": 0,
-      "subClass": 1,
-      "wins": 9,
-      "kills": 261,
-      "deaths": 109,
-      "points": 20
-    },
-    {
       "charName": "Hespert",
       "class": 0,
       "subClass": 1,
       "wins": 9,
       "kills": 157,
       "deaths": 79,
+      "points": 20
+    },
+    {
+      "charName": "REIdoSERTAO",
+      "class": 3,
+      "subClass": 3,
+      "wins": 8,
+      "kills": 84,
+      "deaths": 94,
       "points": 20
     },
     {
@@ -451,13 +442,22 @@
       "points": 20
     },
     {
+      "charName": "DogZZ",
+      "class": 0,
+      "subClass": 1,
+      "wins": 9,
+      "kills": 261,
+      "deaths": 109,
+      "points": 19
+    },
+    {
       "charName": "-PontinhO",
       "class": 1,
       "subClass": 3,
       "wins": 7,
       "kills": 54,
       "deaths": 83,
-      "points": 20
+      "points": 19
     },
     {
       "charName": "zaobau",
@@ -475,42 +475,6 @@
       "wins": 7,
       "kills": 33,
       "deaths": 79,
-      "points": 19
-    },
-    {
-      "charName": "Fakkriten-",
-      "class": 3,
-      "subClass": 2,
-      "wins": 7,
-      "kills": 223,
-      "deaths": 56,
-      "points": 18
-    },
-    {
-      "charName": "-flowgg-",
-      "class": 0,
-      "subClass": 1,
-      "wins": 4,
-      "kills": 177,
-      "deaths": 42,
-      "points": 18
-    },
-    {
-      "charName": "Aspirante",
-      "class": 3,
-      "subClass": 3,
-      "wins": 5,
-      "kills": 39,
-      "deaths": 54,
-      "points": 18
-    },
-    {
-      "charName": "Tai-Jutsu",
-      "class": 0,
-      "subClass": 2,
-      "wins": 4,
-      "kills": 36,
-      "deaths": 41,
       "points": 18
     },
     {
@@ -523,6 +487,24 @@
       "points": 18
     },
     {
+      "charName": "Fakkriten-",
+      "class": 3,
+      "subClass": 2,
+      "wins": 7,
+      "kills": 223,
+      "deaths": 56,
+      "points": 17
+    },
+    {
+      "charName": "-flowgg-",
+      "class": 0,
+      "subClass": 1,
+      "wins": 4,
+      "kills": 177,
+      "deaths": 42,
+      "points": 17
+    },
+    {
       "charName": "������",
       "class": 0,
       "subClass": 0,
@@ -532,13 +514,22 @@
       "points": 17
     },
     {
-      "charName": "Meiow",
-      "class": 1,
-      "subClass": 1,
-      "wins": 6,
-      "kills": 27,
-      "deaths": 93,
-      "points": 16
+      "charName": "Aspirante",
+      "class": 3,
+      "subClass": 3,
+      "wins": 5,
+      "kills": 39,
+      "deaths": 54,
+      "points": 17
+    },
+    {
+      "charName": "Tai-Jutsu",
+      "class": 0,
+      "subClass": 2,
+      "wins": 4,
+      "kills": 36,
+      "deaths": 41,
+      "points": 17
     },
     {
       "charName": "OPENCLOSE",
@@ -550,13 +541,13 @@
       "points": 16
     },
     {
-      "charName": "NightWolff",
-      "class": 0,
-      "subClass": 3,
-      "wins": 4,
-      "kills": 3,
-      "deaths": 39,
-      "points": 16
+      "charName": "Meiow",
+      "class": 1,
+      "subClass": 1,
+      "wins": 6,
+      "kills": 27,
+      "deaths": 93,
+      "points": 15
     },
     {
       "charName": "UOL-linkin13",
@@ -577,21 +568,21 @@
       "points": 15
     },
     {
-      "charName": "HellthoGod",
-      "class": 3,
-      "subClass": 3,
-      "wins": 4,
-      "kills": 10,
-      "deaths": 51,
-      "points": 15
-    },
-    {
       "charName": "Djia",
       "class": 0,
       "subClass": 2,
       "wins": 7,
       "kills": 7,
       "deaths": 107,
+      "points": 15
+    },
+    {
+      "charName": "NightWolff",
+      "class": 0,
+      "subClass": 3,
+      "wins": 4,
+      "kills": 3,
+      "deaths": 39,
       "points": 15
     },
     {
@@ -649,21 +640,21 @@
       "points": 14
     },
     {
+      "charName": "HellthoGod",
+      "class": 3,
+      "subClass": 3,
+      "wins": 4,
+      "kills": 10,
+      "deaths": 51,
+      "points": 14
+    },
+    {
       "charName": "OneFaakri",
       "class": 3,
       "subClass": 2,
       "wins": 6,
       "kills": 438,
       "deaths": 97,
-      "points": 13
-    },
-    {
-      "charName": "Divinius",
-      "class": 0,
-      "subClass": 2,
-      "wins": 4,
-      "kills": 37,
-      "deaths": 69,
       "points": 13
     },
     {
@@ -676,6 +667,15 @@
       "points": 13
     },
     {
+      "charName": "Divinius",
+      "class": 0,
+      "subClass": 2,
+      "wins": 4,
+      "kills": 37,
+      "deaths": 69,
+      "points": 12
+    },
+    {
       "charName": "-AlastorNT-",
       "class": 3,
       "subClass": 0,
@@ -685,39 +685,12 @@
       "points": 12
     },
     {
-      "charName": "Bringer",
-      "class": 0,
-      "subClass": 1,
-      "wins": 6,
-      "kills": 173,
-      "deaths": 72,
-      "points": 11
-    },
-    {
       "charName": "xfdn",
       "class": 3,
       "subClass": 3,
       "wins": 3,
       "kills": 97,
       "deaths": 71,
-      "points": 11
-    },
-    {
-      "charName": "Karinud",
-      "class": 2,
-      "subClass": 3,
-      "wins": 6,
-      "kills": 39,
-      "deaths": 128,
-      "points": 11
-    },
-    {
-      "charName": "SemIdeaiz",
-      "class": 2,
-      "subClass": 0,
-      "wins": 2,
-      "kills": 20,
-      "deaths": 4,
       "points": 11
     },
     {
@@ -748,6 +721,15 @@
       "points": 11
     },
     {
+      "charName": "Bringer",
+      "class": 0,
+      "subClass": 1,
+      "wins": 6,
+      "kills": 173,
+      "deaths": 72,
+      "points": 10
+    },
+    {
       "charName": "xPesTinHa10x",
       "class": 2,
       "subClass": 3,
@@ -757,12 +739,30 @@
       "points": 10
     },
     {
+      "charName": "Karinud",
+      "class": 2,
+      "subClass": 3,
+      "wins": 6,
+      "kills": 39,
+      "deaths": 128,
+      "points": 10
+    },
+    {
       "charName": "DrMax",
       "class": 1,
       "subClass": 0,
       "wins": 5,
       "kills": 29,
       "deaths": 57,
+      "points": 10
+    },
+    {
+      "charName": "SemIdeaiz",
+      "class": 2,
+      "subClass": 0,
+      "wins": 2,
+      "kills": 20,
+      "deaths": 4,
       "points": 10
     },
     {
@@ -802,15 +802,6 @@
       "points": 10
     },
     {
-      "charName": "JogoPodre-",
-      "class": 0,
-      "subClass": 1,
-      "wins": 2,
-      "kills": 3,
-      "deaths": 9,
-      "points": 10
-    },
-    {
       "charName": "Despina",
       "class": 1,
       "subClass": 0,
@@ -829,12 +820,12 @@
       "points": 9
     },
     {
-      "charName": "-Baruk",
+      "charName": "JogoPodre-",
       "class": 0,
       "subClass": 1,
-      "wins": 4,
-      "kills": 11,
-      "deaths": 60,
+      "wins": 2,
+      "kills": 3,
+      "deaths": 9,
       "points": 9
     },
     {
@@ -847,15 +838,6 @@
       "points": 8
     },
     {
-      "charName": "yTr0n",
-      "class": 1,
-      "subClass": 0,
-      "wins": 7,
-      "kills": 52,
-      "deaths": 122,
-      "points": 8
-    },
-    {
       "charName": "-Foka-",
       "class": 3,
       "subClass": 2,
@@ -865,12 +847,12 @@
       "points": 8
     },
     {
-      "charName": "Dusky",
-      "class": 1,
+      "charName": "-Baruk",
+      "class": 0,
       "subClass": 1,
-      "wins": 2,
-      "kills": 2,
-      "deaths": 18,
+      "wins": 4,
+      "kills": 11,
+      "deaths": 60,
       "points": 8
     },
     {
@@ -881,6 +863,15 @@
       "kills": 2,
       "deaths": 36,
       "points": 8
+    },
+    {
+      "charName": "yTr0n",
+      "class": 1,
+      "subClass": 0,
+      "wins": 7,
+      "kills": 52,
+      "deaths": 122,
+      "points": 7
     },
     {
       "charName": "AqueleCara",
@@ -910,6 +901,15 @@
       "points": 7
     },
     {
+      "charName": "Dusky",
+      "class": 1,
+      "subClass": 1,
+      "wins": 2,
+      "kills": 2,
+      "deaths": 18,
+      "points": 7
+    },
+    {
       "charName": "memset",
       "class": 3,
       "subClass": 2,
@@ -925,15 +925,6 @@
       "wins": 1,
       "kills": 19,
       "deaths": 7,
-      "points": 6
-    },
-    {
-      "charName": "Tzeentch",
-      "class": 1,
-      "subClass": 1,
-      "wins": 2,
-      "kills": 19,
-      "deaths": 26,
       "points": 6
     },
     {
@@ -961,15 +952,6 @@
       "wins": 1,
       "kills": 7,
       "deaths": 28,
-      "points": 6
-    },
-    {
-      "charName": "VeridaS",
-      "class": 1,
-      "subClass": 0,
-      "wins": 1,
-      "kills": 5,
-      "deaths": 3,
       "points": 6
     },
     {
@@ -1018,21 +1000,21 @@
       "points": 6
     },
     {
-      "charName": "SheelVPower",
-      "class": 2,
-      "subClass": 3,
-      "wins": 3,
-      "kills": 92,
-      "deaths": 67,
-      "points": 5
-    },
-    {
       "charName": "Flaaap",
       "class": 3,
       "subClass": 2,
       "wins": 1,
       "kills": 62,
       "deaths": 23,
+      "points": 5
+    },
+    {
+      "charName": "Tzeentch",
+      "class": 1,
+      "subClass": 1,
+      "wins": 2,
+      "kills": 19,
+      "deaths": 26,
       "points": 5
     },
     {
@@ -1045,6 +1027,15 @@
       "points": 5
     },
     {
+      "charName": "VeridaS",
+      "class": 1,
+      "subClass": 0,
+      "wins": 1,
+      "kills": 5,
+      "deaths": 3,
+      "points": 5
+    },
+    {
       "charName": "ColdFear",
       "class": 2,
       "subClass": 3,
@@ -1054,18 +1045,18 @@
       "points": 5
     },
     {
-      "charName": "Zeudo",
+      "charName": "-Tucano-",
       "class": 1,
-      "subClass": 0,
+      "subClass": 1,
       "wins": 1,
       "kills": 2,
       "deaths": 6,
       "points": 5
     },
     {
-      "charName": "-Tucano-",
+      "charName": "Zeudo",
       "class": 1,
-      "subClass": 1,
+      "subClass": 0,
       "wins": 1,
       "kills": 2,
       "deaths": 6,
@@ -1096,6 +1087,15 @@
       "wins": 2,
       "kills": 148,
       "deaths": 62,
+      "points": 4
+    },
+    {
+      "charName": "SheelVPower",
+      "class": 2,
+      "subClass": 3,
+      "wins": 3,
+      "kills": 92,
+      "deaths": 67,
       "points": 4
     },
     {
@@ -1180,21 +1180,21 @@
       "points": 2
     },
     {
-      "charName": "Aorb",
-      "class": 3,
-      "subClass": 3,
-      "wins": 5,
-      "kills": 1,
-      "deaths": 136,
-      "points": 2
-    },
-    {
       "charName": "U1OOODE",
       "class": 3,
       "subClass": 2,
       "wins": 1,
       "kills": 0,
       "deaths": 9,
+      "points": 2
+    },
+    {
+      "charName": "Cnut",
+      "class": 3,
+      "subClass": 2,
+      "wins": 1,
+      "kills": 0,
+      "deaths": 15,
       "points": 2
     },
     {
@@ -1207,13 +1207,13 @@
       "points": 2
     },
     {
-      "charName": "Cnut",
+      "charName": "Aorb",
       "class": 3,
-      "subClass": 2,
-      "wins": 1,
-      "kills": 0,
-      "deaths": 15,
-      "points": 2
+      "subClass": 3,
+      "wins": 5,
+      "kills": 1,
+      "deaths": 136,
+      "points": 1
     },
     {
       "charName": "PoneyCrazzy",
@@ -1486,15 +1486,6 @@
       "points": 0
     },
     {
-      "charName": "Gardenalia",
-      "class": 1,
-      "subClass": 3,
-      "wins": 0,
-      "kills": 1,
-      "deaths": 3,
-      "points": 0
-    },
-    {
       "charName": "VeriidaS",
       "class": 0,
       "subClass": 0,
@@ -1506,6 +1497,15 @@
     {
       "charName": "Brasil-SC",
       "class": 3,
+      "subClass": 3,
+      "wins": 0,
+      "kills": 1,
+      "deaths": 3,
+      "points": 0
+    },
+    {
+      "charName": "Gardenalia",
+      "class": 1,
       "subClass": 3,
       "wins": 0,
       "kills": 1,
@@ -1558,6 +1558,24 @@
       "points": 0
     },
     {
+      "charName": "MrJericho",
+      "class": 1,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
+      "charName": "-AfroJacK-",
+      "class": 3,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
       "charName": "KillerOfHell",
       "class": 1,
       "subClass": 0,
@@ -1567,18 +1585,9 @@
       "points": 0
     },
     {
-      "charName": "-Break-Bone-",
-      "class": 2,
-      "subClass": 0,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 0,
-      "points": 0
-    },
-    {
-      "charName": "MrJericho",
-      "class": 1,
-      "subClass": 0,
+      "charName": "-njr",
+      "class": 0,
+      "subClass": 1,
       "wins": 0,
       "kills": 0,
       "deaths": 0,
@@ -1594,8 +1603,8 @@
       "points": 0
     },
     {
-      "charName": "BoWDesTroYer",
-      "class": 0,
+      "charName": "-Break-Bone-",
+      "class": 2,
       "subClass": 0,
       "wins": 0,
       "kills": 0,
@@ -1603,8 +1612,8 @@
       "points": 0
     },
     {
-      "charName": "-AfroJacK-",
-      "class": 3,
+      "charName": "BoWDesTroYer",
+      "class": 0,
       "subClass": 0,
       "wins": 0,
       "kills": 0,
@@ -1639,8 +1648,26 @@
       "points": 0
     },
     {
-      "charName": "Twain",
+      "charName": "ZePsiiKoPATA",
+      "class": 0,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 3,
+      "points": 0
+    },
+    {
+      "charName": "-Elloy-",
       "class": 2,
+      "subClass": 3,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 3,
+      "points": 0
+    },
+    {
+      "charName": "CrookedYoung",
+      "class": 3,
       "subClass": 3,
       "wins": 0,
       "kills": 0,
@@ -1657,18 +1684,9 @@
       "points": 0
     },
     {
-      "charName": "Schiindler",
-      "class": 3,
-      "subClass": 3,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 3,
-      "points": 0
-    },
-    {
-      "charName": "-Elloy-",
-      "class": 2,
-      "subClass": 3,
+      "charName": "MACACO-LOKO",
+      "class": 0,
+      "subClass": 1,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
@@ -1702,18 +1720,9 @@
       "points": 0
     },
     {
-      "charName": "CrookedYoung",
-      "class": 3,
+      "charName": "Twain",
+      "class": 2,
       "subClass": 3,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 3,
-      "points": 0
-    },
-    {
-      "charName": "MACACO-LOKO",
-      "class": 0,
-      "subClass": 1,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
@@ -1729,9 +1738,9 @@
       "points": 0
     },
     {
-      "charName": "ZePsiiKoPATA",
-      "class": 0,
-      "subClass": 0,
+      "charName": "Schiindler",
+      "class": 3,
+      "subClass": 3,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
@@ -1747,18 +1756,18 @@
       "points": 0
     },
     {
-      "charName": "-STR1KER-",
-      "class": 2,
-      "subClass": 0,
+      "charName": "Krabi",
+      "class": 0,
+      "subClass": 1,
       "wins": 0,
       "kills": 0,
       "deaths": 6,
       "points": 0
     },
     {
-      "charName": "Krabi",
-      "class": 0,
-      "subClass": 1,
+      "charName": "-STR1KER-",
+      "class": 2,
+      "subClass": 0,
       "wins": 0,
       "kills": 0,
       "deaths": 6,
@@ -1845,7 +1854,7 @@
       "wins": 29,
       "kills": 677,
       "deaths": 53,
-      "points": 143
+      "points": 142
     },
     {
       "charName": "BigDunga",
@@ -1854,7 +1863,7 @@
       "wins": 24,
       "kills": 654,
       "deaths": 78,
-      "points": 129
+      "points": 128
     },
     {
       "charName": "-NexxoR-",
@@ -1890,7 +1899,7 @@
       "wins": 16,
       "kills": 17,
       "deaths": 110,
-      "points": 72
+      "points": 71
     },
     {
       "charName": "Morganaaa",
@@ -1908,7 +1917,7 @@
       "wins": 13,
       "kills": 213,
       "deaths": 72,
-      "points": 56
+      "points": 55
     },
     {
       "charName": "BYLLYBOLADO",
@@ -1926,7 +1935,7 @@
       "wins": 13,
       "kills": 118,
       "deaths": 124,
-      "points": 53
+      "points": 52
     },
     {
       "charName": "Inkz",
@@ -1935,7 +1944,7 @@
       "wins": 15,
       "kills": 76,
       "deaths": 120,
-      "points": 52
+      "points": 51
     },
     {
       "charName": "MINATO91",
@@ -1962,7 +1971,7 @@
       "wins": 12,
       "kills": 278,
       "deaths": 75,
-      "points": 47
+      "points": 46
     },
     {
       "charName": "damNNNN",
@@ -1971,7 +1980,7 @@
       "wins": 13,
       "kills": 359,
       "deaths": 118,
-      "points": 46
+      "points": 45
     },
     {
       "charName": "posteKaxassa",
@@ -1989,16 +1998,7 @@
       "wins": 11,
       "kills": 166,
       "deaths": 99,
-      "points": 41
-    },
-    {
-      "charName": "Blackhemp",
-      "class": 1,
-      "subClass": 1,
-      "wins": 11,
-      "kills": 117,
-      "deaths": 114,
-      "points": 38
+      "points": 40
     },
     {
       "charName": "-AlcheMisT-",
@@ -2019,22 +2019,22 @@
       "points": 37
     },
     {
+      "charName": "Blackhemp",
+      "class": 1,
+      "subClass": 1,
+      "wins": 11,
+      "kills": 117,
+      "deaths": 114,
+      "points": 37
+    },
+    {
       "charName": "SrSinistros",
       "class": 1,
       "subClass": 1,
       "wins": 8,
       "kills": 102,
       "deaths": 67,
-      "points": 37
-    },
-    {
-      "charName": "-Cesote-",
-      "class": 3,
-      "subClass": 3,
-      "wins": 8,
-      "kills": 207,
-      "deaths": 50,
-      "points": 35
+      "points": 36
     },
     {
       "charName": "Zzzleo",
@@ -2053,6 +2053,15 @@
       "kills": 22,
       "deaths": 134,
       "points": 35
+    },
+    {
+      "charName": "-Cesote-",
+      "class": 3,
+      "subClass": 3,
+      "wins": 8,
+      "kills": 207,
+      "deaths": 50,
+      "points": 34
     },
     {
       "charName": "BMastodonte",
@@ -2079,7 +2088,7 @@
       "wins": 10,
       "kills": 86,
       "deaths": 96,
-      "points": 32
+      "points": 31
     },
     {
       "charName": "ChupaOuCospe",
@@ -2088,7 +2097,7 @@
       "wins": 8,
       "kills": 23,
       "deaths": 64,
-      "points": 31
+      "points": 30
     },
     {
       "charName": "-4cerorA-",
@@ -2097,15 +2106,6 @@
       "wins": 9,
       "kills": 95,
       "deaths": 99,
-      "points": 29
-    },
-    {
-      "charName": "queenvecna",
-      "class": 3,
-      "subClass": 0,
-      "wins": 9,
-      "kills": 130,
-      "deaths": 101,
       "points": 28
     },
     {
@@ -2118,15 +2118,6 @@
       "points": 28
     },
     {
-      "charName": "Bowers",
-      "class": 3,
-      "subClass": 3,
-      "wins": 10,
-      "kills": 0,
-      "deaths": 128,
-      "points": 28
-    },
-    {
       "charName": "??-MORFEU-??",
       "class": 2,
       "subClass": 1,
@@ -2136,13 +2127,31 @@
       "points": 27
     },
     {
+      "charName": "queenvecna",
+      "class": 3,
+      "subClass": 0,
+      "wins": 9,
+      "kills": 130,
+      "deaths": 101,
+      "points": 27
+    },
+    {
+      "charName": "Bowers",
+      "class": 3,
+      "subClass": 3,
+      "wins": 10,
+      "kills": 0,
+      "deaths": 128,
+      "points": 27
+    },
+    {
       "charName": "CAAStech",
       "class": 0,
       "subClass": 0,
       "wins": 6,
       "kills": 74,
       "deaths": 48,
-      "points": 26
+      "points": 25
     },
     {
       "charName": "InSUPort?vel",
@@ -2151,7 +2160,7 @@
       "wins": 8,
       "kills": 64,
       "deaths": 69,
-      "points": 26
+      "points": 25
     },
     {
       "charName": "TioTk",
@@ -2160,7 +2169,7 @@
       "wins": 6,
       "kills": 55,
       "deaths": 48,
-      "points": 25
+      "points": 24
     },
     {
       "charName": "-iNotfounD",
@@ -2169,7 +2178,7 @@
       "wins": 6,
       "kills": 94,
       "deaths": 112,
-      "points": 24
+      "points": 23
     },
     {
       "charName": "radask",
@@ -2187,7 +2196,7 @@
       "wins": 7,
       "kills": 33,
       "deaths": 72,
-      "points": 23
+      "points": 22
     },
     {
       "charName": "Danz3xx",
@@ -2196,24 +2205,6 @@
       "wins": 8,
       "kills": 13,
       "deaths": 110,
-      "points": 23
-    },
-    {
-      "charName": "xDonDiablo",
-      "class": 3,
-      "subClass": 3,
-      "wins": 9,
-      "kills": 243,
-      "deaths": 107,
-      "points": 22
-    },
-    {
-      "charName": "L1ND1NH4",
-      "class": 1,
-      "subClass": 2,
-      "wins": 9,
-      "kills": 31,
-      "deaths": 130,
       "points": 22
     },
     {
@@ -2226,13 +2217,31 @@
       "points": 22
     },
     {
+      "charName": "xDonDiablo",
+      "class": 3,
+      "subClass": 3,
+      "wins": 9,
+      "kills": 243,
+      "deaths": 107,
+      "points": 21
+    },
+    {
+      "charName": "L1ND1NH4",
+      "class": 1,
+      "subClass": 2,
+      "wins": 9,
+      "kills": 31,
+      "deaths": 130,
+      "points": 21
+    },
+    {
       "charName": "MANEIRA0",
       "class": 3,
       "subClass": 3,
       "wins": 7,
       "kills": 10,
       "deaths": 98,
-      "points": 21
+      "points": 20
     },
     {
       "charName": "-Juniiior-",
@@ -2271,30 +2280,21 @@
       "points": 19
     },
     {
-      "charName": "TheBatman",
-      "class": 0,
-      "subClass": 0,
-      "wins": 7,
-      "kills": 2,
-      "deaths": 101,
-      "points": 19
-    },
-    {
-      "charName": "Zefa-Preta",
-      "class": 1,
-      "subClass": 1,
-      "wins": 7,
-      "kills": 31,
-      "deaths": 92,
-      "points": 18
-    },
-    {
       "charName": "LeignelBR-",
       "class": 1,
       "subClass": 1,
       "wins": 4,
       "kills": 15,
       "deaths": 21,
+      "points": 18
+    },
+    {
+      "charName": "TheBatman",
+      "class": 0,
+      "subClass": 0,
+      "wins": 7,
+      "kills": 2,
+      "deaths": 101,
       "points": 18
     },
     {
@@ -2313,6 +2313,15 @@
       "wins": 9,
       "kills": 469,
       "deaths": 102,
+      "points": 17
+    },
+    {
+      "charName": "Zefa-Preta",
+      "class": 1,
+      "subClass": 1,
+      "wins": 7,
+      "kills": 31,
+      "deaths": 92,
       "points": 17
     },
     {
@@ -2352,30 +2361,12 @@
       "points": 16
     },
     {
-      "charName": "-BEAVER-",
-      "class": 3,
-      "subClass": 2,
-      "wins": 8,
-      "kills": 66,
-      "deaths": 127,
-      "points": 16
-    },
-    {
       "charName": "-xmLL",
       "class": 3,
       "subClass": 3,
       "wins": 3,
       "kills": 53,
       "deaths": 23,
-      "points": 16
-    },
-    {
-      "charName": "-ShurpZ-",
-      "class": 3,
-      "subClass": 0,
-      "wins": 6,
-      "kills": 27,
-      "deaths": 71,
       "points": 16
     },
     {
@@ -2397,15 +2388,6 @@
       "points": 16
     },
     {
-      "charName": "Espancadao",
-      "class": 2,
-      "subClass": 2,
-      "wins": 4,
-      "kills": 1,
-      "deaths": 32,
-      "points": 16
-    },
-    {
       "charName": "-GangstA-",
       "class": 0,
       "subClass": 2,
@@ -2415,21 +2397,12 @@
       "points": 16
     },
     {
-      "charName": "chocola12",
-      "class": 2,
-      "subClass": 3,
-      "wins": 6,
-      "kills": 91,
-      "deaths": 89,
-      "points": 15
-    },
-    {
-      "charName": "ZeroMK",
-      "class": 0,
-      "subClass": 3,
-      "wins": 6,
-      "kills": 53,
-      "deaths": 113,
+      "charName": "-BEAVER-",
+      "class": 3,
+      "subClass": 2,
+      "wins": 8,
+      "kills": 66,
+      "deaths": 127,
       "points": 15
     },
     {
@@ -2442,12 +2415,39 @@
       "points": 15
     },
     {
-      "charName": "SalgadinhoCE",
-      "class": 1,
+      "charName": "-ShurpZ-",
+      "class": 3,
       "subClass": 0,
+      "wins": 6,
+      "kills": 27,
+      "deaths": 71,
+      "points": 15
+    },
+    {
+      "charName": "Espancadao",
+      "class": 2,
+      "subClass": 2,
       "wins": 4,
-      "kills": 35,
-      "deaths": 26,
+      "kills": 1,
+      "deaths": 32,
+      "points": 15
+    },
+    {
+      "charName": "chocola12",
+      "class": 2,
+      "subClass": 3,
+      "wins": 6,
+      "kills": 91,
+      "deaths": 89,
+      "points": 14
+    },
+    {
+      "charName": "ZeroMK",
+      "class": 0,
+      "subClass": 3,
+      "wins": 6,
+      "kills": 53,
+      "deaths": 113,
       "points": 14
     },
     {
@@ -2478,15 +2478,6 @@
       "points": 14
     },
     {
-      "charName": "KinhoBM",
-      "class": 1,
-      "subClass": 3,
-      "wins": 5,
-      "kills": 8,
-      "deaths": 94,
-      "points": 14
-    },
-    {
       "charName": "70x7Forever",
       "class": 0,
       "subClass": 0,
@@ -2494,6 +2485,15 @@
       "kills": 3,
       "deaths": 30,
       "points": 14
+    },
+    {
+      "charName": "SalgadinhoCE",
+      "class": 1,
+      "subClass": 0,
+      "wins": 4,
+      "kills": 35,
+      "deaths": 26,
+      "points": 13
     },
     {
       "charName": "BOTO",
@@ -2505,13 +2505,13 @@
       "points": 13
     },
     {
-      "charName": "MagicSouder-",
-      "class": 3,
+      "charName": "KinhoBM",
+      "class": 1,
       "subClass": 3,
       "wins": 5,
-      "kills": 97,
-      "deaths": 67,
-      "points": 12
+      "kills": 8,
+      "deaths": 94,
+      "points": 13
     },
     {
       "charName": "lTarzaNl",
@@ -2538,15 +2538,6 @@
       "wins": 2,
       "kills": 22,
       "deaths": 16,
-      "points": 12
-    },
-    {
-      "charName": "-Kaboom",
-      "class": 3,
-      "subClass": 3,
-      "wins": 5,
-      "kills": 20,
-      "deaths": 62,
       "points": 12
     },
     {
@@ -2586,21 +2577,21 @@
       "points": 12
     },
     {
+      "charName": "MagicSouder-",
+      "class": 3,
+      "subClass": 3,
+      "wins": 5,
+      "kills": 97,
+      "deaths": 67,
+      "points": 11
+    },
+    {
       "charName": "lScarFace",
       "class": 3,
       "subClass": 3,
       "wins": 2,
       "kills": 69,
       "deaths": 37,
-      "points": 11
-    },
-    {
-      "charName": "FM-HellBoy",
-      "class": 2,
-      "subClass": 1,
-      "wins": 2,
-      "kills": 24,
-      "deaths": 17,
       "points": 11
     },
     {
@@ -2613,6 +2604,24 @@
       "points": 11
     },
     {
+      "charName": "-Kaboom",
+      "class": 3,
+      "subClass": 3,
+      "wins": 5,
+      "kills": 20,
+      "deaths": 62,
+      "points": 11
+    },
+    {
+      "charName": "FM-HellBoy",
+      "class": 2,
+      "subClass": 1,
+      "wins": 2,
+      "kills": 24,
+      "deaths": 17,
+      "points": 10
+    },
+    {
       "charName": "XisdezinzZ-",
       "class": 0,
       "subClass": 1,
@@ -2620,15 +2629,6 @@
       "kills": 0,
       "deaths": 44,
       "points": 10
-    },
-    {
-      "charName": "PomboAlpha",
-      "class": 0,
-      "subClass": 3,
-      "wins": 6,
-      "kills": 245,
-      "deaths": 86,
-      "points": 9
     },
     {
       "charName": "RUBEO",
@@ -2647,6 +2647,15 @@
       "kills": 7,
       "deaths": 66,
       "points": 9
+    },
+    {
+      "charName": "PomboAlpha",
+      "class": 0,
+      "subClass": 3,
+      "wins": 6,
+      "kills": 245,
+      "deaths": 86,
+      "points": 8
     },
     {
       "charName": "--Tucano--",
@@ -2676,21 +2685,21 @@
       "points": 8
     },
     {
-      "charName": "-Marys2YN-",
-      "class": 0,
-      "subClass": 3,
-      "wins": 2,
-      "kills": 2,
-      "deaths": 29,
-      "points": 8
-    },
-    {
       "charName": "-Haizo-",
       "class": 1,
       "subClass": 0,
       "wins": 4,
       "kills": 38,
       "deaths": 56,
+      "points": 7
+    },
+    {
+      "charName": "-Marys2YN-",
+      "class": 0,
+      "subClass": 3,
+      "wins": 2,
+      "kills": 2,
+      "deaths": 29,
       "points": 7
     },
     {
@@ -2739,15 +2748,6 @@
       "points": 6
     },
     {
-      "charName": "-LoL-BM",
-      "class": 2,
-      "subClass": 1,
-      "wins": 1,
-      "kills": 0,
-      "deaths": 1,
-      "points": 6
-    },
-    {
       "charName": "N-King",
       "class": 1,
       "subClass": 1,
@@ -2784,15 +2784,6 @@
       "points": 5
     },
     {
-      "charName": "PapaiDoMau",
-      "class": 3,
-      "subClass": 3,
-      "wins": 4,
-      "kills": 19,
-      "deaths": 103,
-      "points": 5
-    },
-    {
       "charName": "II--Zero--II",
       "class": 0,
       "subClass": 2,
@@ -2802,12 +2793,12 @@
       "points": 5
     },
     {
-      "charName": "WolfCraazzY",
+      "charName": "-LoL-BM",
       "class": 2,
       "subClass": 1,
       "wins": 1,
       "kills": 0,
-      "deaths": 8,
+      "deaths": 1,
       "points": 5
     },
     {
@@ -2838,21 +2829,21 @@
       "points": 4
     },
     {
+      "charName": "PapaiDoMau",
+      "class": 3,
+      "subClass": 3,
+      "wins": 4,
+      "kills": 19,
+      "deaths": 103,
+      "points": 4
+    },
+    {
       "charName": "Pescador-MS",
       "class": 2,
       "subClass": 1,
       "wins": 1,
       "kills": 4,
       "deaths": 15,
-      "points": 4
-    },
-    {
-      "charName": "Iron-Rudis",
-      "class": 0,
-      "subClass": 3,
-      "wins": 1,
-      "kills": 2,
-      "deaths": 6,
       "points": 4
     },
     {
@@ -2883,6 +2874,15 @@
       "points": 4
     },
     {
+      "charName": "WolfCraazzY",
+      "class": 2,
+      "subClass": 1,
+      "wins": 1,
+      "kills": 0,
+      "deaths": 8,
+      "points": 4
+    },
+    {
       "charName": "-MAXOALPHA-",
       "class": 3,
       "subClass": 0,
@@ -2901,39 +2901,12 @@
       "points": 4
     },
     {
-      "charName": "?Lethyn",
-      "class": 3,
-      "subClass": 3,
-      "wins": 6,
-      "kills": 311,
-      "deaths": 98,
-      "points": 3
-    },
-    {
-      "charName": "MiinT",
-      "class": 0,
-      "subClass": 0,
-      "wins": 5,
-      "kills": 153,
-      "deaths": 83,
-      "points": 3
-    },
-    {
       "charName": "Dusky",
       "class": 1,
       "subClass": 1,
       "wins": 2,
       "kills": 38,
       "deaths": 30,
-      "points": 3
-    },
-    {
-      "charName": "NicolasG",
-      "class": 2,
-      "subClass": 3,
-      "wins": 3,
-      "kills": 27,
-      "deaths": 61,
       "points": 3
     },
     {
@@ -2955,6 +2928,15 @@
       "points": 3
     },
     {
+      "charName": "Iron-Rudis",
+      "class": 0,
+      "subClass": 3,
+      "wins": 1,
+      "kills": 2,
+      "deaths": 6,
+      "points": 3
+    },
+    {
       "charName": "AcordouArzan",
       "class": 3,
       "subClass": 0,
@@ -2962,6 +2944,24 @@
       "kills": 1,
       "deaths": 52,
       "points": 3
+    },
+    {
+      "charName": "?Lethyn",
+      "class": 3,
+      "subClass": 3,
+      "wins": 6,
+      "kills": 311,
+      "deaths": 98,
+      "points": 2
+    },
+    {
+      "charName": "MiinT",
+      "class": 0,
+      "subClass": 0,
+      "wins": 5,
+      "kills": 153,
+      "deaths": 83,
+      "points": 2
     },
     {
       "charName": "rfaell",
@@ -2973,12 +2973,12 @@
       "points": 2
     },
     {
-      "charName": "Deu-SDDS",
+      "charName": "NicolasG",
       "class": 2,
       "subClass": 3,
       "wins": 3,
-      "kills": 26,
-      "deaths": 57,
+      "kills": 27,
+      "deaths": 61,
       "points": 2
     },
     {
@@ -2989,6 +2989,15 @@
       "kills": 1,
       "deaths": 24,
       "points": 2
+    },
+    {
+      "charName": "Deu-SDDS",
+      "class": 2,
+      "subClass": 3,
+      "wins": 3,
+      "kills": 26,
+      "deaths": 57,
+      "points": 1
     },
     {
       "charName": "Syn-",
@@ -3117,6 +3126,15 @@
       "points": 0
     },
     {
+      "charName": "akenozinho",
+      "class": 3,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 2,
+      "deaths": 0,
+      "points": 0
+    },
+    {
       "charName": "Taws-",
       "class": 3,
       "subClass": 0,
@@ -3135,15 +3153,6 @@
       "points": 0
     },
     {
-      "charName": "akenozinho",
-      "class": 3,
-      "subClass": 0,
-      "wins": 0,
-      "kills": 2,
-      "deaths": 0,
-      "points": 0
-    },
-    {
       "charName": "BRNL",
       "class": 3,
       "subClass": 3,
@@ -3153,18 +3162,18 @@
       "points": 0
     },
     {
-      "charName": "ITALIANINHOO",
+      "charName": "KakashiST",
       "class": 0,
-      "subClass": 2,
+      "subClass": 0,
       "wins": 0,
       "kills": 2,
       "deaths": 6,
       "points": 0
     },
     {
-      "charName": "KakashiST",
+      "charName": "ITALIANINHOO",
       "class": 0,
-      "subClass": 0,
+      "subClass": 2,
       "wins": 0,
       "kills": 2,
       "deaths": 6,
@@ -3180,18 +3189,18 @@
       "points": 0
     },
     {
-      "charName": "JackDaniel69",
+      "charName": "-PRETORIUSS-",
       "class": 3,
-      "subClass": 3,
+      "subClass": 2,
       "wins": 0,
       "kills": 1,
       "deaths": 0,
       "points": 0
     },
     {
-      "charName": "HuntCothe",
-      "class": 1,
-      "subClass": 1,
+      "charName": "Polaks",
+      "class": 0,
+      "subClass": 2,
       "wins": 0,
       "kills": 1,
       "deaths": 0,
@@ -3207,18 +3216,18 @@
       "points": 0
     },
     {
-      "charName": "-PRETORIUSS-",
-      "class": 3,
-      "subClass": 2,
+      "charName": "HuntCothe",
+      "class": 1,
+      "subClass": 1,
       "wins": 0,
       "kills": 1,
       "deaths": 0,
       "points": 0
     },
     {
-      "charName": "Polaks",
-      "class": 0,
-      "subClass": 2,
+      "charName": "JackDaniel69",
+      "class": 3,
+      "subClass": 3,
       "wins": 0,
       "kills": 1,
       "deaths": 0,
@@ -3243,7 +3252,7 @@
       "points": 0
     },
     {
-      "charName": "Ministru",
+      "charName": "F3N1X-bau",
       "class": 1,
       "subClass": 0,
       "wins": 0,
@@ -3252,7 +3261,7 @@
       "points": 0
     },
     {
-      "charName": "F3N1X-bau",
+      "charName": "Ministru",
       "class": 1,
       "subClass": 0,
       "wins": 0,
@@ -3270,9 +3279,9 @@
       "points": 0
     },
     {
-      "charName": "CargoGuarde",
+      "charName": "Hellzel",
       "class": 2,
-      "subClass": 0,
+      "subClass": 1,
       "wins": 0,
       "kills": 1,
       "deaths": 12,
@@ -3288,9 +3297,9 @@
       "points": 0
     },
     {
-      "charName": "Hellzel",
+      "charName": "CargoGuarde",
       "class": 2,
-      "subClass": 1,
+      "subClass": 0,
       "wins": 0,
       "kills": 1,
       "deaths": 12,
@@ -3324,17 +3333,8 @@
       "points": 0
     },
     {
-      "charName": "Fili",
-      "class": 3,
-      "subClass": 0,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 0,
-      "points": 0
-    },
-    {
-      "charName": "Twain",
-      "class": 2,
+      "charName": "-Makyo",
+      "class": 0,
       "subClass": 3,
       "wins": 0,
       "kills": 0,
@@ -3342,9 +3342,9 @@
       "points": 0
     },
     {
-      "charName": "JU-BRS",
-      "class": 1,
-      "subClass": 0,
+      "charName": "P3RNAMBUCO",
+      "class": 0,
+      "subClass": 3,
       "wins": 0,
       "kills": 0,
       "deaths": 0,
@@ -3360,25 +3360,16 @@
       "points": 0
     },
     {
+      "charName": "LABAYO",
+      "class": 3,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
       "charName": "JOHN-I",
-      "class": 3,
-      "subClass": 0,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 0,
-      "points": 0
-    },
-    {
-      "charName": "S-K-Y",
-      "class": 3,
-      "subClass": 0,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 0,
-      "points": 0
-    },
-    {
-      "charName": "P4P4FOX",
       "class": 3,
       "subClass": 0,
       "wins": 0,
@@ -3405,6 +3396,15 @@
       "points": 0
     },
     {
+      "charName": "bobinha13",
+      "class": 0,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
       "charName": "-StylleProO-",
       "class": 0,
       "subClass": 3,
@@ -3414,53 +3414,8 @@
       "points": 0
     },
     {
-      "charName": "LABAYO",
-      "class": 3,
-      "subClass": 0,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 0,
-      "points": 0
-    },
-    {
-      "charName": "P3RNAMBUCO",
-      "class": 0,
-      "subClass": 3,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 0,
-      "points": 0
-    },
-    {
-      "charName": "iamPOPS",
-      "class": 1,
-      "subClass": 1,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 0,
-      "points": 0
-    },
-    {
-      "charName": "Neg4oDoZap",
-      "class": 0,
-      "subClass": 2,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 0,
-      "points": 0
-    },
-    {
-      "charName": "Schiindler",
-      "class": 3,
-      "subClass": 3,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 0,
-      "points": 0
-    },
-    {
-      "charName": "-Makyo",
-      "class": 0,
+      "charName": "Twain",
+      "class": 2,
       "subClass": 3,
       "wins": 0,
       "kills": 0,
@@ -3477,34 +3432,70 @@
       "points": 0
     },
     {
-      "charName": "Greb",
-      "class": 0,
-      "subClass": 2,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 3,
-      "points": 0
-    },
-    {
-      "charName": "Ameri",
-      "class": 1,
-      "subClass": 1,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 3,
-      "points": 0
-    },
-    {
-      "charName": "MeioVazio",
+      "charName": "JU-BRS",
       "class": 1,
       "subClass": 0,
       "wins": 0,
       "kills": 0,
-      "deaths": 3,
+      "deaths": 0,
       "points": 0
     },
     {
-      "charName": "Sherrif",
+      "charName": "Fili",
+      "class": 3,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
+      "charName": "Schiindler",
+      "class": 3,
+      "subClass": 3,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
+      "charName": "Neg4oDoZap",
+      "class": 0,
+      "subClass": 2,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
+      "charName": "P4P4FOX",
+      "class": 3,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
+      "charName": "iamPOPS",
+      "class": 1,
+      "subClass": 1,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
+      "charName": "S-K-Y",
+      "class": 3,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 0,
+      "points": 0
+    },
+    {
+      "charName": "BLINDBLADE",
       "class": 2,
       "subClass": 1,
       "wins": 0,
@@ -3513,7 +3504,16 @@
       "points": 0
     },
     {
-      "charName": "BLINDBLADE",
+      "charName": "-PerTurBaDo-",
+      "class": 3,
+      "subClass": 2,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 3,
+      "points": 0
+    },
+    {
+      "charName": "Sherrif",
       "class": 2,
       "subClass": 1,
       "wins": 0,
@@ -3531,27 +3531,18 @@
       "points": 0
     },
     {
-      "charName": "-PerTurBaDo-",
-      "class": 3,
-      "subClass": 2,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 3,
-      "points": 0
-    },
-    {
-      "charName": "AvalonNatu",
+      "charName": "Greb",
       "class": 0,
-      "subClass": 0,
+      "subClass": 2,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
       "points": 0
     },
     {
-      "charName": "-deePy",
-      "class": 3,
-      "subClass": 2,
+      "charName": "MeioVazio",
+      "class": 1,
+      "subClass": 0,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
@@ -3567,9 +3558,36 @@
       "points": 0
     },
     {
+      "charName": "AvalonNatu",
+      "class": 0,
+      "subClass": 0,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 3,
+      "points": 0
+    },
+    {
+      "charName": "Ameri",
+      "class": 1,
+      "subClass": 1,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 3,
+      "points": 0
+    },
+    {
       "charName": "Splinter-661",
       "class": 1,
       "subClass": 3,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 3,
+      "points": 0
+    },
+    {
+      "charName": "-deePy",
+      "class": 3,
+      "subClass": 2,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
@@ -3585,9 +3603,18 @@
       "points": 0
     },
     {
-      "charName": "RatoVuador",
+      "charName": "Aziir-",
       "class": 2,
-      "subClass": 0,
+      "subClass": 3,
+      "wins": 0,
+      "kills": 0,
+      "deaths": 6,
+      "points": 0
+    },
+    {
+      "charName": "DropXaulin",
+      "class": 0,
+      "subClass": 3,
       "wins": 0,
       "kills": 0,
       "deaths": 6,
@@ -3603,9 +3630,9 @@
       "points": 0
     },
     {
-      "charName": "Aziir-",
-      "class": 2,
-      "subClass": 3,
+      "charName": "SHAPIIROV",
+      "class": 3,
+      "subClass": 0,
       "wins": 0,
       "kills": 0,
       "deaths": 6,
@@ -3630,17 +3657,8 @@
       "points": 0
     },
     {
-      "charName": "DropXaulin",
-      "class": 0,
-      "subClass": 3,
-      "wins": 0,
-      "kills": 0,
-      "deaths": 6,
-      "points": 0
-    },
-    {
-      "charName": "SHAPIIROV",
-      "class": 3,
+      "charName": "RatoVuador",
+      "class": 2,
       "subClass": 0,
       "wins": 0,
       "kills": 0,
@@ -3648,7 +3666,7 @@
       "points": 0
     },
     {
-      "charName": "WIFI999",
+      "charName": "Brehn",
       "class": 3,
       "subClass": 3,
       "wins": 0,
@@ -3657,7 +3675,7 @@
       "points": 0
     },
     {
-      "charName": "Brehn",
+      "charName": "WIFI999",
       "class": 3,
       "subClass": 3,
       "wins": 0,
