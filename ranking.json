@@ -408,7 +408,7 @@
     {
       "charName": "REIdoSERTAO",
       "class": 3,
-      "subClass": 2,
+      "subClass": 3,
       "wins": 8,
       "kills": 84,
       "deaths": 94,
@@ -1108,7 +1108,7 @@
       "points": 4
     },
     {
-      "charName": "APL7",
+      "charName": "JogoPessimo",
       "class": 0,
       "subClass": 2,
       "wins": 2,
@@ -1621,9 +1621,9 @@
       "points": 0
     },
     {
-      "charName": "Goudenlionn",
-      "class": 2,
-      "subClass": 3,
+      "charName": "BoWDesTroYer",
+      "class": 0,
+      "subClass": 0,
       "wins": 0,
       "kills": 0,
       "deaths": 0,
@@ -1730,8 +1730,8 @@
     },
     {
       "charName": "ZePsiiKoPATA",
-      "class": 3,
-      "subClass": 2,
+      "class": 0,
+      "subClass": 0,
       "wins": 0,
       "kills": 0,
       "deaths": 3,
@@ -2704,7 +2704,7 @@
     },
     {
       "charName": "PapaiDoMau",
-      "class": 1,
+      "class": 3,
       "subClass": 3,
       "wins": 4,
       "kills": 19,
